@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08); deck clip the-anchor_code_v3 replaces the earlier code version. Script: tools/animate/procedural/flow_strokes.py
+python3 flow_strokes.py --art ../batch/the-anchor/art.png --water anchor_water.png --title "The Anchor" --out anchor_water_v3 --count 0 --warp 7 --warp-length 140 --warp-waves 3 --shimmer 0.35 --shimmer-local 25 --shimmer-depth 0.3 --shimmer-speed 1.5 --fleck-morph 6
+(art = tools/animate/batch/the-anchor/art.png; 96 frames at 24 fps; run in tools/animate/procedural; masks: card_the-anchor_water.png = anchor_water.png)

@@ -1,0 +1,55 @@
+---
+import CardMedia from "./CardMedia.astro";
+import { cardByTitle, cardUrl, longDate, sections, type Reading } from "../lib/deck";
+
+interface Props {
+  reading: Reading;
+  kicker: string;
+}
+
+const { reading, kicker } = Astro.props;
+const r = reading.data;
+const card = await cardByTitle(r.card);
+const lens = await cardByTitle(r.lens);
+const parts = Object.entries(sections(reading));
+const reversed = r.orientation === "reversed";
+---
+
+<article class="reading">
+  <div class="reading-media">
+    {card && <CardMedia card={card} reversed={reversed} alt={r.alt} />}
+  </div>
+  <div class="reading-text">
+    <p class="kicker">{kicker} · <time datetime={r.date.toISOString().slice(0, 10)}>{longDate(r.date)}</time></p>
+    <h1 class="card-title">
+      {card ? <a href={cardUrl(card)}>{r.card}</a> : r.card}
+      {reversed && <span class="orientation">reversed</span>}
+    </h1>
+    <p class="lede">{r.lede}</p>
+    <div class="prose">
+      {
+        parts.map(([heading, html]) => (
+          <section class:list={{ today: heading === "For today" }}>
+            <h2>{heading}</h2>
+            <Fragment set:html={html} />
+          </section>
+        ))
+      }
+    </div>
+    <dl class="draw-facts">
+      <div>
+        <dt>drand round</dt>
+        <dd><a href={`https://api.drand.sh/public/${r.drand}`}>{r.drand}</a></dd>
+      </div>
+      <div>
+        <dt>Lens card</dt>
+        <dd>{lens ? <a href={cardUrl(lens)}>{r.lens}</a> : r.lens}</dd>
+      </div>
+      <div>
+        <dt>Drawn</dt>
+        <dd><a href="/about/#draw">How the draw works</a></dd>
+      </div>
+    </dl>
+    <slot />
+  </div>
+</article>

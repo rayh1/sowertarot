@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/sway.py
+python3 sway.py --art ../batch/the-hollow-crown/art.png --title "The Hollow Crown" --out hollowcrown_sway_v1 --mask hollow_grass_tree.png --still hollow_still.png --parts --part-join 8 --fill diffuse --keep-rooted
+(art = tools/animate/batch/the-hollow-crown/art.png; 96 frames at 24 fps; run in tools/animate/procedural; masks: card_the-hollow-crown_grass_tree.png = hollow_grass_tree.png, card_the-hollow-crown_still.png = hollow_still.png)

@@ -1,0 +1,4 @@
+Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/flow_strokes.py + glide.py
+python3 flow_strokes.py --art ../batch/the-cartographer/art.png --water cartographer_water.png --flow-mask cartographer_flow.png --title "The Cartographer" --out cartographer_water_v1 --count 280 --speed 2.6 --save-raw cartographer_raw
+python3 glide.py --art ../batch/the-cartographer/art.png --title "The Cartographer" --out cartographer_water_bird_v2 --boxes "620,120,790,215" --kinds bird --radius 35 --drift 0 --base-frames cartographer_raw
+(art = tools/animate/batch/the-cartographer/art.png; 96 frames at 24 fps; run in tools/animate/procedural; masks: card_the-cartographer_water.png = cartographer_water.png, card_the-cartographer_flow.png = cartographer_flow.png)

@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/falling_particles.py
+python3 falling_particles.py --art ../batch/the-spiral/art.png --title "The Spiral" --out spiral_snow_v1 --size 9 --outline 2 --count 90 --speed 1.6 --sway 8
+(art = tools/animate/batch/the-spiral/art.png; 96 frames at 24 fps; run in tools/animate/procedural)

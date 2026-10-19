@@ -1,0 +1,11 @@
+# Changes here will be overwritten by Copier; do NOT edit manually.
+_commit: v0.7.0
+_src_path: http://git.charm.nl:3000/Charm/tdp-template.git
+charm_internal: false
+description: The Sower tarot deck and its daily card
+extra_dockerignore: work/, tools/animate/batch/
+extra_extensions: astro-build.astro-vscode
+issue_id: ''
+languages:
+- node
+project_name: sowertarot

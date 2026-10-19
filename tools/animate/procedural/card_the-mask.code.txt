@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-10). Script: tools/animate/procedural/ribbon.py
+python3 ribbon.py --art ../batch/the-mask/art.png --title "The Mask" --out the-mask_code_v2 --mask mask_ribbons.png --grow 5 --amp 12 --cloth mask_cloth.png --cloth-amp 7
+(art = tools/animate/batch/the-mask/art.png, the A1-trimmed unframed art of render #1607 seed 141592; 96 frames at 24 fps; run in tools/animate/procedural; masks: card_the-mask_ribbons.png = mask_ribbons.png (two polygons, one per ribbon), card_the-mask_cloth.png = mask_cloth.png (the red cloth on the rail). v1 = the same command without --cloth/--cloth-amp: ribbons only.)

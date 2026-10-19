@@ -1,0 +1,27 @@
+---
+import Base from "../../layouts/Base.astro";
+import CardMedia from "../../components/CardMedia.astro";
+import { cardUrl, deck } from "../../lib/deck";
+
+const cards = await deck();
+---
+
+<Base title="The deck">
+  <header class="page-head">
+    <h1>The deck</h1>
+    <p>{cards.length} cards. Each opens on its own page, with its clip and the original image.</p>
+  </header>
+  <ul class="card-grid">
+    {
+      cards.map((c) => (
+        <li>
+          <a href={cardUrl(c)}>
+            <CardMedia card={c} variant="thumb" />
+            <span class="thumb-title">{c.data.title}</span>
+            <span class="thumb-concept">{c.data.concept}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

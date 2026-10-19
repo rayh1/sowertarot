@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/sway.py
+python3 sway.py --art ../batch/the-bramble/art.png --title "The Bramble" --out bramble_sway_v1 --mask bramble_thicket.png --still bramble_still.png
+(art = tools/animate/batch/the-bramble/art.png; 96 frames at 24 fps; defaults --amp 10 --gust 520 --ripple 150 --pin 60 --fill rows; masks: card_the-bramble_thicket.png = bramble_thicket.png, card_the-bramble_still.png = bramble_still.png)

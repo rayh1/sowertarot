@@ -1,0 +1,33 @@
+---
+import Base from "../../layouts/Base.astro";
+import CardMedia from "../../components/CardMedia.astro";
+import { cardByTitle, readings, readingUrl, shortDate } from "../../lib/deck";
+
+const all = await Promise.all((await readings()).map(async (r) => ({ r, card: await cardByTitle(r.data.card) })));
+---
+
+<Base title="Readings">
+  <header class="page-head">
+    <h1>Readings</h1>
+    <p>One card each morning, newest first. <a href="/rss.xml">RSS feed</a></p>
+  </header>
+  <ol class="reading-list">
+    {
+      all.map(({ r, card }) => (
+        <li>
+          <a href={readingUrl(r)}>
+            {card && <CardMedia card={card} variant="thumb" reversed={r.data.orientation === "reversed"} />}
+            <span class="reading-list-text">
+              <time>{shortDate(r.data.date)}</time>
+              <strong>
+                {r.data.card}
+                {r.data.orientation === "reversed" && <span class="orientation">reversed</span>}
+              </strong>
+              <span>{r.data.lede}</span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</Base>

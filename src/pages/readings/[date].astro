@@ -1,0 +1,33 @@
+---
+import Base from "../../layouts/Base.astro";
+import ReadingView from "../../components/ReadingView.astro";
+import { cardByTitle, previewUrl, readings, readingUrl, shortDate } from "../../lib/deck";
+
+export async function getStaticPaths() {
+  const all = await readings();
+  // all is newest first: the newer reading comes before, the older after.
+  return all.map((reading, i) => ({
+    params: { date: reading.id },
+    props: { reading, newer: all[i - 1], older: all[i + 1] },
+  }));
+}
+
+const { reading, newer, older } = Astro.props;
+const card = await cardByTitle(reading.data.card);
+---
+
+<Base
+  title={`${reading.data.card}, ${shortDate(reading.data.date)}`}
+  description={reading.data.lede}
+  type="article"
+  image={card && previewUrl(card, reading.data.orientation === "reversed")}
+  imageAlt={card && reading.data.alt}
+>
+  <ReadingView reading={reading} kicker="Reading">
+    <nav class="pager" aria-label="Other readings">
+      {older ? <a href={readingUrl(older)} rel="prev">← {shortDate(older.data.date)}</a> : <span />}
+      <a href="/readings/">All readings</a>
+      {newer ? <a href={readingUrl(newer)} rel="next">{shortDate(newer.data.date)} →</a> : <span />}
+    </nav>
+  </ReadingView>
+</Base>

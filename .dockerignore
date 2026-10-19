@@ -1,0 +1,12 @@
+# Kept out of the image build context. .git is deliberately included: the workspace volume is
+# seeded from the image and must carry the repository.
+.venv
+__pycache__
+node_modules
+target
+build
+.dart_tool
+.ruff_cache
+.pytest_cache
+work/
+tools/animate/batch/

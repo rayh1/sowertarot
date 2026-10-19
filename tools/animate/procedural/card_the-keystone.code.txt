@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/falling_particles.py
+python3 falling_particles.py --kind sand --art ../batch/the-keystone/art.png --title "The Keystone" --out keystone_sand_v2 --path "485,214;483,500;480,900;476,1440" --count 50 --size 2.2 --outline 0.8 --spread 2,9 --ease 1.4 --laps 1 --fade-end 0.03
+(art = tools/animate/batch/the-keystone/art.png; 96 frames at 24 fps; run in tools/animate/procedural)

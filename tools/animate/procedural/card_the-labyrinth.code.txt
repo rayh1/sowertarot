@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/sway.py
+python3 sway.py --art ../batch/the-labyrinth/art.png --title "The Labyrinth" --out labyrinth_sway_v1 --mask labyrinth_tree.png --parts --keep-rooted --fill diffuse
+(art = tools/animate/batch/the-labyrinth/art.png; 96 frames at 24 fps; run in tools/animate/procedural; masks: card_the-labyrinth_tree.png = labyrinth_tree.png)

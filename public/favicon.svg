@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .card { fill: #efe5cc; stroke: #1a1612; }
+    .ink { fill: #1a1612; stroke: #1a1612; }
+    .seed { fill: #8b3a1e; }
+    @media (prefers-color-scheme: dark) {
+      .card { fill: #0d0b10; stroke: #d0a95f; }
+      .ink { fill: #d0a95f; stroke: #d0a95f; }
+      .seed { fill: #d0a95f; }
+    }
+  </style>
+  <rect class="card" x="5" y="3" width="22" height="26" rx="2.5" stroke-width="2"/>
+  <path class="ink" d="M16 21.5 C15.4 17.5 15.6 14.5 16.6 11" fill="none" stroke-width="2.2" stroke-linecap="round"/>
+  <path class="ink" d="M16.1 15.2 C13.6 15.6 10.6 14.2 9.6 10.8 C12.8 10.4 15.4 12.2 16.1 15.2 Z" stroke-width="0.4"/>
+  <path class="ink" d="M16.5 12.2 C17.4 9.4 20.2 7.4 23.2 7.8 C22.6 10.8 19.6 12.6 16.5 12.2 Z" stroke-width="0.4"/>
+  <ellipse class="seed" cx="16" cy="23.6" rx="4.6" ry="3"/>
+</svg>

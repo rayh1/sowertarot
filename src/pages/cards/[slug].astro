@@ -1,0 +1,82 @@
+---
+import Base from "../../layouts/Base.astro";
+import CardMedia from "../../components/CardMedia.astro";
+import { cardByTitle, cardUrl, deck, media, previewUrl, readings, readingUrl, sections, shortDate, type Card } from "../../lib/deck";
+
+export async function getStaticPaths() {
+  return (await deck()).map((card) => ({ params: { slug: card.id }, props: { card } }));
+}
+
+const { card } = Astro.props as { card: Card };
+const c = card.data;
+const s = sections(card);
+// Archetypal Essence first; older notes have one "Visual Description" instead of the three parts.
+const shown = ["Archetypal Essence", "Symbolism", "Composition", "Atmosphere", "Visual Description"].filter((k) => s[k]);
+const drawn = await Promise.all(
+  (await readings())
+    .filter((r) => r.data.card === c.title)
+    .map(async (r) => ({ r, lens: await cardByTitle(r.data.lens) })),
+);
+---
+
+<Base title={c.title} description={c.concept} image={previewUrl(card)} imageAlt={`${c.title}, a card of the Sower Tarot deck.`}>
+  <article class="card-page">
+    <header class="card-head">
+      <h1 class="card-title">{c.title}</h1>
+      <p class="concept">{c.concept}</p>
+      <ul class="key-terms" aria-label="Key terms">{c.key_terms.map((t) => <li>{t}</li>)}</ul>
+    </header>
+
+    <div class="card-body">
+      <div class="card-media-col">
+        <CardMedia card={card} />
+        <p class="card-files">
+          <a href={media(c.image)} download>Download the original image</a>
+          <span aria-hidden="true"> · </span>
+          <a href="/about/#check">Check it is genuine</a>
+        </p>
+      </div>
+
+      <div class="card-text">
+        {
+          shown.map((k) => (
+            <section class="prose">
+              <h2 class="section-title">{k === "Archetypal Essence" ? "Essence" : k}</h2>
+              <Fragment set:html={s[k]} />
+            </section>
+          ))
+        }
+
+        <section class="drawn-on">
+          <h2 class="section-title">Drawn on</h2>
+          {
+            drawn.length ? (
+              <ul>
+                {drawn.map(({ r, lens }) => (
+                  <li>
+                    <a href={readingUrl(r)}>{shortDate(r.data.date)}</a>
+                    {r.data.orientation === "reversed" && <span class="orientation">reversed</span>}
+                    <span class="lens">
+                      lens card {lens ? <a href={cardUrl(lens)}>{r.data.lens}</a> : r.data.lens}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>Not drawn yet.</p>
+            )
+          }
+        </section>
+
+        <details class="made">
+          <summary>How this card was made</summary>
+          <p>Created {shortDate(c.created)}.</p>
+          {s["Render Prompt"] && <h3>Render prompt</h3>}
+          {s["Render Prompt"] && <Fragment set:html={s["Render Prompt"]} />}
+          {s["Render Record"] && <h3>Render record</h3>}
+          {s["Render Record"] && <Fragment set:html={s["Render Record"]} />}
+        </details>
+      </div>
+    </div>
+  </article>
+</Base>

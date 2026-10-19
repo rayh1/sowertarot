@@ -1,0 +1,43 @@
+---
+// A card's picture. "hero": the clip, muted and looping, with the original PNG as poster;
+// viewers who ask for reduced motion keep the still. "thumb": a small web copy of the still.
+import { media, thumbUrl, type Card } from "../lib/deck";
+
+interface Props {
+  card: Card;
+  variant?: "hero" | "thumb";
+  reversed?: boolean;
+  alt?: string;
+}
+
+const { card, variant = "hero", reversed = false, alt } = Astro.props;
+const label = alt ?? card.data.title;
+---
+
+<figure class:list={["card-media", `card-media--${variant}`, { reversed }]}>
+  {
+    variant === "hero" && card.data.clip ? (
+      <video
+        src={media(card.data.clip)}
+        poster={media(card.data.image)}
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        aria-label={label}
+        data-motion
+      />
+    ) : variant === "thumb" ? (
+      <img src={thumbUrl(card)} alt={label} loading="lazy" width="400" height="700" />
+    ) : (
+      <img src={media(card.data.image)} alt={label} loading="eager" width="1024" height="1792" />
+    )
+  }
+</figure>
+
+<script>
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)");
+  for (const v of document.querySelectorAll<HTMLVideoElement>("video[data-motion]")) {
+    if (!still.matches) v.play().catch(() => {});
+  }
+</script>

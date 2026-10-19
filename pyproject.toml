@@ -1,0 +1,15 @@
+[project]
+name = "sowertarot"
+version = "0.1.0"
+description = "The Sower tarot deck and its daily card"
+requires-python = ">=3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "ruff",
+]
+
+[tool.uv]
+package = false

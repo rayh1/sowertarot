@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/glide.py
+python3 glide.py --art ../batch/the-murmuration/art.png --title "The Murmuration" --out murmuration_glide_v1 --mode swirl --centre 395,690 --flock-extra 380,960,760,1010
+(art = tools/animate/batch/the-murmuration/art.png; 96 frames at 24 fps; run in tools/animate/procedural)

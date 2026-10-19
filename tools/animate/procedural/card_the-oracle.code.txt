@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/glow.py
+python3 glow.py --art ../batch/the-oracle/art.png --title "The Oracle" --out oracle_twinkle_v1 --twinkle 320,20,720,800
+(art = tools/animate/batch/the-oracle/art.png; 96 frames at 24 fps; run in tools/animate/procedural)

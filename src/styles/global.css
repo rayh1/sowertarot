@@ -1,0 +1,710 @@
+@import "tailwindcss";
+
+/* One design, "Ink", taken from the cards: their paper (216,199,158), their ink (26,22,18) and an
+   old-style serif, with "Night" (near-black with gold) as its dark mode. Chosen with the user in
+   step 12b of the site plan, 2026-10-18. The mode is data-theme="light"|"dark" on <html>, set
+   before first paint by the script in Base.astro: the visitor's stored choice from the sun/moon
+   button, else their system setting. Without JavaScript the page stays light. */
+
+:root {
+  --bg: #efe5cc;
+  --bg-2: #e4d6b4;
+  --text: #1a1612;
+  --muted: #5e5141;
+  --rule: #1a1612;
+  --accent: #8b3a1e;
+  --font-display: "IM Fell English", "EB Garamond", Georgia, serif;
+  --font-body: "EB Garamond", Georgia, serif;
+  --font-ui: "EB Garamond", Georgia, serif;
+  --title-size: clamp(2.4rem, 6vw, 3.6rem);
+  --title-weight: 400;
+  --title-case: none;
+  --title-tracking: 0;
+  --label-case: none;
+  --label-tracking: 0.04em;
+  --page: 72rem;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0d0b10;
+  --bg-2: #17141c;
+  --text: #ebe3d3;
+  --muted: #a69d8c;
+  --rule: #4a4033;
+  --accent: #d0a95f;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-ui: "Cormorant Garamond", Georgia, serif;
+  --title-size: clamp(2.4rem, 6vw, 4rem);
+  --title-weight: 300;
+  --title-case: uppercase;
+  --title-tracking: 0.16em;
+  --label-case: uppercase;
+  --label-tracking: 0.22em;
+  color-scheme: dark;
+}
+
+/* ---------- base ---------- */
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 0 1rem 4rem;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+/* ---------- header and footer ---------- */
+
+.site-header {
+  width: 100%;
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: var(--font-ui);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  text-decoration: none;
+  text-transform: var(--title-case);
+  letter-spacing: var(--title-tracking);
+  font-weight: var(--title-weight);
+}
+
+.site-header nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1.25rem;
+  text-transform: var(--label-case);
+  letter-spacing: var(--label-tracking);
+  font-size: 0.95rem;
+}
+
+.site-header nav a {
+  text-decoration: none;
+  color: var(--muted);
+}
+
+.site-header nav a[aria-current="page"] {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+.site-footer {
+  width: 100%;
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 2rem 1rem 5rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 30rem) {
+  .site-header nav {
+    letter-spacing: min(var(--label-tracking), 0.08em);
+    font-size: 0.85rem;
+  }
+}
+
+/* ---------- light/dark toggle ---------- */
+
+.theme-toggle {
+  display: none; /* shown once the head script has set data-theme, i.e. JavaScript runs */
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-left: 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+:root[data-theme] .theme-toggle {
+  display: inline-flex;
+}
+
+.theme-toggle:hover {
+  color: var(--accent);
+}
+
+.theme-toggle svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+:root[data-theme="dark"] .theme-toggle .moon,
+:root:not([data-theme="dark"]) .theme-toggle .sun {
+  display: none;
+}
+
+/* ---------- shared pieces ---------- */
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: var(--title-size);
+  font-weight: var(--title-weight);
+  text-transform: var(--title-case);
+  letter-spacing: var(--title-tracking);
+  line-height: 1.05;
+  margin: 0.25rem 0 0.75rem;
+}
+
+.card-title a {
+  text-decoration: none;
+}
+
+.orientation {
+  display: inline-block;
+  margin-left: 0.6em;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--accent);
+  vertical-align: middle;
+}
+
+.kicker,
+.section-title,
+.thumb-concept,
+.draw-facts dt,
+.key-terms li,
+.made summary {
+  font-family: var(--font-ui);
+  text-transform: var(--label-case);
+  letter-spacing: var(--label-tracking);
+  color: var(--muted);
+}
+
+.kicker {
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.section-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 2rem 0 0.5rem;
+}
+
+.lede {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  line-height: 1.35;
+  font-style: italic;
+  margin: 0 0 1.5rem;
+}
+
+.prose p {
+  margin: 0 0 1em;
+}
+
+/* "For today" stands out as a panel, as on the Card of the Day page. */
+.prose .today {
+  margin-top: 2rem;
+  padding: 0.25rem 1.5rem 0.6rem;
+  background: var(--bg-2);
+  border-radius: 6px;
+}
+
+.prose .today p:first-of-type {
+  font-size: 1.15em;
+}
+
+.prose h2 {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: var(--label-case);
+  letter-spacing: var(--label-tracking);
+  color: var(--muted);
+  margin: 2rem 0 0.5rem;
+}
+
+.card-media {
+  margin: 0;
+}
+
+.card-media img,
+.card-media video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1024 / 1792;
+  object-fit: cover;
+  background: var(--bg-2);
+}
+
+.card-media.reversed img,
+.card-media.reversed video {
+  transform: rotate(180deg);
+}
+
+.card-media--hero {
+  /* The whole card fits the screen height: width = 85% of the viewport height × 1024/1792. */
+  max-width: min(28rem, 48.6vh);
+  margin: 0 auto;
+}
+
+.draw-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  margin: 2rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.draw-facts dt {
+  font-size: 0.75rem;
+}
+
+.draw-facts dd {
+  margin: 0;
+}
+
+.pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+  font-family: var(--font-ui);
+}
+
+/* ---------- reading and card page layout ---------- */
+
+.reading,
+.card-body {
+  display: grid;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.card-head {
+  margin: 1.5rem 0 1rem;
+}
+
+.concept {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.35rem;
+  margin: 0 0 0.75rem;
+}
+
+.key-terms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.key-terms li {
+  font-size: 0.75rem;
+  border: 1px solid var(--rule);
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+}
+
+.card-files {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  text-align: center;
+  font-family: var(--font-ui);
+}
+
+.drawn-on ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.drawn-on li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.75rem;
+  align-items: baseline;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.drawn-on .lens {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.made {
+  margin-top: 2.5rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 1rem;
+}
+
+.made summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.made h3 {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  margin: 1.25rem 0 0.25rem;
+}
+
+.made pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 22rem;
+  overflow: auto;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  background: var(--bg-2);
+  padding: 0.75rem;
+}
+
+.made details {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+/* ---------- home: intro and earlier days ---------- */
+
+.intro {
+  max-width: 40rem;
+  margin: 4rem auto 0;
+  text-align: center;
+  font-size: 1.15rem;
+  color: var(--muted);
+}
+
+.recent {
+  max-width: 48rem;
+  margin: 3rem auto 0;
+}
+
+.card-grid a {
+  display: block;
+  text-decoration: none;
+}
+
+.thumb-title {
+  display: block;
+  margin-top: 0.4rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.thumb-concept {
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 0.15rem;
+}
+
+.more {
+  max-width: 48rem;
+  margin: 1.5rem auto 0;
+  text-align: right;
+  font-family: var(--font-ui);
+}
+
+/* ---------- deck overview and reading list ---------- */
+
+.page-head {
+  margin: 2rem 0 2rem;
+}
+
+.page-head h1 {
+  font-family: var(--font-display);
+  font-size: var(--title-size);
+  font-weight: var(--title-weight);
+  text-transform: var(--title-case);
+  letter-spacing: var(--title-tracking);
+  line-height: 1.05;
+  margin: 0 0 0.5rem;
+}
+
+.page-head p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 2rem 1.25rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.reading-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-width: 48rem;
+}
+
+.reading-list li {
+  border-bottom: 1px solid var(--rule);
+}
+
+.reading-list a {
+  display: flex;
+  gap: 1.25rem;
+  padding: 1rem 0;
+  text-decoration: none;
+  align-items: center;
+}
+
+.reading-list .card-media {
+  flex: 0 0 4rem;
+}
+
+.reading-list-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.reading-list time {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.reading-list strong {
+  font-family: var(--font-display);
+  font-weight: var(--title-weight);
+  font-size: 1.35rem;
+}
+
+.about {
+  max-width: 40rem;
+}
+
+.about h1 {
+  font-family: var(--font-display);
+  font-size: var(--title-size);
+  font-weight: var(--title-weight);
+  text-transform: var(--title-case);
+  letter-spacing: var(--title-tracking);
+  margin: 2rem 0 1rem;
+}
+
+/* The seed mark beside "The deck": centred above the text on phones, to its right where there is room. */
+.seed-mark {
+  display: block;
+  width: 4.5rem;
+  height: auto;
+  margin: 0.5rem auto 1rem;
+}
+
+.seed-mark .ink {
+  fill: var(--text);
+  stroke: var(--text);
+}
+
+.seed-mark .seed {
+  fill: var(--accent);
+}
+
+@media (min-width: 36rem) {
+  .seed-mark {
+    float: right;
+    margin: 0.25rem 0 0.75rem 1.75rem;
+  }
+}
+
+.placeholder {
+  color: var(--accent);
+  font-style: italic;
+}
+
+/* ---------- layout: card left, text right on wide screens ---------- */
+
+@media (min-width: 52rem) {
+  .reading,
+  .card-body {
+    /* Card column as wide as the screen-height-limited card, text takes the rest. */
+    grid-template-columns: minmax(0, min(48.6vh, 30rem)) minmax(0, 1fr);
+    gap: 4rem;
+    align-items: start;
+    margin-top: 2.5rem;
+  }
+
+  .reading-media,
+  .card-media-col {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .reading-text,
+  .card-text {
+    max-width: 38rem;
+  }
+}
+
+.card-head {
+  text-align: center;
+}
+
+.card-head .key-terms {
+  justify-content: center;
+}
+
+/* ---------- light: Ink ---------- */
+
+:root:not([data-theme="dark"]) {
+  body {
+    background:
+      radial-gradient(ellipse at 50% 0%, rgb(255 250 235 / 0.6), transparent 60%),
+      radial-gradient(ellipse at 50% 120%, rgb(120 90 40 / 0.18), transparent 60%),
+      var(--bg);
+  }
+
+  .site-header {
+    border-bottom: 3px double var(--rule);
+  }
+
+  .site-header nav a[aria-current="page"] {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .card-media--hero img,
+  .card-media--hero video {
+    outline: 1px solid var(--rule);
+    outline-offset: 8px;
+  }
+
+  .card-media--thumb img {
+    border: 1px solid var(--rule);
+  }
+
+  .section-title::before,
+  .prose h2::before {
+    content: "❧ ";
+    color: var(--accent);
+  }
+
+  .reading .prose > section:first-child > p:first-of-type::first-letter {
+    float: left;
+    font-family: var(--font-display);
+    font-size: 3.6em;
+    line-height: 0.8;
+    padding: 0.08em 0.1em 0 0;
+    color: var(--accent);
+  }
+
+  .draw-facts {
+    border-top: 3px double var(--rule);
+  }
+
+  .lede {
+    color: var(--accent);
+  }
+}
+
+/* ---------- dark: Night ---------- */
+
+:root[data-theme="dark"] {
+  body {
+    background:
+      radial-gradient(ellipse at 30% 10%, rgb(208 169 95 / 0.08), transparent 55%),
+      var(--bg);
+  }
+
+  .card-media--hero img,
+  .card-media--hero video {
+    border-radius: 6px;
+    box-shadow:
+      0 0 0 1px rgb(208 169 95 / 0.25),
+      0 30px 80px rgb(0 0 0 / 0.7),
+      0 0 120px rgb(208 169 95 / 0.12);
+  }
+
+  .card-media--thumb img {
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.6);
+  }
+
+  .prose .today {
+    box-shadow: inset 0 0 0 1px rgb(208 169 95 / 0.3);
+  }
+
+  .lede {
+    font-style: normal;
+    font-weight: 300;
+    font-size: 1.7rem;
+    color: var(--accent);
+  }
+
+  .kicker {
+    color: var(--accent);
+  }
+
+  .wordmark {
+    font-size: 1.15rem;
+  }
+}
+
+/* ---------- about page: the checksum commands ---------- */
+
+.about pre {
+  margin: 0 0 1em;
+  padding: 0.9rem 1rem;
+  background: var(--bg-2);
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.about code {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.9em;
+}
+
+.about pre code {
+  font-size: 1em;
+  white-space: pre;
+}

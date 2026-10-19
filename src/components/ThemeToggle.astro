@@ -1,0 +1,42 @@
+---
+// Sun/moon button: switches between light (Ink) and dark (Night) and remembers the choice.
+// The head script in Base.astro applies the stored choice, or the system setting, before paint.
+---
+
+<button type="button" class="theme-toggle" aria-label="Dark mode" aria-pressed="false">
+  <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+    <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" stroke-linejoin="round"></path>
+  </svg>
+  <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path
+      d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"
+      stroke-linecap="round"></path>
+  </svg>
+</button>
+
+<script>
+  const root = document.documentElement;
+  const button = document.querySelector<HTMLButtonElement>(".theme-toggle")!;
+  const show = () => button.setAttribute("aria-pressed", String(root.dataset.theme === "dark"));
+  button.addEventListener("click", () => {
+    const next = root.dataset.theme === "dark" ? "light" : "dark";
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem("sower-theme", next);
+    } catch {}
+    show();
+  });
+  // Without a stored choice, follow the system when it changes.
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+    let stored = null;
+    try {
+      stored = localStorage.getItem("sower-theme");
+    } catch {}
+    if (!stored) {
+      root.dataset.theme = e.matches ? "dark" : "light";
+      show();
+    }
+  });
+  show();
+</script>

@@ -1,0 +1,52 @@
+---
+import Base from "../layouts/Base.astro";
+import ReadingView from "../components/ReadingView.astro";
+import { cardByTitle, deck, previewUrl, readings, readingUrl, shortDate } from "../lib/deck";
+
+const [today, ...earlier] = await readings();
+const cards = await deck();
+// Text only, no card images: the home page stays light however large the deck grows.
+const recent = earlier.slice(0, 5);
+// The link preview shows today's card, as the page does.
+const todayCard = today && (await cardByTitle(today.data.card));
+---
+
+<Base
+  image={todayCard && previewUrl(todayCard, today.data.orientation === "reversed")}
+  imageAlt={todayCard && today.data.alt}
+>
+  {today && <ReadingView reading={today} kicker="Card of the day" />}
+
+  <section class="intro">
+    <p>
+      Sower Tarot is a deck of {cards.length} cards, made with AI in the style of an old woodcut. Each morning at
+      seven a public random number picks one card, and it is read for the day.
+    </p>
+  </section>
+
+  {
+    recent.length > 0 && (
+      <section class="recent" aria-labelledby="recent-title">
+        <h2 id="recent-title" class="section-title">Earlier days</h2>
+        <ol class="reading-list">
+          {recent.map((r) => (
+            <li>
+              <a href={readingUrl(r)}>
+                <span class="reading-list-text">
+                  <time>{shortDate(r.data.date)}</time>
+                  <strong>
+                    {r.data.card}
+                    {r.data.orientation === "reversed" && <span class="orientation">reversed</span>}
+                  </strong>
+                  <span>{r.data.lede}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )
+  }
+
+  <p class="more"><a href="/readings/">All readings</a> · <a href="/cards/">See the whole deck</a></p>
+</Base>

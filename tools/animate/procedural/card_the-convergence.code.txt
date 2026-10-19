@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/sway.py
+python3 sway.py --art ../batch/the-convergence/art.png --title "The Convergence" --out convergence_sway_v2 --mask conv_grass_both.png --still conv_still_both.png --parts --fill diffuse
+(art = tools/animate/batch/the-convergence/art.png; 96 frames at 24 fps; run in tools/animate/procedural; masks: card_the-convergence_grass_both.png = conv_grass_both.png, card_the-convergence_still_both.png = conv_still_both.png)

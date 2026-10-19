@@ -1,0 +1,126 @@
+---
+import Base from "../layouts/Base.astro";
+import { deck } from "../lib/deck";
+
+const cards = await deck();
+const repo = "rayh1/sowertarot";
+---
+
+<Base title="About" description="What the Sower Tarot deck is, how the daily card is drawn, how the cards are made, and the licence.">
+  <article class="about prose">
+    <h1>About</h1>
+
+    <h2 id="deck">The deck</h2>
+    <!-- The seed mark of public/favicon.svg without its card frame, in the page's colours. -->
+    <svg class="seed-mark" viewBox="8 6 17 22" aria-hidden="true">
+      <path class="ink" d="M16 21.5 C15.4 17.5 15.6 14.5 16.6 11" fill="none" stroke-width="2.2" stroke-linecap="round" />
+      <path class="ink" d="M16.1 15.2 C13.6 15.6 10.6 14.2 9.6 10.8 C12.8 10.4 15.4 12.2 16.1 15.2 Z" stroke-width="0.4" />
+      <path class="ink" d="M16.5 12.2 C17.4 9.4 20.2 7.4 23.2 7.8 C22.6 10.8 19.6 12.6 16.5 12.2 Z" stroke-width="0.4" />
+      <ellipse class="seed" cx="16" cy="23.6" rx="4.6" ry="3" />
+    </svg>
+    <p>
+      Sower Tarot is a deck that is still being found. It is named after its central card, The Sower: casting what
+      you have across ground you cannot control, trusting that some of it will take. The deck grows the same way.
+      Each new card starts from a seed that comes from outside: something from the day, a random page of a book, a
+      sentence someone else said. Several candidate cards sprout from it, and a new card has to differ in meaning
+      from every card already in the deck. Most candidates do not take; one is kept, or none. There is no final
+      size: there is always further to go.
+    </p>
+    <p>
+      The cards borrow the look of the old Rider-Waite deck, but not its meanings. No card has a fixed meaning,
+      upright or reversed. Meaning forms through use: each morning one card is drawn and read fresh for that day,
+      and a second, hidden card, the lens card, sets the angle it is read from. The same card can say something
+      different on another day.
+    </p>
+    <p>
+      The deck is for anyone who wants a card and a question to carry through the day; no knowledge of tarot is
+      needed. It does not tell fortunes and does not give advice: a reading is a question to consider, not an
+      answer. Read together, the readings are also a record of a search, of where the deck has looked so far.
+    </p>
+
+    <h2 id="draw">How the daily draw works</h2>
+    <p>
+      The card is drawn every morning at seven (Amsterdam time).
+    </p>
+    <p>
+      Nobody picks the card. It comes from <a href="https://drand.love">drand</a>, a public source of random
+      numbers run by the League of Entropy, a group of independent organisations such as universities and internet
+      companies. Every thirty seconds they publish a new number, counted by round. Each organisation holds one
+      piece of a shared secret key, and a round's number can only be worked out when enough of them combine their
+      pieces. So no single organisation, and nobody outside, can know a number before it is published or change it
+      afterwards, and anyone can check that a published number is genuine.
+    </p>
+    <p>
+      The draw uses the number published at seven. The cards are lined up in alphabetical order, and the number is
+      divided by the number of cards: what is left over points to the card. The rest of the number, divided the
+      same way, picks the lens card from the remaining cards and decides whether the card is upright or reversed.
+      Each reading shows the round its card came from.
+    </p>
+    <p>
+      Because every round's number follows from that shared key, the numbers for all mornings to come are already
+      fixed. Nobody can know them until they are published, the deck's maker included. So for a given deck, every
+      future morning's card is already settled but unknown. Only the deck changing keeps the sequence open: when a
+      card enters or leaves, the alphabetical line-up shifts and every later morning falls differently, and when
+      that will happen cannot be foreseen.
+    </p>
+    <p>
+      Anyone can check a draw with{" "}
+      <a href={`https://github.com/${repo}/blob/main/scripts/draw_check.py`}><code>draw_check.py</code></a>, a small
+      Python program in the site's public repository on GitHub, which recomputes any day's card from its round and
+      the deck as it stood that morning.
+    </p>
+
+    <h2 id="made">How the cards are made</h2>
+    <p>
+      Every picture in this deck is AI-generated. The cards are rendered on a home computer with FLUX.1 [dev], an
+      open image model, and a small add-on model trained for this deck that gives it its woodcut look: heavy ink
+      outlines, hatching and flat colour.
+    </p>
+    <p>
+      Each card starts as a written scene, usually one figure, one object and one gesture. It is rendered many
+      times, each time from a different random starting point, and the maker picks one. Small faults, such as a
+      stray ornament at the edge, are repaired with an AI image editor (Qwen Image). The border, the title banner and the lettering are
+      not drawn by the model: a script adds them, so every card has the same frame.
+    </p>
+    <p>
+      The moving pictures move only where something should move. For {cards.filter((c) => /_code_/.test(c.data.clip ?? "")).length} of
+      the {cards.length} cards a script draws the motion (ripples, gliding birds, flickering candles, glowing
+      light) over the card's own pixels, so the ink lines stay exactly as they were. For the other {cards.filter((c) => !/_code_/.test(c.data.clip ?? "")).length}, where the
+      motion is hard to draw (fire, pouring water, breaking waves), an AI video model (Wan 2.2) animates a masked
+      part of the card. The maker watched and chose every clip.
+    </p>
+
+    <h2 id="check">Check a card</h2>
+    <p>
+      Every original card image and clip on this site is listed in <a href="/checksums.txt">checksums.txt</a>{" "}
+      with its SHA-256 checksum: a 64-character fingerprint of the file's exact bytes. The same list is in the{" "}
+      <a href={`https://github.com/${repo}/blob/main/content/checksums.txt`}>repository</a>, whose history shows
+      when each file changed. To check a file you downloaded, compute its checksum and look for it in the list:
+    </p>
+    <pre><code>{`sha256sum card_the-sower.png            # Linux
+shasum -a 256 card_the-sower.png        # macOS
+Get-FileHash card_the-sower.png         # Windows PowerShell (prints capitals)`}</code></pre>
+    <p>
+      Or put the list next to your downloads and run <code>sha256sum -c --ignore-missing checksums.txt</code>.
+    </p>
+    <p>
+      A match means the file is the original, byte for byte. Each original also carries a label inside it, in
+      its XMP metadata: made by a trained AI model (the IPTC digital source type
+      <em>trainedAlgorithmicMedia</em>), creator Sower Tarot, licence CC BY-NC-SA 4.0. A copy that was resized,
+      recompressed or stripped of that label, as most social media do, no longer matches. That shows only that
+      it is not the original file, not that the picture was changed.
+    </p>
+
+    <h2 id="licence">Licence and credits</h2>
+    <p>
+      The cards, clips and texts are licensed under{" "}
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>: you may share and adapt
+      them for non-commercial use, if you credit Sower Tarot and share your version under the same licence. The
+      site's code is licensed under the MIT licence.
+    </p>
+    <p>
+      Made with FLUX.1 [dev] by Black Forest Labs, Qwen Image and Wan 2.2 by Alibaba, ComfyUI, Claude by Anthropic,
+      and drand by the League of Entropy. Type: IM Fell English, EB Garamond and Cormorant Garamond.
+    </p>
+  </article>
+</Base>

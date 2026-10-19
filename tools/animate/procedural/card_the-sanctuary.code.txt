@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08); replaces the AI clip the-sanctuary_s*_v2 as the deck clip. Script: tools/animate/procedural/flicker.py
+python3 flicker.py --art ../batch/the-sanctuary/art.png --title "The Sanctuary" --out sanctuary_code_v1 --box 540,570,615,673 --core 235,150,70 --widen 0 --glow-mask sanctuary_door.png --glow-amp 0.2
+(art = tools/animate/batch/the-sanctuary/art.png; 96 frames at 24 fps; run in tools/animate/procedural; masks: card_the-sanctuary_door.png = sanctuary_door.png)

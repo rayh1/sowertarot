@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08); replaces the AI clip the-echo_s*_v2 as the deck clip. Script: tools/animate/procedural/flow_strokes.py
+python3 flow_strokes.py --art ../batch/the-echo/art.png --water echo_water.png --title "The Echo" --out echo_water_v4 --count 260 --speed 2.4 --light-frac 0.5 --light 248,246,226 --dark 0.55 --warp 4 --warp-length 110 --warp-waves 3 --shimmer 0.5 --shimmer-depth 0.25 --shimmer-speed 2 --fleck-morph 7 --glints 80 --glint-box 420,900,760,1790 --glint-size 18 --glint-rgb 255,255,245 --glint-outline 40,80,72
+(art = tools/animate/batch/the-echo/art.png; 96 frames at 24 fps; run in tools/animate/procedural; masks: card_the-echo_water.png = echo_water.png)

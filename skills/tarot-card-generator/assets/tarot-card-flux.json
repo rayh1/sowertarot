@@ -1,0 +1,630 @@
+{
+  "nodes": [
+    {
+      "id": 4445667083308169,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        40.0,
+        60.0
+      ],
+      "size": [
+        240.0,
+        126.0
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            3799688723544825
+          ]
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            216987216856329
+          ]
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            3955659167933895
+          ]
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "flux1-dev-fp8.safetensors"
+      ]
+    },
+    {
+      "id": 3988400399187937,
+      "type": "CLIPTextEncode",
+      "pos": [
+        360.0,
+        60.0
+      ],
+      "size": [
+        240.0,
+        86.0
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 314188761739225
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            1259276548221966,
+            28388603616467
+          ]
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "A vintage Rider-Waite tarot card illustration, bold pen-and-ink woodcut linework with flat muted earthy color, aged paper texture. A single hooded robed figure stands at the center beneath a great unfinished stone arch, holding aloft one glowing golden wedge-shaped keystone, reaching to set it into the open apex of the arch. Twin stone pillars frame the figure. Scattered dressed stones and a mason's mallet, chisel and hanging plumb line rest at the figure's feet. Through the arch a path leads to a luminous violet dawn horizon with a temple span beyond. Symmetrical composition, warm golden glow against cool grey-blue stone, hushed reverent atmosphere, hand-drawn storybook illustration, no text."
+      ]
+    },
+    {
+      "id": 3351178248307577,
+      "type": "FluxGuidance",
+      "pos": [
+        680.0,
+        60.0
+      ],
+      "size": [
+        240.0,
+        86.0
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 1259276548221966
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            3945034780450715
+          ]
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        3.5
+      ]
+    },
+    {
+      "id": 3966392173087885,
+      "type": "ConditioningZeroOut",
+      "pos": [
+        680.0,
+        186.0
+      ],
+      "size": [
+        240.0,
+        62.0
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 28388603616467
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            2024788041624710
+          ]
+        }
+      ],
+      "properties": {},
+      "widgets_values": []
+    },
+    {
+      "id": 2149758162015531,
+      "type": "EmptySD3LatentImage",
+      "pos": [
+        40.0,
+        226.0
+      ],
+      "size": [
+        240.0,
+        134.0
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            105285719362796
+          ]
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        896,
+        1536,
+        1
+      ]
+    },
+    {
+      "id": 502708169065303,
+      "type": "KSampler",
+      "pos": [
+        1000.0,
+        60.0
+      ],
+      "size": [
+        240.0,
+        290.0
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 3548809960567735
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 3945034780450715
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 2024788041624710
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 105285719362796
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            746700569129196
+          ]
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        0,
+        "fixed",
+        20,
+        1.0,
+        "euler",
+        "simple",
+        1.0
+      ]
+    },
+    {
+      "id": 1617950119549939,
+      "type": "VAEDecode",
+      "pos": [
+        1320.0,
+        60.0
+      ],
+      "size": [
+        240.0,
+        82.0
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 746700569129196
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 3955659167933895
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            861924331265246,
+            2757430084529588
+          ]
+        }
+      ],
+      "properties": {},
+      "widgets_values": []
+    },
+    {
+      "id": 3880964665895773,
+      "type": "SaveImage",
+      "pos": [
+        1640.0,
+        60.0
+      ],
+      "size": [
+        240.0,
+        86.0
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 861924331265246
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "tarot_flux"
+      ]
+    },
+    {
+      "id": 1279432504611721,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        40.0,
+        400.0
+      ],
+      "size": [
+        240.0,
+        86.0
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "links": [
+            3913291765306949
+          ]
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "4x-UltraSharp.pth"
+      ]
+    },
+    {
+      "id": 1107469044429072,
+      "type": "ImageUpscaleWithModel",
+      "pos": [
+        1640.0,
+        186.0
+      ],
+      "size": [
+        240.0,
+        82.0
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": 3913291765306949
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 2757430084529588
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            3438749099948826
+          ]
+        }
+      ],
+      "properties": {},
+      "widgets_values": []
+    },
+    {
+      "id": 2411597916599562,
+      "type": "ImageScale",
+      "pos": [
+        1960.0,
+        60.0
+      ],
+      "size": [
+        240.0,
+        158.0
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 3438749099948826
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            2396754467314797
+          ]
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "nearest-exact",
+        1024,
+        1792,
+        "center"
+      ]
+    },
+    {
+      "id": 3886908355529710,
+      "type": "SaveImage",
+      "pos": [
+        2280.0,
+        60.0
+      ],
+      "size": [
+        240.0,
+        86.0
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 2396754467314797
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "tarot_flux_final"
+      ]
+    },
+    {
+      "id": 2708406073710926,
+      "type": "LoraLoader",
+      "pos": [
+        680.0,
+        260.0
+      ],
+      "size": [
+        240.0,
+        154.0
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 3799688723544825
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 216987216856329
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            3548809960567735
+          ]
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            314188761739225
+          ]
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "sowtarot_woodcut-v1.safetensors",
+        1.0,
+        1.0
+      ]
+    }
+  ],
+  "links": [
+    [
+      1259276548221966,
+      3988400399187937,
+      0,
+      3351178248307577,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      28388603616467,
+      3988400399187937,
+      0,
+      3966392173087885,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      3945034780450715,
+      3351178248307577,
+      0,
+      502708169065303,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      2024788041624710,
+      3966392173087885,
+      0,
+      502708169065303,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      105285719362796,
+      2149758162015531,
+      0,
+      502708169065303,
+      3,
+      "LATENT"
+    ],
+    [
+      746700569129196,
+      502708169065303,
+      0,
+      1617950119549939,
+      0,
+      "LATENT"
+    ],
+    [
+      3955659167933895,
+      4445667083308169,
+      2,
+      1617950119549939,
+      1,
+      "VAE"
+    ],
+    [
+      861924331265246,
+      1617950119549939,
+      0,
+      3880964665895773,
+      0,
+      "IMAGE"
+    ],
+    [
+      3913291765306949,
+      1279432504611721,
+      0,
+      1107469044429072,
+      0,
+      "UPSCALE_MODEL"
+    ],
+    [
+      2757430084529588,
+      1617950119549939,
+      0,
+      1107469044429072,
+      1,
+      "IMAGE"
+    ],
+    [
+      3438749099948826,
+      1107469044429072,
+      0,
+      2411597916599562,
+      0,
+      "IMAGE"
+    ],
+    [
+      2396754467314797,
+      2411597916599562,
+      0,
+      3886908355529710,
+      0,
+      "IMAGE"
+    ],
+    [
+      3799688723544825,
+      4445667083308169,
+      0,
+      2708406073710926,
+      0,
+      "MODEL"
+    ],
+    [
+      216987216856329,
+      4445667083308169,
+      1,
+      2708406073710926,
+      1,
+      "CLIP"
+    ],
+    [
+      3548809960567735,
+      2708406073710926,
+      0,
+      502708169065303,
+      0,
+      "MODEL"
+    ],
+    [
+      314188761739225,
+      2708406073710926,
+      1,
+      3988400399187937,
+      0,
+      "CLIP"
+    ]
+  ],
+  "last_node_id": 4445667083308169,
+  "last_link_id": 0,
+  "version": 0.4
+}

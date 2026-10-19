@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/flow_strokes.py
+python3 flow_strokes.py --art compass_art.png --water card_the-compass-rose_water.png --title "The Compass Rose" --out compass_flow_v3 --count 300 --speed 2.8 --star 670,285,860,520
+(compass_art.png = the card art; seed 1, 96 frames at 24 fps)

@@ -1,0 +1,31 @@
+# Ten-Day Project (python, node)
+
+# python
+.venv/
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.pytest_cache/
+dist/
+
+# node
+node_modules/
+npm-debug.log*
+
+.DS_Store
+
+# astro
+dist/
+.astro/
+
+# scratch that never goes in git (renders in progress, build intermediates)
+work/
+
+# browser automation logs
+.playwright-cli/
+
+# Personal settings (settings.env explains the keys)
+/settings.local.env
+
+# Card art the animation commands read (tools/animate/README.md)
+/tools/animate/batch/

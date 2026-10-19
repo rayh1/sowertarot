@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/flicker.py
+python3 flicker.py --art ../batch/the-candelabra/art.png --title "The Candelabra" --out candelabra_flicker_v1 --box 140,320,500,520
+(art = tools/animate/batch/the-candelabra/art.png; seed 1, 96 frames at 24 fps; flame masks are found by colour inside --box at run time)

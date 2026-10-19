@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/glide.py
+python3 glide.py --art ../batch/the-pilgrim/art.png --title "The Pilgrim" --out pilgrim_glide_v1 --box 130,140,900,310
+(art = tools/animate/batch/the-pilgrim/art.png; seed 1, 96 frames at 24 fps; birds found at run time inside --box; defaults --radius 24 --drift 10 --bank 7 --flap 0.12 --beats 4)

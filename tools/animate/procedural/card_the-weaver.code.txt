@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/drifting_fog.py
+python3 drifting_fog.py --art ../batch/the-weaver/art.png --title "The Weaver" --out weaver_plume_v1 --plume 163,18 --wind 2.8,1.0 --puffs 14 --grow 14,52 --opacity 0.75
+(art = tools/animate/batch/the-weaver/art.png; 96 frames at 24 fps; run in tools/animate/procedural)

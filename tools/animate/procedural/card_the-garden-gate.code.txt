@@ -1,0 +1,3 @@
+Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/glide.py
+python3 glide.py --art ../batch/the-garden-gate/art.png --title "The Garden Gate" --out garden_glide_v2 --boxes "630,80,800,230;370,250,510,390;650,405,740,500" --kinds butterfly,butterfly,bee --radius 30 --drift 0
+(art = tools/animate/batch/the-garden-gate/art.png; 96 frames at 24 fps; run in tools/animate/procedural)
