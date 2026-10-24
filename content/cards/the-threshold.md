@@ -7,7 +7,7 @@ seed: 113988557
 image_status: "present"
 prompt_status: "original"
 image: "card_the-threshold.png"
-clip: "the-threshold_code_v2.mp4"
+clip: "the-threshold_code_v3.mp4"
 joplin_note: "e78799a2d0b04e1481586e618efae07d"
 ---
 
@@ -66,12 +66,13 @@ Style specifications:
 <details>
 <summary>Seed 113988557 · tarot_flux_final_00823_.png — full render recipe</summary>
 
-Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file — `render_card.py --from-note "<title>"` does all of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first run its `workflow` on the unframed art and keep the result only inside `box` (soft edge `feather`), as `edit_card.py` does. The model files named below must exist in ComfyUI.
+Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file — `render_card.py --from-note "<title>"` does all of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first apply it to the unframed art: a Qwen edit runs its `workflow` and keeps the result only inside `box` (soft edge `feather`), then, if `tone_match` is true, evens the box's tone (`repair_tools.tone_match`), as `edit_card.py` does; a `method: fill_disc` entry fills the disc in `box` from the sky around it with its `grow`/`thresh` (`repair_tools.fill_disc`, no AI model); a `method: fill_halo` entry fills the light rim round the linework in `box` from the sky with its `grow` (`repair_tools.fill_halo`, no AI model). The model files named below must exist in ComfyUI.
 
 - Rendered: 2026-10-01T17:29:19+02:00 · ComfyUI 0.37.0 · output `tarot_flux_final_00823_.png`
 - Seed: 113988557
-- Models: `flux1-dev-fp8.safetensors`, `4x-UltraSharp.pth`, `sowtarot_woodcut-v1.safetensors` (LoRA, strength 1.0)
+- Models: `flux1-dev-fp8.safetensors`, `4x-UltraSharp.pth`, `sowtarot_woodcut-v1.safetensors` (LoRA, strength 1.0), `qwen_image_2.1_int8_convrot.safetensors`, `qwen3vl_8b_int8_convrot.safetensors`, `qwen_image_2.1_vae_bf16.safetensors`
 - Frame flags: `--art-crop 0.035 --paper 216,199,158 --ink 26,22,18 --margin-frac 0.020 --border-frac 0.008 --banner-frac 0.085`
+- Repair: Remove the brown bird perched on top of the right pillar's capital, half sunk into the arch stones. Fill its place with the same dark shadow of the arch's inner side and the edge of the arch stones. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [792, 462, 885, 648], seed 2, output `tarot_qwen21_edit_00159_.png`, tone-matched, 2026-10-24T19:29:09+02:00)
 
 ```json
 {
@@ -287,7 +288,142 @@ Written by `attach_image.py` with the image above. It holds everything needed to
         "title": "Load LoRA (Model and CLIP)"
       }
     }
-  }
+  },
+  "repairs": [
+    {
+      "edited": "2026-10-24T19:29:09+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00159_.png",
+      "seed": 2,
+      "instruction": "Remove the brown bird perched on top of the right pillar's capital, half sunk into the arch stones. Fill its place with the same dark shadow of the arch's inner side and the edge of the arch stones. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        792,
+        462,
+        885,
+        648
+      ],
+      "feather": 6,
+      "tone_match": true,
+      "tone_offset": [
+        2.8,
+        2.6,
+        0.1
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_fcb4eaee.png"
+          },
+          "is_changed": [
+            "794f3209a37da18d534e8464dc3521cc263b0c1f2be5e0f7b89ca145b62eb228"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the brown bird perched on top of the right pillar's capital, half sunk into the arch stones. Fill its place with the same dark shadow of the arch's inner side and the edge of the arch stones. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 2,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    }
+  ]
 }
 ```
 
