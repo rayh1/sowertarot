@@ -7,7 +7,7 @@ seed: 509155465
 image_status: "present"
 prompt_status: "original"
 image: "card_the-clockmaker.png"
-clip: "the-clockmaker_s6_v2.mp4"
+clip: "the-clockmaker_s6_v3.mp4"
 joplin_note: "004fc1f436a841b4b3c594e1bd9e6e36"
 ---
 
@@ -68,13 +68,16 @@ Style specifications:
 <details>
 <summary>Seed 509155465 · tarot_flux_final_00743_.png — full render recipe</summary>
 
-Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file — `render_card.py --from-note "<title>"` does all of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first apply it to the unframed art: a Qwen edit runs its `workflow` and keeps the result only inside `box` (soft edge `feather`), then, if `tone_match` is true, evens the box's tone (`repair_tools.tone_match`), as `edit_card.py` does; a `method: fill_disc` entry fills the disc in `box` from the sky around it with its `grow`/`thresh` (`repair_tools.fill_disc`, no AI model). The model files named below must exist in ComfyUI.
+Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file — `render_card.py --from-note "<title>"` does all of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first apply it to the unframed art: a Qwen edit runs its `workflow` and keeps the result only inside `box` (soft edge `feather`), then, if `tone_match` is true, evens the box's tone (`repair_tools.tone_match`), as `edit_card.py` does; a `method: fill_disc` entry fills the disc in `box` from the sky around it with its `grow`/`thresh` (`repair_tools.fill_disc`, no AI model); a `method: fill_halo` entry fills the light rim round the linework in `box` from the sky with its `grow` (`repair_tools.fill_halo`, no AI model). The model files named below must exist in ComfyUI.
 
 - Rendered: 2026-10-01T16:43:45+02:00 · ComfyUI 0.37.0 · output `tarot_flux_final_00743_.png`
 - Seed: 509155465
-- Models: `flux1-dev-fp8.safetensors`, `4x-UltraSharp.pth`, `sowtarot_woodcut-v1.safetensors` (LoRA, strength 1.0)
+- Models: `flux1-dev-fp8.safetensors`, `4x-UltraSharp.pth`, `sowtarot_woodcut-v1.safetensors` (LoRA, strength 1.0), `qwen_image_2.1_int8_convrot.safetensors`, `qwen3vl_8b_int8_convrot.safetensors`, `qwen_image_2.1_vae_bf16.safetensors`
 - Frame flags: `--art-crop 0.035 --paper 216,199,158 --ink 26,22,18 --margin-frac 0.020 --border-frac 0.008 --banner-frac 0.085`
 - Repair: sun/moon filled from the sky, no AI edit (box [360, 230, 620, 490], grow 14, thresh 18, 2026-10-03T23:23:27+02:00)
+- Repair: Remove the hourglass-shaped glass vessel on its round wooden base that stands on the ground at the lower right of <image1>, and the small yellow scrap lying on the street above it. Fill their place with what is around them: the dark shadow under the bench, the stone paving and the green grass. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [760, 1290, 1000, 1700], seed 3, output `tarot_qwen21_edit_00087_.png`, tone-matched, 2026-10-24T16:21:31+02:00)
+- Repair: Remove the soft grey smudge in the sky just below and left of the hanging ivy leaves at the top of <image1>. Fill its place with the same flat pale cream sky. Keep the ivy leaves exactly as they are. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [330, 180, 470, 320], seed 1, output `tarot_qwen21_edit_00088_.png`, tone-matched, 2026-10-24T16:22:26+02:00)
+- Repair: Remove the small yellow cloud in the blue-grey patch below the bench at the lower right of <image1>. Fill its place with the same smooth blue-grey colour. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [770, 1300, 826, 1341], seed 2, output `tarot_qwen21_edit_00102_.png`, tone-matched, 2026-10-24T16:38:25+02:00)
 
 ```json
 {
@@ -304,6 +307,405 @@ Written by `attach_image.py` with the image above. It holds everything needed to
       "grow": 14,
       "disc_pixels": 42956,
       "thresh": 18
+    },
+    {
+      "edited": "2026-10-24T16:21:31+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00087_.png",
+      "seed": 3,
+      "instruction": "Remove the hourglass-shaped glass vessel on its round wooden base that stands on the ground at the lower right of <image1>, and the small yellow scrap lying on the street above it. Fill their place with what is around them: the dark shadow under the bench, the stone paving and the green grass. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        760,
+        1290,
+        1000,
+        1700
+      ],
+      "feather": 24,
+      "tone_match": true,
+      "tone_offset": [
+        -0.0,
+        0.5,
+        0.0
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_b41c6158.png"
+          },
+          "is_changed": [
+            "9035919669916f692140e97939054440cc856f07d15cc11d0ce17d427815a329"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the hourglass-shaped glass vessel on its round wooden base that stands on the ground at the lower right of <image1>, and the small yellow scrap lying on the street above it. Fill their place with what is around them: the dark shadow under the bench, the stone paving and the green grass. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 3,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T16:22:26+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00088_.png",
+      "seed": 1,
+      "instruction": "Remove the soft grey smudge in the sky just below and left of the hanging ivy leaves at the top of <image1>. Fill its place with the same flat pale cream sky. Keep the ivy leaves exactly as they are. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        330,
+        180,
+        470,
+        320
+      ],
+      "feather": 24,
+      "tone_match": true,
+      "tone_offset": [
+        3.0,
+        8.9,
+        9.5
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_91fd2ed3.png"
+          },
+          "is_changed": [
+            "9035919669916f692140e97939054440cc856f07d15cc11d0ce17d427815a329"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the soft grey smudge in the sky just below and left of the hanging ivy leaves at the top of <image1>. Fill its place with the same flat pale cream sky. Keep the ivy leaves exactly as they are. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 1,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T16:38:25+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00102_.png",
+      "seed": 2,
+      "instruction": "Remove the small yellow cloud in the blue-grey patch below the bench at the lower right of <image1>. Fill its place with the same smooth blue-grey colour. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        770,
+        1300,
+        826,
+        1341
+      ],
+      "feather": 6,
+      "tone_match": true,
+      "tone_offset": [
+        16.5,
+        17.4,
+        9.3
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_988ea2d9.png"
+          },
+          "is_changed": [
+            "9035919669916f692140e97939054440cc856f07d15cc11d0ce17d427815a329"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the small yellow cloud in the blue-grey patch below the bench at the lower right of <image1>. Fill its place with the same smooth blue-grey colour. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 2,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
     }
   ]
 }
