@@ -20,10 +20,10 @@ joplin_note: "b8b3b5812d4147eb837b844e03904777"
 ## Visual Description
 
 ### Composition
-A young woman in a long russet dress with rolled sleeves stands at a round stone well in open grassland, drawing water. One hand grips the rope where it runs up to a wooden crossbeam; the other steadies a copper bucket that pours a stream of clear water back into the well. A small copper cup hangs below a hook on the beam, just above her raised hand. A bare old tree leans in from the left, its branches spreading across the sky. Low rolling hills lie behind her.
+A young woman in a long russet dress with rolled sleeves stands at a round stone well in open grassland, drawing water. One hand grips the rope where it runs up to a wooden crossbeam; the other steadies a copper bucket from which a stream of clear water falls back into the well. A small copper cup hangs below a hook on the beam, just above her raised hand. A bare old tree leans in from the left, its branches spreading across the sky. Low rolling hills lie behind her.
 
 ### Symbolism
-The well is the deep inner source: what sustains us lies below the surface and must be drawn up by deliberate effort. The rope is the work of reaching down and the trust that something waits there; the overflowing bucket is the reward, water brought up into the light. The hanging cup is readiness to share what is drawn. The crescent moon marks the hidden, intuitive side of wisdom; the bare tree is patience and endurance through dry seasons.
+The well is the deep inner source: what sustains us lies below the surface and must be drawn up by deliberate effort. The rope is the work of reaching down and the trust that something waits there; the bucket of water is the reward, water brought up into the light. The hanging cup is readiness to share what is drawn. The crescent moon marks the hidden, intuitive side of wisdom; the bare tree is patience and endurance through dry seasons.
 
 ### Atmosphere
 Twilight deepening into night: a dark teal sky with a thin crescent moon and the first stars. The grass still holds the last pale light. The mood is quiet, steady and reverent, the stillness of a daily act done with care.
