@@ -7,7 +7,7 @@ seed: 655743
 image_status: "present"
 prompt_status: "original"
 image: "card_the-root.png"
-clip: "the-root_code_v1.mp4"
+clip: "the-root_code_v2.mp4"
 joplin_note: "372d51d9c8e446a49e7ca1d004bc42b3"
 ---
 

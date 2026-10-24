@@ -1,3 +1,4 @@
-Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/glow.py
-python3 glow.py --art ../batch/the-root/art.png --title "The Root" --out root_glow_v1 --light root_gold.png --travel-from 512,950 --wavelength 300 --cycles 2 --tint 255,214,96 --bright 0.45 --dim-mult 0.8,0.64,0.42 --outer 0.22
-(art = tools/animate/batch/the-root/art.png; 96 frames at 24 fps; run in tools/animate/procedural; masks: card_the-root_gold.png = root_gold.png)
+Made in code, no AI model (2026-10-24); deck clip the-root_code_v2 replaces the-root_code_v1, which had been made from a different render (another kneeling figure and tree). Scripts: tools/animate/procedural/root_gold_v2_mask.py (cuts the mask from the art's gold colour), then tools/animate/procedural/glow.py
+python3 root_gold_v2_mask.py
+python3 glow.py --art ../batch/the-root/art.png --title "The Root" --out the-root_code_v2 --light root_gold_v2.png --travel-from 512,950 --wavelength 300 --cycles 2 --tint 255,214,96 --bright 0.45 --dim-mult 0.8,0.64,0.42 --outer 0.22
+(art = tools/animate/batch/the-root/art.png: the card's art (its record's comfy_file tarot_flux_final_00092_.png, copy in dropbox:Tarot/animations/source/procedural/the-root_full_art.png) trimmed 3.5 % per side and resized to 1024 x 1792, as frame_card.py --art-crop 0.035; 96 frames at 24 fps; run in tools/animate/procedural; mask: root_gold_v2.png from root_gold_v2_mask.py; the old root_gold.png was drawn round the other render)
