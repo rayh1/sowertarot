@@ -7,7 +7,7 @@ seed: 1130063091
 image_status: "present"
 prompt_status: "original"
 image: "card_the-spiral.png"
-clip: "the-spiral_code_v1.mp4"
+clip: "the-spiral_code_v2.mp4"
 joplin_note: "4b28373ab3304ca58611ef4364827f10"
 ---
 

@@ -1,3 +1,3 @@
-Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/falling_particles.py
-python3 falling_particles.py --art ../batch/the-spiral/art.png --title "The Spiral" --out spiral_snow_v1 --size 9 --outline 2 --count 90 --speed 1.6 --sway 8
-(art = tools/animate/batch/the-spiral/art.png; 96 frames at 24 fps; run in tools/animate/procedural)
+Made in code, no AI model (2026-10-24); deck clip the-spiral_code_v2 replaces the-spiral_code_v1, which had been made from a different render (another path edge, with small rings on it). Script: tools/animate/procedural/falling_particles.py
+python3 falling_particles.py --art ../batch/the-spiral/art.png --title "The Spiral" --out the-spiral_code_v2 --size 9 --outline 2 --count 90 --speed 1.6 --sway 8
+(art = tools/animate/batch/the-spiral/art.png: the card's art (its record's comfy_file tarot_flux_final_01418_.png with the recorded sun fill replayed by fill_disc.py --box 455,95,610,245 --grow 14 --thresh 18; copy in dropbox:Tarot/animations/source/procedural/the-spiral_full_art.png) trimmed 3.5 % per side and resized to 1024 x 1792, as frame_card.py --art-crop 0.035; 96 frames at 24 fps; run in tools/animate/procedural. The copies in dropbox:Tarot/seed-sheets/discs/the-spiral_*art.png are older renders, not this card)
