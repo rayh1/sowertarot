@@ -7,7 +7,7 @@ seed: 435889
 image_status: "present"
 prompt_status: "original"
 image: "card_the-forge.png"
-clip: "forge_5b_strong_s2.mp4"
+clip: "the-forge_5b_strong_s2_v2.mp4"
 joplin_note: "ff58830924384b6a96609a4fc19e7e10"
 ---
 
@@ -65,13 +65,15 @@ Style specifications:
 <details>
 <summary>Seed 435889 · tarot_flux_final_00066_.png — full render recipe</summary>
 
-Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first run its `workflow` on the unframed art and keep the result only inside `box` (soft edge `feather`), as `edit_card.py` does. The model files named below must exist in ComfyUI.
+Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file — `render_card.py --from-note "<title>"` does all of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first apply it to the unframed art: a Qwen edit runs its `workflow` and keeps the result only inside `box` (soft edge `feather`), then, if `tone_match` is true, evens the box's tone (`repair_tools.tone_match`), as `edit_card.py` does; a `method: fill_disc` entry fills the disc in `box` from the sky around it with its `grow`/`thresh` (`repair_tools.fill_disc`, no AI model); a `method: fill_halo` entry fills the light rim round the linework in `box` from the sky with its `grow` (`repair_tools.fill_halo`, no AI model). The model files named below must exist in ComfyUI.
 
 - Rendered: None · ComfyUI 0.35.0 or earlier · output `tarot_flux_final_00066_.png`
 - Seed: 435889
 - Models: `flux1-dev-fp8.safetensors`, `4x-UltraSharp.pth`, `sowtarot_woodcut-v1.safetensors` (LoRA, strength 1.0), `qwen_image_2.1_int8_convrot.safetensors`, `qwen3vl_8b_int8_convrot.safetensors`, `qwen_image_2.1_vae_bf16.safetensors`
 - Frame flags: `--art-crop 0.035 --paper 216,199,158 --ink 26,22,18 --margin-frac 0.020 --border-frac 0.008 --banner-frac 0.085`
 - Repair: Remove the gold star at the top of <image1>. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [380, 0, 660, 200], seed 1, output `tarot_qwen21_edit_00013_.png`, 2026-09-24T15:58:53+02:00)
+- Repair: Paint over everything drawn on the dark grey wall to the right of the stone arch in <image1>: the star with a face, the squiggles, the keyhole shape and the white dots, so this part of the wall is plain dark grey with faint vertical streaks like the rest of the wall. Keep the stone arch and the metal vase below exactly as they are. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [758, 570, 900, 805], seed 3, output `tarot_qwen21_edit_00126_.png`, tone-matched, 2026-10-24T17:46:21+02:00)
+- Repair: Replace the strange hoop-and-key shaped object hanging on the left wall of <image1> with a pair of long iron blacksmith's tongs hanging from a peg, drawn in the same woodcut style with black ink outlines, with the whole tongs visible down to the ends of their handles. Also remove the small white dot on the wall to its right. Fill around them with the same dark grey wall. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [60, 600, 285, 950], seed 1, output `tarot_qwen21_edit_00123_.png`, tone-matched, 2026-10-24T17:42:49+02:00)
 - Note: Backfilled 2026-09-24 from the ComfyUI output tarot_flux_final_00066_.png, matched to the attached image by pixel comparison (mean difference 1.2 on 0-255 after re-framing with these frame flags; next-best tarot_flux_final_00072_.png at 17.8). Render date unknown.
 
 ```json
@@ -358,6 +360,272 @@ Written by `attach_image.py` with the image above. It holds everything needed to
               0
             ],
             "prompt": "Remove the gold star at the top of <image1>. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 1,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T17:46:21+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00126_.png",
+      "seed": 3,
+      "instruction": "Paint over everything drawn on the dark grey wall to the right of the stone arch in <image1>: the star with a face, the squiggles, the keyhole shape and the white dots, so this part of the wall is plain dark grey with faint vertical streaks like the rest of the wall. Keep the stone arch and the metal vase below exactly as they are. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        758,
+        570,
+        900,
+        805
+      ],
+      "feather": 10,
+      "tone_match": true,
+      "tone_offset": [
+        2.7,
+        5.8,
+        4.7
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_4ddcffe9.png"
+          },
+          "is_changed": [
+            "6b3fbf15fa0787eb7ff3ededed3063625bf8d8af7707de81e6eae19769ff582b"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Paint over everything drawn on the dark grey wall to the right of the stone arch in <image1>: the star with a face, the squiggles, the keyhole shape and the white dots, so this part of the wall is plain dark grey with faint vertical streaks like the rest of the wall. Keep the stone arch and the metal vase below exactly as they are. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 3,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T17:42:49+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00123_.png",
+      "seed": 1,
+      "instruction": "Replace the strange hoop-and-key shaped object hanging on the left wall of <image1> with a pair of long iron blacksmith's tongs hanging from a peg, drawn in the same woodcut style with black ink outlines, with the whole tongs visible down to the ends of their handles. Also remove the small white dot on the wall to its right. Fill around them with the same dark grey wall. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        60,
+        600,
+        285,
+        950
+      ],
+      "feather": 24,
+      "tone_match": true,
+      "tone_offset": [
+        0.4,
+        1.0,
+        -0.2
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_21b32975.png"
+          },
+          "is_changed": [
+            "6b3fbf15fa0787eb7ff3ededed3063625bf8d8af7707de81e6eae19769ff582b"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Replace the strange hoop-and-key shaped object hanging on the left wall of <image1> with a pair of long iron blacksmith's tongs hanging from a peg, drawn in the same woodcut style with black ink outlines, with the whole tongs visible down to the ends of their handles. Also remove the small white dot on the wall to its right. Fill around them with the same dark grey wall. Keep everything else, including the woodcut linework and hatching, exactly the same.",
             "negative_prompt": "",
             "resolution": 0,
             "images.image_1": [
