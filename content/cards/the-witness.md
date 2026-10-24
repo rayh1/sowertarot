@@ -7,7 +7,7 @@ seed: 663885082
 image_status: "present"
 prompt_status: "original"
 image: "card_the-witness.png"
-clip: "the-witness_code_v1.mp4"
+clip: "the-witness_code_v2.mp4"
 joplin_note: "f195f911d574416c919fc5b9d115ea3f"
 ---
 
