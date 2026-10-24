@@ -20,13 +20,13 @@ joplin_note: "c820457ccdbe46878b89128c39be496a"
 ## Visual Description
 
 ### Composition
-A woman in a long dark-green gown walks along a pale stone path through a night garden, holding up a tall silver candelabra with five lit candles in one hand. White roses grow thickly on both sides of the path. Behind her the path leads back to a small stone chapel with a green door and a cross on its roof. Bare trees frame the starry sky.
+A woman in a long dark-green gown stands on a pale stone path through a night garden, holding up a tall silver candelabra with five lit candles in one hand. White roses grow thickly on both sides of the path. Behind her the path leads back to a small stone chapel with a green door and a cross on its roof. Bare trees frame the starry sky.
 
 ### Symbolism
-The candelabra is light carried out into the dark, many flames from one stem: many paths of understanding held together. The woman bearing it walks away from the chapel, taking the sacred light out into the world. The white roses are purity and devotion along the way. The night shows that this light matters most where it is darkest.
+The candelabra is light carried out into the dark, many flames from one stem: many paths of understanding held together. The woman bearing it stands with the chapel behind her: the sacred light has been carried out into the world. The white roses are purity and devotion along the way. The night shows that this light matters most where it is darkest.
 
 ### Atmosphere
-Deep night with a scattering of stars, lit only by the candles' warm glow. The mood is reverent, quiet and glowing.
+Deep night with a scattering of stars; the candles glow warm against the dark sky, and the garden below lies in a soft, pale light. The mood is reverent, quiet and glowing.
 
 ## Archetypal Essence
 

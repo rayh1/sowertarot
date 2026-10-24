@@ -20,10 +20,10 @@ joplin_note: "72cf6e06ef5349c0a94b14da7f3cdf48"
 ## Visual Description
 
 ### Composition
-A great bare oak stands alone in a frozen meadow, every branch and twig white with frost, its crown spreading wide across the sky. At its foot a small round pond is frozen over, its pale blue ice mirroring the tree. A robin with a bright red breast perches on a low frosted branch at the pond's edge. Frost-stiff grass and seed heads fill the foreground. A pale moon with a soft halo and two small stars shine in the blue-grey sky at the top right.
+A great bare oak stands alone in a pale meadow of dry winter grass, every branch and twig white with frost, its crown spreading wide across the sky. At its foot a small round pond is frozen over, its pale blue ice mirroring the tree. A robin with a bright red breast perches on a low bare branch at the pond's edge. Dry grass, bare twigs and dark seed heads fill the foreground. Small stars dot the blue-grey sky, the two brightest at the top left, and a round yellow moon with a soft halo shines at the top right.
 
 ### Symbolism
-The frost is preservation through stillness: the tree held perfectly in its winter state, waiting. The frozen pond is life paused, not ended, and the tree's reflection in the ice is that life held intact beneath the surface. The robin is warmth and life that endure through the cold. The fading moon and stars are night giving way to the first light of day.
+The frost is preservation through stillness: the tree held perfectly in its winter state, waiting. The frozen pond is life paused, not ended, and the tree's reflection in the ice is that life held intact beneath the surface. The robin is warmth and life that endure through the cold. The moon and the last stars are night giving way to the first light of day.
 
 ### Atmosphere
 First light of a winter morning, the sky shading from blue-grey to pale cream at the horizon. The mood is hushed, crystalline and motionless.

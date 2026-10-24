@@ -20,10 +20,10 @@ joplin_note: "a6ac13e2d477423a94ac99956de3df6b"
 ## Visual Description
 
 ### Composition
-A woman in a loose yellow linen shift stands barefoot on a flat rock at the edge of a calm lake, one hand resting on her chest, her face lifted. Reeds grow at the water's edge, and wooded blue hills line the far shore. A golden crescent moon hangs in a pale cream sky.
+A woman in a loose yellow linen shift stands barefoot on a flat rock at the edge of a calm lake, both hands pressed together at her chest, her face lifted. Reeds grow at the water's edge, and wooded blue hills line the far shore. An orange crescent moon hangs in a pale cream sky.
 
 ### Symbolism
-The hand on the chest is attention to the breath, the simplest way back to the present moment. The still lake is the calm that follows. The rock beneath her bare feet is grounding: being fully here, in the body. The fading crescent moon is the quiet between night and day, a pause like the pause between breaths.
+The hands pressed together at her chest are attention to the breath, the simplest way back to the present moment. The still lake is the calm that follows. The rock beneath her bare feet is grounding: being fully here, in the body. The fading crescent moon is the quiet between night and day, a pause like the pause between breaths.
 
 ### Atmosphere
 Early morning, a soft cream and pale peach sky. The mood is still, peaceful and present.

@@ -20,10 +20,10 @@ joplin_note: "a0ece8c6d6e94d838428ca2f6547daa1"
 ## Visual Description
 
 ### Composition
-A small round shrine of white stone with a plain dome and a small round knob on top stands among tall dark cypresses. In its open arched doorway an old keeper with a white beard, in a plain undyed habit, stands facing us and raises a lit oil lamp in welcome, warm golden light glowing from the room behind him. Worn stone steps lead down toward us. White climbing roses grow beside the doorway, and a stone basin stands beside the steps.
+A small round shrine of white stone with a plain dome and a small round knob on top stands among tall dark cypresses. In its open arched doorway an old keeper with a white beard, in a plain undyed habit, stands facing us and raises a small flame on a short handle in welcome, warm golden light glowing from the room behind him. Worn stone steps lead down toward us. Tall stems of white roses grow beside the walls, and a stone basin stands beside the steps.
 
 ### Symbolism
-The sanctuary is refuge: a place set apart where the weary can rest and be restored. The keeper facing us with his lamp raised is welcome freely given, the host who waits for the traveller. The steps are the last effort of the journey before rest. The basin of water is cleansing and renewal. The cypresses, evergreen and watchful, are protection and endurance.
+The sanctuary is refuge: a place set apart where the weary can rest and be restored. The keeper facing us with his flame raised is welcome freely given, the host who waits for the traveller. The steps are the last effort of the journey before rest. The basin of water is cleansing and renewal. The cypresses, evergreen and watchful, are protection and endurance.
 
 ### Atmosphere
 Evening, a rose and violet sky behind the dark trees, warm light from the doorway. The mood is safe, welcoming and peaceful.

@@ -26,7 +26,7 @@ A vast flock of starlings sweeps low over a winter marsh, thousands of small dar
 The murmuration is the many moving as one: no leader, yet a single living shape. The spiral the flock draws is emergent order, beauty that no single bird intends but all create together. With no watcher in the scene, the card asks the viewer to stand in the marsh and see their own place within a larger whole. The winding stream is the path that leads the eye from the ground into that whole.
 
 ### Atmosphere
-Winter dusk, a cream and pale-gold sky above the reeds. The mood is awed, open and connected.
+Winter dusk, grey-green cloud across the upper sky, cream and pale gold above the reeds. The mood is awed, open and connected.
 
 ## Archetypal Essence
 

@@ -20,7 +20,7 @@ joplin_note: "ddc8ad1f05804cb0a5b773286f021f21"
 ## Visual Description
 
 ### Composition
-A young woman in a long red woollen dress, her hair in a long braid, sits on a low wooden stool weaving at a tall upright wooden loom outside a stone cottage with a red-tiled roof. She passes a ball of blue yarn through the warp; the cloth on the loom shows bands of red, yellow and blue above a small woven sun. Baskets of coloured yarn stand at her feet, and green hills roll away behind her under a soft blue-grey sky.
+A young woman in a long red woollen dress, her hair in a long braid, sits on a low wooden stool weaving at a tall upright wooden loom outside a stone cottage with a red-tiled roof. She holds a ball of blue yarn and a thin stick up to the warp; the cloth on the loom shows bands of red, yellow and blue above a small woven sun. Baskets of coloured yarn stand at her feet, and green hills roll away behind her under a soft blue-grey sky.
 
 ### Symbolism
 The weaver is the maker of patterns: each thread small on its own, together forming a whole that none of them could make alone. The loom is the structure that holds the work, the warp of what is given, the weft of what we add. The bands of colour are the different strands of a life woven together. The baskets of yarn are possibility still waiting to be used.

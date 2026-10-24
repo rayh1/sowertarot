@@ -20,13 +20,13 @@ joplin_note: "a0c4955c6d364779a979c9a75b8e4153"
 ## Visual Description
 
 ### Composition
-A hooded ferryman stands at the stern of a long flat wooden boat, poling across a wide, still river at dusk. The near bank is thick with tall reeds; the far shore shows low hills and a pale rising moon. The boat is centered, moving from the viewer's bank toward the far one; the water is glassy and calm.
+A hooded ferryman stands in a long flat wooden boat on a wide river at dusk, a long pole in his hands, facing the far shore. The near bank is bare sand and boulders, edged with tall reeds; the far shore shows golden reeds and low hills, and a full pale moon hangs high above. The boat rests with its near end on the viewer's bank, its bow pointing toward the far one; the water is rippled and silvered by the moon. A large gold coin lies on the deck.
 
 ### Symbolism
-The still water is the threshold between one state and the next. The pole in another's hands marks passage entrusted to a guide rather than taken alone. A single coin resting on the gunwale is the fare — the price every crossing asks. The reeds are the liminal edge; dusk is the hour of transition; the far bank, half-seen, is the unknown destination.
+The water is the threshold between one state and the next. The pole in another's hands marks passage entrusted to a guide rather than taken alone. A single coin resting on the deck is the fare — the price every crossing asks. The reeds are the liminal edge; dusk is the hour of transition; the far bank, half-seen, is the unknown destination.
 
 ### Atmosphere
-Hushed dusk, mist lying low on the water, the air still and cool. Solemn, calm, and weighted — the quiet of a passage underway.
+Hushed dusk under a full moon, the air still and cool. Solemn, calm, and weighted — the quiet of a passage about to begin.
 
 ## Archetypal Essence
 

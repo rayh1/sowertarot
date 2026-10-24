@@ -20,7 +20,7 @@ joplin_note: "f195f911d574416c919fc5b9d115ea3f"
 ## Visual Description
 
 ### Composition
-An old man in a grey woollen habit with a rope belt sits on a low stone bench beneath a great tree at the edge of a clearing, hands resting in his lap, watching. Before him a red fox stands in the grass, and further off a stag grazes beside a still pool. An owl sits on a high branch above him, as still as he is. A few dry leaves drift down through the air. Bare trees frame the scene, and beyond them low hills stretch toward the horizon.
+An old man in a grey woollen habit with an orange-gold sash sits on a low stone bench beneath a great tree at the edge of a clearing, hands resting in his lap, watching. Before him a red fox stands in the grass, and further off a stag grazes beside a still pool. An owl sits on a high branch above him, as still as he is. A few dry leaves drift down through the air. Bare trees frame the scene, and beyond them low hills stretch toward the horizon.
 
 ### Symbolism
 The seated man is pure attention: present, unmoving, taking everything in without interfering. The fox and the stag go about their lives unafraid, because he does not grasp at them. The owl repeats his watchfulness from above, wisdom that sees in silence. The still pool reflects without distortion, as clear awareness does. The falling leaves are time passing while the witness remains.

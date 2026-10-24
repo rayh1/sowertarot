@@ -20,7 +20,7 @@ joplin_note: "1455e0367106471b97c7225367798394"
 ## Visual Description
 
 ### Composition
-A perfectly still mountain lake lies between steep peaks whose snow glows pink, and the peaks are mirrored upside down in its glassy surface, so the far shore and its reflection meet in one line across the middle of the card. Dark pines stand on the right bank and are reflected too. In the foreground two white water lilies open on broad green pads near a shore of smooth grey stones. Pink clouds drift in a pale cream sky.
+A perfectly still mountain lake lies between steep grey peaks capped with white snow, and only the far peaks at the centre glow pink; the peaks are mirrored upside down in its glassy surface, so the far shore and its reflection meet in one line across the middle of the card. Dark pines stand on both banks and are reflected too. In the foreground two white water lilies open on broad green pads between two large brown boulders and a few pebbles. Pink clouds drift in a pale cream sky.
 
 ### Symbolism
 The mirror lake is the still mind: only when the water is calm does it show the world truly. The doubled peaks show the outer world and its reflection as equal halves. With no figure, the lake itself is the one who sees. The lilies, rooted in mud yet opening clean on the surface, are clarity that grows out of depth.

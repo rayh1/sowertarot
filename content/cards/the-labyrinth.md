@@ -20,10 +20,10 @@ joplin_note: "00ff2218166d4c9aa791ac849be13a8d"
 ## Visual Description
 
 ### Composition
-Seen from high above, a great round labyrinth of dark clipped yew hedges fills the card, its narrow pale paths turning in concentric rings toward the centre. At the heart, in a small round clearing, grows a single rose bush heavy with golden blooms, a red thread lying at its foot. At the bottom of the card a young man in a green tunic walks in through the entrance. Fallen autumn leaves are scattered along the paths.
+Seen from high above, a great round labyrinth of clipped hedges, pale green on top and dark at the sides, fills the card, its narrow pale paths turning in concentric rings toward the centre; near the top the rings break into straight, blocky hedges. At the heart, in a small round clearing, grows a single small tree with a round golden crown, a red thread lying at its foot. At the bottom of the card a young man in a pale grey-green tunic walks in through the entrance. Fallen autumn leaves are scattered along the paths.
 
 ### Symbolism
-The hedges are the winding, enclosed path of life, whose pattern can be seen only from above. The view from the air is the card's gift: the whole way laid out, which the walker can only live through on foot. The red thread is memory and trust, the line that keeps him from being wholly lost. The golden rose at the heart is the centre that waits to be found, wholeness reached by walking rather than solving.
+The hedges are the winding, enclosed path of life, whose pattern can be seen only from above. The view from the air is the card's gift: the whole way laid out, which the walker can only live through on foot. The red thread is memory and trust, the line that keeps him from being wholly lost. The golden tree at the heart is the centre that waits to be found, wholeness reached by walking rather than solving.
 
 ### Atmosphere
 Soft, even daylight over muted greens. The mood is contemplative and searching, alone but not afraid.

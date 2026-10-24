@@ -20,10 +20,10 @@ joplin_note: "5b51f24f8e324adcabd5de73161d74b0"
 ## Visual Description
 
 ### Composition
-Three travellers meet at a tall grey standing stone where three dirt roads join in a golden meadow. On the left an old shepherd with grey hair in a long brown robe leans on his crook; in the middle a young woman in a saffron cloak and hood rests her hand on the stone; on the right a fisherman in a blue knitted jersey and a cap reaches toward it, a basket of bread in his other hand. Behind them the roads lead away to grey mountains on the left and a far strip of sea. An even, overcast cream sky fills the top of the card.
+Three travellers meet at a tall grey standing stone where a dirt road parts around it and joins again in a golden meadow. On the left an old shepherd with grey hair in a long brown robe stands with a plain wooden staff at his side; in the middle a young woman in a saffron cloak and hood rests her hand on the stone; on the right a fisherman in a blue knitted jersey and a cap reaches toward it, a basket of bread in his other hand. Behind them the road leads away toward a far strip of sea, with grey mountains on the left. An even, overcast cream sky fills the top of the card.
 
 ### Symbolism
-The three roads are the separate streams of a life, or of different lives, coming together. Shepherd, woman and fisherman come from mountain, field and sea: unlike lives that meet as equals. The standing stone is the shared centre, the point where every path is visible; their hands reaching toward it are the moment of meeting itself. The bread is what each brings to share.
+The two ways around the stone, joining again into one road, are the separate streams of a life, or of different lives, coming together. Shepherd, woman and fisherman come from mountain, field and sea: unlike lives that meet as equals. The standing stone is the shared centre, the point where every path is visible; their hands reaching toward it are the moment of meeting itself. The bread is what each brings to share.
 
 ### Atmosphere
 A soft, even light under a quiet overcast sky, the meadow warm and golden. The mood is warm and whole, a moment of meeting and recognition.

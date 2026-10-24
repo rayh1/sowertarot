@@ -19,11 +19,11 @@ joplin_note: "ff58830924384b6a96609a4fc19e7e10"
 
 ## Visual Description
 
-A muscular figure stands before a roaring forge, their face illuminated by orange and crimson flames that dance within a stone hearth. The blacksmith holds a glowing piece of metal on an anvil with iron tongs, their other hand raising a heavy hammer mid-strike. Sparks cascade like golden rain, frozen in mid-air, each one catching the firelight. The blacksmith wears a leather apron scarred with burn marks and years of labor, their bare arms showing both strength and old scars—testaments to lessons learned through pain.
+A muscular figure stands before a roaring forge, their face illuminated by orange and crimson flames that dance within a tall arched stone hearth. The blacksmith holds a glowing piece of metal on an anvil with iron tongs, their other hand holding a heavy hammer ready at chest height. Sparks cascade like golden rain, frozen in mid-air, each one catching the firelight. The blacksmith wears a leather apron scarred with burn marks and years of labor, their bare arms showing both strength and old scars—testaments to lessons learned through pain.
 
-Behind the forge, tools hang in perfect order on the wall: hammers of various sizes, tongs, chisels, and files, each worn smooth by countless hands. To the left, a bucket of water steams where hot metal has been quenched, its surface rippling in concentric circles. To the right, completed works rest on a wooden table—a sword, a key, a horseshoe, and a delicate iron rose—showing the range from practical to beautiful.
+To the right, a tall brass jar holding two iron rods stands on the bench beside the hearth, and a single small iron tool rests on a wooden table.
 
-Through an arched doorway in the background, dawn breaks over distant mountains, its cool blue light contrasting sharply with the forge's warm glow. A leather bellows hangs beside the forge, and scattered coals glow ruby-red on the stone floor. The overall atmosphere is one of intense heat, focused concentration, and purposeful creation. Smoke rises in spirals, carrying with it the scent of transformation.
+A great stone arch vaults over the dim grey workshop, lit by the forge's warm glow, and firelight glows ruby-red between the flagstones of the floor. The overall atmosphere is one of intense heat, focused concentration, and purposeful creation.
 
 ## Archetypal Essence
 

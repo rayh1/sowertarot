@@ -20,13 +20,13 @@ joplin_note: "3928ce57f90448b090c9fe217d270ada"
 ## Visual Description
 
 ### Composition
-A young traveller in a long grey hooded cloak and tall leather boots stands on a rocky summit, holding an open brass compass on his palm. Below him a broad river winds between steep mountain ridges toward a distant sea. A single bright star shines in the deep blue sky above, and golden clouds glow along the horizon.
+A young traveller in a long grey hooded cloak and tall leather boots stands on a rocky summit, holding an open brass compass on his palm. Below him a broad river winds between steep mountain ridges toward a distant sea. A single bright star shines among many small stars in the deep teal-green sky above, and golden clouds glow along the horizon.
 
 ### Symbolism
-The compass is inner guidance made visible: direction found by steadiness rather than by seeing the whole way. The single bright star is the fixed point to steer by. The winding river below is the path of life, never straight but always moving toward the sea. The summit is the moment of overview, where one can see where to go next.
+The compass is inner guidance made visible: direction found by steadiness rather than by seeing the whole way. The single bright star, brighter than all the others, is the fixed point to steer by. The winding river below is the path of life, never straight but always moving toward the sea. The summit is the moment of overview, where one can see where to go next.
 
 ### Atmosphere
-Twilight, the sky deepening to blue overhead with gold at the horizon. The mood is focused and certain.
+Twilight, the sky deepening to teal-green overhead with gold at the horizon. The mood is focused and certain.
 
 ## Archetypal Essence
 

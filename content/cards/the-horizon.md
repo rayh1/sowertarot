@@ -20,10 +20,10 @@ joplin_note: "b5e641caf3f3418aa73d8d5d06987a95"
 ## Visual Description
 
 ### Composition
-A young woman in a long sky-blue hooded cloak stands on a grassy ridge with her back to us, gazing out at a vast golden plain that stretches to a flat horizon. A round orange sun rests on the horizon line. Four dark birds fly high on the right, and a single bright four-pointed evening star shines in the upper left. Pale boulders lie in the amber grass at her feet, and a rocky outcrop rises on the right.
+A young woman in a long sky-blue hooded cloak stands on a grassy clifftop, half turned from us with her face in profile, gazing out at a vast, softly rippled golden sea that stretches to a flat horizon. A round orange sun rests on the horizon line. Four dark birds fly high on the right, and a single bright four-pointed evening star shines in the upper left. Pale boulders lie in the amber grass at her feet, and a rocky outcrop rises on the right.
 
 ### Symbolism
-The horizon is the boundary of what can be seen: the place where the known meets the unknown and keeps moving as we approach it. The setting sun resting on it is an ending that also promises a return. The evening star is the first light of what comes next. Her stillness and the open land before her are longing and possibility, the sense of a life larger than the present view.
+The horizon is the boundary of what can be seen: the place where the known meets the unknown and keeps moving as we approach it. The setting sun resting on it is an ending that also promises a return. The evening star is the first light of what comes next. Her stillness and the open sea before her are longing and possibility, the sense of a life larger than the present view.
 
 ### Atmosphere
 Sunset, the sky shading from deep violet overhead to warm gold at the horizon. The mood is still, longing and open.
