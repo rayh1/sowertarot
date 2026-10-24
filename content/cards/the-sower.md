@@ -20,7 +20,7 @@ joplin_note: "c820533f03e4468990f476f74fd97c3d"
 ## Visual Description
 
 ### Composition
-A lone figure stands, back to us, in a freshly tilled field on a hazy morning, one arm swept wide mid-cast, scattering an arc of golden seed that falls onto the furrows to his right. A large pale-gold sun hangs in the hazy sky. Deep plowed furrows recede toward a low horizon. A single bare tree stands at the field's edge; birds wheel overhead. The figure is centered and still, feet together between the furrows.
+A lone figure stands, back to us, in a freshly tilled field on a hazy morning, one arm swept wide mid-cast, scattering an arc of golden seed through the air. A large pale-gold sun hangs in the hazy sky. Deep plowed furrows recede toward a low horizon. A single bare tree stands at the field's edge; birds wheel overhead. The figure is centered and still, feet together between the furrows.
 
 ### Symbolism
 The golden seed is potential — faith in an unseen future harvest. The open furrows are prepared, receptive ground. The wide-armed gesture is generosity: casting without control over where each seed lands. Some seed will land where nothing grows — not all will take root. Morning marks a beginning; the wheeling birds are chance and risk. Earthy palette: tilled umber soil, sage field, gold seed, pale morning sun.
