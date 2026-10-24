@@ -7,7 +7,7 @@ seed: 723914775
 image_status: "present"
 prompt_status: "original"
 image: "card_the-veil.png"
-clip: "the-veil_code_v2.mp4"
+clip: "the-veil_code_v3.mp4"
 joplin_note: "6d3d5d979df64714883c4fca279cec12"
 ---
 
