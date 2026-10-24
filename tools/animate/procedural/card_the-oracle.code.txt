@@ -1,3 +1,4 @@
-Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/glow.py
-python3 glow.py --art ../batch/the-oracle/art.png --title "The Oracle" --out oracle_twinkle_v1 --twinkle 320,20,720,800
-(art = tools/animate/batch/the-oracle/art.png; 96 frames at 24 fps; run in tools/animate/procedural)
+Made in code, no AI model (2026-10-24); deck clip the-oracle_code_v3 replaces the-oracle_code_v1 after the picture repair (the golden vessel became a crystal orb; stray ball, teardrop stars, gold dots and can removed): the stars twinkle as before and the orb pulses twice per clip, its glow falling on her hands. Scripts: tools/animate/procedural/oracle_orb_v2_mask.py (cuts the orb mask from the art), then tools/animate/procedural/glow.py
+python3 oracle_orb_v2_mask.py
+python3 glow.py --art ../batch/the-oracle/art.png --title "The Oracle" --out the-oracle_code_v3 --twinkle 320,20,720,800 --light oracle_orb_v2.png --pulse 2 --tint 255,248,220 --bright 0.8 --dim 0.32 --outer 0.95 --outer-size 45
+(art = tools/animate/batch/the-oracle/art.png: the card's repaired art (copy in dropbox:Tarot/animations/source/procedural/the-oracle_full_art.png) trimmed 3.5 % per side and resized to 1024 x 1792, as frame_card.py --art-crop 0.035; 96 frames at 24 fps; run in tools/animate/procedural; mask: oracle_orb_v2.png from oracle_orb_v2_mask.py)

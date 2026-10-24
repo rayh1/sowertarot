@@ -7,7 +7,7 @@ seed: 314159
 image_status: "present"
 prompt_status: "original"
 image: "card_the-oracle.png"
-clip: "the-oracle_code_v1.mp4"
+clip: "the-oracle_code_v3.mp4"
 joplin_note: "4f5261195a5246d59e0896846b516063"
 ---
 
@@ -46,13 +46,24 @@ A seated woman at the center on a simple stone dais, framed between two tall sto
 <details>
 <summary>Seed 314159 · tarot_flux_final_00035_.png — full render recipe</summary>
 
-Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first run its `workflow` on the unframed art and keep the result only inside `box` (soft edge `feather`), as `edit_card.py` does. The model files named below must exist in ComfyUI.
+Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file — `render_card.py --from-note "<title>"` does all of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first apply it to the unframed art: a Qwen edit runs its `workflow` and keeps the result only inside `box` (soft edge `feather`), then, if `tone_match` is true, evens the box's tone (`repair_tools.tone_match`), as `edit_card.py` does; a `method: fill_disc` entry fills the disc in `box` from the sky around it with its `grow`/`thresh` (`repair_tools.fill_disc`, no AI model); a `method: fill_halo` entry fills the light rim round the linework in `box` from the sky with its `grow` (`repair_tools.fill_halo`, no AI model). The model files named below must exist in ComfyUI.
 
 - Rendered: None · ComfyUI 0.35.0 or earlier · output `tarot_flux_final_00035_.png`
 - Seed: 314159
 - Models: `flux1-dev-fp8.safetensors`, `4x-UltraSharp.pth`, `sowtarot_woodcut-v1.safetensors` (LoRA, strength 1.0), `qwen_image_2.1_int8_convrot.safetensors`, `qwen3vl_8b_int8_convrot.safetensors`, `qwen_image_2.1_vae_bf16.safetensors`
 - Frame flags: `--art-crop 0.035 --paper 216,199,158 --ink 26,22,18 --margin-frac 0.020 --border-frac 0.008 --banner-frac 0.085`
 - Repair: Remove the thin hanging line with the small pendulum at the top center of <image1>. Fill its place with the same dark night sky. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [470, 36, 560, 270], seed 1, output `tarot_qwen21_edit_00014_.png`, 2026-09-24T16:00:00+02:00)
+- Repair: Change the three small white teardrop-shaped specks in the dark teal sky into small four-pointed white stars, like the other four-pointed stars in the sky. Fill around them with the same dark teal night sky. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [370, 85, 650, 360], seed 2, output `tarot_qwen21_edit_00166_.png`, tone-matched, 2026-10-24T22:04:03+02:00)
+- Repair: Remove the small white ball on a thin pin in the dark teal sky. Fill its place with the same plain dark teal night sky. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [555, 625, 690, 760], seed 2, output `tarot_qwen21_edit_00169_.png`, tone-matched, 2026-10-24T22:06:53+02:00)
+- Repair: Remove the small white tin can with the gold label standing on the stone floor. Fill its place with the same pale stone floor tiles and their dark joint lines. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [672, 1545, 812, 1722], seed 1, output `tarot_qwen21_edit_00171_.png`, tone-matched, 2026-10-24T22:08:54+02:00)
+- Repair: Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [182, 869, 218, 905], seed 1, output `tarot_qwen21_edit_00180_.png`, tone-matched, 2026-10-24T22:20:34+02:00)
+- Repair: Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [195, 1118, 231, 1154], seed 1, output `tarot_qwen21_edit_00180_.png`, tone-matched, 2026-10-24T22:20:34+02:00)
+- Repair: Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [852, 252, 888, 288], seed 1, output `tarot_qwen21_edit_00180_.png`, tone-matched, 2026-10-24T22:20:34+02:00)
+- Repair: Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [848, 486, 884, 522], seed 1, output `tarot_qwen21_edit_00180_.png`, tone-matched, 2026-10-24T22:20:34+02:00)
+- Repair: Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [922, 687, 958, 723], seed 1, output `tarot_qwen21_edit_00180_.png`, tone-matched, 2026-10-24T22:20:34+02:00)
+- Repair: Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [861, 829, 897, 865], seed 1, output `tarot_qwen21_edit_00180_.png`, tone-matched, 2026-10-24T22:20:34+02:00)
+- Repair: Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [860, 1182, 896, 1218], seed 1, output `tarot_qwen21_edit_00180_.png`, tone-matched, 2026-10-24T22:20:34+02:00)
+- Repair: Replace the golden vessel held in her hands with a small round glowing crystal orb resting in her clasped hands in her lap. The orb is clear pale crystal with a soft white inner light, drawn with black ink outlines, and its pale glow falls softly on her hands. Keep her hands, her red robe, the turquoise pendant and the scroll. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [405, 1112, 640, 1322], seed 2, output `tarot_qwen21_edit_00163_.png`, tone-matched, 2026-10-24T22:01:18+02:00)
 - Note: Backfilled 2026-09-24 from the ComfyUI output tarot_flux_final_00035_.png, matched to the attached image by pixel comparison (mean difference 1.4 on 0-255 after re-framing with these frame flags; next-best tarot_flux_final_00096_.png at 2.7). Render date unknown.
 
 ```json
@@ -367,6 +378,1469 @@ Written by `attach_image.py` with the image above. It holds everything needed to
               2
             ],
             "seed": 1,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T22:04:03+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00166_.png",
+      "seed": 2,
+      "instruction": "Change the three small white teardrop-shaped specks in the dark teal sky into small four-pointed white stars, like the other four-pointed stars in the sky. Fill around them with the same dark teal night sky. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        370,
+        85,
+        650,
+        360
+      ],
+      "feather": 24,
+      "tone_match": true,
+      "tone_offset": [
+        6.5,
+        2.6,
+        1.6
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_dc76c57f.png"
+          },
+          "is_changed": [
+            "9df10ec0cc2ed92ccd2296cb0868e24f2a8fe256f1e7a6b4ee0b180c47231771"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Change the three small white teardrop-shaped specks in the dark teal sky into small four-pointed white stars, like the other four-pointed stars in the sky. Fill around them with the same dark teal night sky. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 2,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T22:06:53+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00169_.png",
+      "seed": 2,
+      "instruction": "Remove the small white ball on a thin pin in the dark teal sky. Fill its place with the same plain dark teal night sky. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        555,
+        625,
+        690,
+        760
+      ],
+      "feather": 24,
+      "tone_match": true,
+      "tone_offset": [
+        6.7,
+        4.5,
+        4.0
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_1d2c4df8.png"
+          },
+          "is_changed": [
+            "9df10ec0cc2ed92ccd2296cb0868e24f2a8fe256f1e7a6b4ee0b180c47231771"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the small white ball on a thin pin in the dark teal sky. Fill its place with the same plain dark teal night sky. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 2,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T22:08:54+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00171_.png",
+      "seed": 1,
+      "instruction": "Remove the small white tin can with the gold label standing on the stone floor. Fill its place with the same pale stone floor tiles and their dark joint lines. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        672,
+        1545,
+        812,
+        1722
+      ],
+      "feather": 8,
+      "tone_match": true,
+      "tone_offset": [
+        1.7,
+        2.0,
+        -0.9
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_873dba96.png"
+          },
+          "is_changed": [
+            "9df10ec0cc2ed92ccd2296cb0868e24f2a8fe256f1e7a6b4ee0b180c47231771"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the small white tin can with the gold label standing on the stone floor. Fill its place with the same pale stone floor tiles and their dark joint lines. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 1,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T22:20:34+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00180_.png",
+      "seed": 1,
+      "instruction": "Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        182,
+        869,
+        218,
+        905
+      ],
+      "feather": 6,
+      "tone_match": true,
+      "tone_offset": [
+        0.0,
+        1.9,
+        -9.8
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_94289cb1.png"
+          },
+          "is_changed": [
+            "9df10ec0cc2ed92ccd2296cb0868e24f2a8fe256f1e7a6b4ee0b180c47231771"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 1,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T22:20:34+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00180_.png",
+      "seed": 1,
+      "instruction": "Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        195,
+        1118,
+        231,
+        1154
+      ],
+      "feather": 6,
+      "tone_match": true,
+      "tone_offset": [
+        -26.9,
+        -20.7,
+        -20.7
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_94289cb1.png"
+          },
+          "is_changed": [
+            "9df10ec0cc2ed92ccd2296cb0868e24f2a8fe256f1e7a6b4ee0b180c47231771"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 1,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T22:20:34+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00180_.png",
+      "seed": 1,
+      "instruction": "Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        852,
+        252,
+        888,
+        288
+      ],
+      "feather": 6,
+      "tone_match": true,
+      "tone_offset": [
+        -5.4,
+        -4.5,
+        -14.7
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_94289cb1.png"
+          },
+          "is_changed": [
+            "9df10ec0cc2ed92ccd2296cb0868e24f2a8fe256f1e7a6b4ee0b180c47231771"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 1,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T22:20:34+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00180_.png",
+      "seed": 1,
+      "instruction": "Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        848,
+        486,
+        884,
+        522
+      ],
+      "feather": 6,
+      "tone_match": true,
+      "tone_offset": [
+        -28.9,
+        -32.9,
+        -51.2
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_94289cb1.png"
+          },
+          "is_changed": [
+            "9df10ec0cc2ed92ccd2296cb0868e24f2a8fe256f1e7a6b4ee0b180c47231771"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 1,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T22:20:34+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00180_.png",
+      "seed": 1,
+      "instruction": "Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        922,
+        687,
+        958,
+        723
+      ],
+      "feather": 6,
+      "tone_match": true,
+      "tone_offset": [
+        8.9,
+        4.8,
+        -10.5
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_94289cb1.png"
+          },
+          "is_changed": [
+            "9df10ec0cc2ed92ccd2296cb0868e24f2a8fe256f1e7a6b4ee0b180c47231771"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 1,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T22:20:34+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00180_.png",
+      "seed": 1,
+      "instruction": "Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        861,
+        829,
+        897,
+        865
+      ],
+      "feather": 6,
+      "tone_match": true,
+      "tone_offset": [
+        -17.8,
+        -24.0,
+        -44.8
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_94289cb1.png"
+          },
+          "is_changed": [
+            "9df10ec0cc2ed92ccd2296cb0868e24f2a8fe256f1e7a6b4ee0b180c47231771"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 1,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T22:20:34+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00180_.png",
+      "seed": 1,
+      "instruction": "Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        860,
+        1182,
+        896,
+        1218
+      ],
+      "feather": 6,
+      "tone_match": true,
+      "tone_offset": [
+        -9.7,
+        -10.2,
+        -18.5
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_94289cb1.png"
+          },
+          "is_changed": [
+            "9df10ec0cc2ed92ccd2296cb0868e24f2a8fe256f1e7a6b4ee0b180c47231771"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the small round gold dots that float on the two grey stone columns, apart from the ivy. Fill their places with the same pale grey stone and its vertical black hatching. Keep the golden ivy leaves and stems. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 1,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T22:01:18+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00163_.png",
+      "seed": 2,
+      "instruction": "Replace the golden vessel held in her hands with a small round glowing crystal orb resting in her clasped hands in her lap. The orb is clear pale crystal with a soft white inner light, drawn with black ink outlines, and its pale glow falls softly on her hands. Keep her hands, her red robe, the turquoise pendant and the scroll. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        405,
+        1112,
+        640,
+        1322
+      ],
+      "feather": 6,
+      "tone_match": true,
+      "tone_offset": [
+        5.4,
+        -2.9,
+        -1.4
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_fd96a342.png"
+          },
+          "is_changed": [
+            "9df10ec0cc2ed92ccd2296cb0868e24f2a8fe256f1e7a6b4ee0b180c47231771"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Replace the golden vessel held in her hands with a small round glowing crystal orb resting in her clasped hands in her lap. The orb is clear pale crystal with a soft white inner light, drawn with black ink outlines, and its pale glow falls softly on her hands. Keep her hands, her red robe, the turquoise pendant and the scroll. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 2,
             "steps": 40,
             "cfg": 1.0,
             "sampler_name": "euler",
