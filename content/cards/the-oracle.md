@@ -21,15 +21,15 @@ joplin_note: "4f5261195a5246d59e0896846b516063"
 
 ### Composition
 
-A seated figure sits at the center of the card on a simple stone dais, framed between two tall stone columns draped with climbing ivy. Her eyes are closed, her face turned slightly downward, posture still and inward. A delicate golden diadem crosses her brow, set with a single turquoise gem at the center — the third eye, open in the realm of intuition. In her lap, held lightly in her right hand, rests a glowing crystal orb; across her thigh her left hand holds a partially unrolled scroll inscribed in an ancient, unreadable hand.
+A seated figure sits at the center of the card on a simple stone dais, framed between two tall stone columns draped with climbing golden ivy. Her eyes are closed, her face turned slightly downward, posture still and inward. A delicate golden diadem crosses her brow, set with a single white gem at the center — the third eye, open in the realm of intuition. A turquoise stone hangs on a pendant at her chest. Her clasped hands hold a glowing crystal orb in her lap; beneath them a rolled scroll inscribed in an ancient, unreadable hand lies across her knees.
 
 ### Symbolism
 
-The deep red robe signals rooted spiritual vitality — power drawn from within rather than performed outward. The twin stone columns evoke a threshold between worlds, an architectural echo of the liminal. The climbing vines soften stone with time: wisdom entwined with living patience. The turquoise gem is specifically a stone of inner seeing. The crystal orb in her lap is the card's only light source — the figure herself does not glow; her knowing does. The closed eyes insist that this seer does not look *out* to find truth. The unreadable scroll suggests that answers arrive not as legible prophecy but as presence. Between the tops of the columns a sliver of twilight sky shows two or three early stars, a reminder that cosmic order and inner knowing meet at the moment the day lets go.
+The deep red robe signals rooted spiritual vitality — power drawn from within rather than performed outward. The twin stone columns evoke a threshold between worlds, an architectural echo of the liminal. The climbing vines soften stone with time: wisdom entwined with living patience. The turquoise stone at her heart is specifically a stone of inner seeing. The crystal orb in her hands is the brightest light in the scene — the figure herself does not glow; her knowing does. The closed eyes insist that this seer does not look *out* to find truth. The unreadable scroll suggests that answers arrive not as legible prophecy but as presence. Between the columns the open night sky shows a few early stars, a reminder that cosmic order and inner knowing meet at the moment the day lets go.
 
 ### Atmosphere
 
-A dim temple chamber at twilight. The orb's pale light illuminates only her face and hands; the rest of the scene fades into deep indigo shadow. The air is hushed and reverent. The emotional tone is neither dramatic nor withheld — it is the stillness of a listener who has been here a long time and is in no hurry.
+An open stone dais under a deep teal night sky. The orb glows pale in her hands; the dark trees behind the dais fade into blue shadow. The air is hushed and reverent. The emotional tone is neither dramatic nor withheld — it is the stillness of a listener who has been here a long time and is in no hurry.
 
 ## Archetypal Essence
 
