@@ -7,7 +7,7 @@ seed: 865107094
 image_status: "present"
 prompt_status: "original"
 image: "card_the-convergence.png"
-clip: "the-convergence_code_v2.mp4"
+clip: "the-convergence_code_v3.mp4"
 joplin_note: "5b51f24f8e324adcabd5de73161d74b0"
 ---
 
@@ -70,12 +70,13 @@ Style specifications:
 <details>
 <summary>Seed 865107094 · tarot_flux_final_00022_.png — full render recipe</summary>
 
-Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file — `render_card.py --from-note "<title>"` does all of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first run its `workflow` on the unframed art and keep the result only inside `box` (soft edge `feather`), as `edit_card.py` does. The model files named below must exist in ComfyUI.
+Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file — `render_card.py --from-note "<title>"` does all of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first apply it to the unframed art: a Qwen edit runs its `workflow` and keeps the result only inside `box` (soft edge `feather`), then, if `tone_match` is true, evens the box's tone (`repair_tools.tone_match`), as `edit_card.py` does; a `method: fill_disc` entry fills the disc in `box` from the sky around it with its `grow`/`thresh` (`repair_tools.fill_disc`, no AI model); a `method: fill_halo` entry fills the light rim round the linework in `box` from the sky with its `grow` (`repair_tools.fill_halo`, no AI model). The model files named below must exist in ComfyUI.
 
 - Rendered: 2026-10-03T23:38:12+02:00 · ComfyUI 0.38.0 · output `tarot_flux_final_00022_.png`
 - Seed: 865107094
-- Models: `flux1-dev-fp8.safetensors`, `4x-UltraSharp.pth`, `sowtarot_woodcut-v1.safetensors` (LoRA, strength 1.0)
+- Models: `flux1-dev-fp8.safetensors`, `4x-UltraSharp.pth`, `sowtarot_woodcut-v1.safetensors` (LoRA, strength 1.0), `qwen_image_2.1_int8_convrot.safetensors`, `qwen3vl_8b_int8_convrot.safetensors`, `qwen_image_2.1_vae_bf16.safetensors`
 - Frame flags: `--art-crop 0.035 --paper 216,199,158 --ink 26,22,18 --margin-frac 0.020 --border-frac 0.008 --banner-frac 0.085`
+- Repair: Remove the round orange ornament with the black symbol and the black curved bracket that dips down under it at the top center of <image1>. Keep the straight black border line running along the top edge, and fill the space below it with the same pale cream sky. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [420, 0, 620, 150], seed 1, output `tarot_qwen21_edit_00104_.png`, tone-matched, 2026-10-24T17:03:32+02:00)
 
 ```json
 {
@@ -291,7 +292,142 @@ Written by `attach_image.py` with the image above. It holds everything needed to
         "title": "Load LoRA (Model and CLIP)"
       }
     }
-  }
+  },
+  "repairs": [
+    {
+      "edited": "2026-10-24T17:03:32+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00104_.png",
+      "seed": 1,
+      "instruction": "Remove the round orange ornament with the black symbol and the black curved bracket that dips down under it at the top center of <image1>. Keep the straight black border line running along the top edge, and fill the space below it with the same pale cream sky. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        420,
+        0,
+        620,
+        150
+      ],
+      "feather": 24,
+      "tone_match": true,
+      "tone_offset": [
+        2.1,
+        4.9,
+        7.9
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_b4dc6c23.png"
+          },
+          "is_changed": [
+            "9f7d1f0c3115d4aae63a77966634fa1dfa5010c62c546d84fca581e4d43baaa3"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the round orange ornament with the black symbol and the black curved bracket that dips down under it at the top center of <image1>. Keep the straight black border line running along the top edge, and fill the space below it with the same pale cream sky. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 1,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    }
+  ]
 }
 ```
 
