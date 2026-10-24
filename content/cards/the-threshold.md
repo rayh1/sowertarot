@@ -20,7 +20,7 @@ joplin_note: "e78799a2d0b04e1481586e618efae07d"
 ## Visual Description
 
 ### Composition
-A young man in a long purple cloak stands just inside a ruined stone archway, holding a large iron key. Beyond the arch a pale stone path winds into a misty forest of tall bare trees. A black cat walks out through the doorway at his feet, and a black raven perches on a branch inside the arch. Ivy climbs the weathered stones.
+A young man in a long purple cloak stands just inside an old stone archway, holding a large iron key. Beyond the arch a pale stone path winds into a misty forest of tall bare trees. A black cat walks out through the doorway at his feet, and a black raven perches on a branch inside the arch. Ivy climbs the weathered stones.
 
 ### Symbolism
 The archway is the threshold between the known and the unknown. The key is the power to cross and the choice to use it. The cat walking out ahead is instinct that already moves where the mind still hesitates. The raven watching from above is the messenger of change. The misty path shows that what lies ahead can only be seen by walking it.

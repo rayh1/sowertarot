@@ -20,13 +20,13 @@ joplin_note: "bd4cbb7331624f8b9d8d592a7a7ad806"
 ## Visual Description
 
 ### Composition
-A keeper in a dark blue coat stands on the iron gallery at the top of a tall stone lighthouse, beside the great lamp that throws broad beams of pale light across the sky. The tower rises from a steep rocky headland, with waves breaking white on black rocks below. Out at sea a tall sailing ship heads toward the light. Clouds drift across the night sky.
+A keeper in a bright blue coat stands on the iron gallery at the top of a tall stone lighthouse, beside the great lamp that throws broad beams of pale light across the sky. The tower rises from a steep rocky headland, with waves breaking white on brown rocks below. Out at sea a tall sailing ship heads toward the light. Clouds drift low across the teal-grey dusk sky.
 
 ### Symbolism
 The lighthouse keeper is the solitary guide: his work is to keep the light burning so that others, whom he will never meet, find their way safely. The beam is guidance given freely. The ship steering by it is everyone who relies on that steady service. The isolated tower on the rocks is the cost and the strength of serving alone.
 
 ### Atmosphere
-Night, a dark sky with drifting clouds, the sea dark and restless. The mood is watchful and steadfast.
+Dusk, a teal-grey sky with drifting clouds, the sea grey and restless. The mood is watchful and steadfast.
 
 ## Archetypal Essence
 

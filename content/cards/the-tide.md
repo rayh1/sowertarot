@@ -20,7 +20,7 @@ joplin_note: "5ce4367b23934840be6f41217caa68fd"
 ## Visual Description
 
 ### Composition
-A barefoot woman in a long indigo dress stands at the edge of the sea, pouring water from a silver bowl back into the incoming waves. Rocks line the shore, and starfish lie on the wet sand at her feet. A large full moon shines above the sea through drifting purple clouds, with stars around it.
+A barefoot woman in a long indigo dress stands at the edge of the sea, pouring water from a silver bowl back into the incoming waves. Rocks line the shore, and starfish lie on the wet sand at her feet. A large full moon shines in clear sky above the sea and a bank of drifting purple clouds, with stars around it.
 
 ### Symbolism
 The tide is the great rhythm of coming and going. The water poured back into the sea is giving back what was received, joining one's own part to the larger cycle. The full moon is the hidden force that moves the tides and the inner rhythms of life. The starfish, left by the last tide, show what each ebb leaves behind.

@@ -20,10 +20,10 @@ joplin_note: "bd8aef6b87964d26a84c686f278fa7f3"
 ## Visual Description
 
 ### Composition
-A weathered wooden garden gate stands half open between two grey stone pillars, a pair of iron shears hanging from its latch. On the near side, tall wild grass grows over the threshold and red climbing roses cover the right-hand pillar; fruit trees with small golden fruit lean over the tops of the walls. Through the gateway a path of flat pale stones curves between rounded green hedges, past a freshly planted bed, toward a single tall pine. Bees and white butterflies drift through the air, and a large pale sun hangs above the garden. No person is in sight.
+A weathered wooden garden gate stands half open between two grey stone pillars, an iron latch on its edge. On the near side, tall wild grass grows over the threshold and red climbing roses cover the right-hand pillar; fruit trees with small golden fruit lean over the tops of the pillars. Through the gateway a path of flat pale stones curves between rounded green hedges, past a freshly planted bed, toward a single tall pine. Bees with broad white wings drift through the air, and a large pale sun hangs above the garden. No person is in sight.
 
 ### Symbolism
-The half-open gate is an invitation: the way in is offered but not forced, and stepping through is a choice. The wild grass and roses on the near side are untended nature, beautiful but unshaped; the neat hedges and planted bed beyond are what patient tending makes of the same ground. The shears left on the latch are the tool and the work waiting for whoever enters. The empty path says the garden belongs to the one who chooses to walk it. The bees moving freely through the gate are the life that flows between wild and cultivated.
+The half-open gate is an invitation: the way in is offered but not forced, and stepping through is a choice. The wild grass and roses on the near side are untended nature, beautiful but unshaped; the neat hedges and planted bed beyond are what patient tending makes of the same ground. The empty path says the garden belongs to the one who chooses to walk it. The bees moving freely through the gate are the life that flows between wild and cultivated.
 
 ### Atmosphere
 Warm late afternoon, a soft blue-green sky and a pale sun. The air is still and humming with bees. The mood is peaceful and inviting.

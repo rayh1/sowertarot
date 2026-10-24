@@ -20,7 +20,7 @@ joplin_note: "773eeccce3f24e74acaf230b4877b33e"
 ## Visual Description
 
 ### Composition
-A young girl in a plain grey linen dress kneels in the grass beneath an old gnarled tree, looking up in wonder. From a low bare branch a golden-green chrysalis hangs on a long silken thread; beside it hangs a spray of pink blossom. A few brown leaves drift down through the air past her. Tall grasses and wild flowers grow around her.
+A young girl in a plain blue-grey linen dress kneels in the grass beneath an old gnarled tree, looking up in wonder. From a low bare branch a golden-green chrysalis hangs on a long silken thread; beside it hangs a spray of pink blossom. A few brown leaves drift down through the air past her. Tall grasses and leafy stalks grow around her, and a single small pink flower blooms in the grass.
 
 ### Symbolism
 The chrysalis is transformation in progress: neither what was nor what will be, held still while the change happens inside. The falling leaves and the opening blossom side by side show an ending and a beginning at the same moment. The kneeling child is patience and wonder, watching without trying to hurry the change.

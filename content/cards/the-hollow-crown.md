@@ -20,12 +20,10 @@ joplin_note: "a2a0783f4bab402dbd825c6864de014f"
 ## Visual Description
 
 ### Composition
-
-In the foreground a five-pointed crown rests on a plain wooden table, tilted so its empty inside faces the viewer, a heap of red robe lying beside it as if just set down. Behind the table, a dark stone room opens onto a plain doorway, its heavy door swung wide. A figure seen from behind steps over the threshold into a wide green field, walking toward a single bare tree. The table and crown sit low and close; the figure is small and distant, so the eye travels from what was carried to the one who has stopped carrying it.
+In the foreground a five-pointed crown sits upright on a plain wooden table, seen from above so its empty inside shows, a heap of red cloth tied with a blue band lying beside it as if just set down. Behind the table, a dark stone room opens onto a plain doorway, its heavy door swung wide. A figure seen from behind has just crossed the threshold into a wide green field, walking toward a single bare tree. The table and crown sit low and close; the figure is small and distant, so the eye travels from what was carried to the one who has stopped carrying it.
 
 ### Symbolism
-
-The crown is finely wrought and still whole: set down, not broken. Its hollow inside is the card's point: the power was a shape around nothing. The red robe of office lies crumpled rather than folded away. The figure wears a plain ochre travelling coat with no insignia. The open door and the threshold mark a crossing made by choice, and the bare tree promises a season that has not yet begun.
+The crown is finely wrought and still whole: set down, not broken. Its hollow inside is the card's point: the power was a shape around nothing. The red cloth of office lies bunched in a heap rather than folded away. The figure wears a plain ochre travelling coat with no insignia. The open door and the threshold mark a crossing made by choice, and the bare tree promises a season that has not yet begun.
 
 ### Atmosphere
 

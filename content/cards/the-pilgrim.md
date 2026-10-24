@@ -20,10 +20,10 @@ joplin_note: "8e28ef36c3e247b89e0c7979da1fc6d0"
 ## Visual Description
 
 ### Composition
-A small figure of a pilgrim in an ochre travelling coat and a wide-brimmed hat, leaning on a tall staff, walks away from us along a long dirt road that winds back and forth across a vast landscape of green foothills. Small stacked-stone cairns mark the roadside. Far ahead, where the road ends, a small golden chapel with a cross stands at the foot of purple mountains. A line of white cranes flies across the sky toward it.
+A pilgrim in an orange travelling coat and a wide-brimmed hat, leaning on a walking stick, walks away from us in the right foreground along a long dirt road that winds back and forth across a vast landscape of green foothills. Small stacked-stone cairns mark the roadside. Far ahead, where the road ends, a small golden chapel with a cross stands at the foot of purple mountains. A line of white birds flies across the sky above it.
 
 ### Symbolism
-The road is the journey itself, long and winding, the destination visible but far. The pilgrim is small against the land: the journey is greater than the one who makes it. The staff is discipline and support. The cairns are the marks of those who walked before. The distant chapel is the sacred goal that draws the seeker on; the cranes flying the same way are fellow travellers and good omens.
+The road is the journey itself, long and winding, the destination visible but far. The pilgrim has the whole road still before him: the journey is greater than the one who makes it. The walking stick is discipline and support. The cairns are the marks of those who walked before. The distant chapel is the sacred goal that draws the seeker on; the white birds above it are fellow travellers and good omens.
 
 ### Atmosphere
 Dawn, the sky shading from pale green-grey overhead to peach at the mountains. The light is calm and clear. The mood is steady and determined, the quiet resolve of someone who has chosen the long way.

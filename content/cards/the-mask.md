@@ -20,13 +20,13 @@ joplin_note: "a6649b304ef045d7a0ccd74b60a36919"
 ## Visual Description
 
 ### Composition
-A travelling player stands at the centre of a small wooden stage-cart, turned three-quarters toward the viewer. He holds a carved wooden mask out at arm's length in his right hand and studies its face; his own face is bare, calm and open. Further along the boards lie three more masks, one pale and serene, one ochre and smiling, one pale and sorrowful, beside a red curtain-cloth hung over a rail at the back of the cart. Behind, a village green with a few thatched cottages and a line of trees recedes under an evening sky.
+A travelling player stands at the left end of a small wooden stage-cart, his body half turned toward the viewer and his head in profile, facing right. He holds a carved wooden mask out at arm's length in his right hand and studies its face; his own face is bare, calm and open. Further along the boards lie three more masks, one pale and serene, one ochre and smiling, one pale and sorrowful, beside a red curtain-cloth hung over a rail at the back of the cart. Behind, a village green with a few thatched cottages and a line of trees recedes under a pale cream sky with beige clouds.
 
 ### Symbolism
-The mask held at arm's length is a role seen from outside: worn, but not mistaken for the self. The bare face between the masks is the one who chooses. The smiling and sorrowful masks are the old twin faces of the stage, comedy and tragedy, lying side by side as equally true. The ochre and green doublet joins earth and growth: the player is a worker, not a trickster. The red curtain-cloth, taken down from its place, marks the line between stage and life, and shows that the line can be crossed both ways. The village behind is the audience, the community each role serves.
+The mask held at arm's length is a role seen from outside: worn, but not mistaken for the self. The bare face turned toward the masks is the one who chooses. The smiling and sorrowful masks are the old twin faces of the stage, comedy and tragedy, lying side by side as equally true. The ochre and green doublet joins earth and growth: the player is a worker, not a trickster. The red curtain-cloth, taken down from its place, marks the line between stage and life, and shows that the line can be crossed both ways. The village behind is the audience, the community each role serves.
 
 ### Atmosphere
-Dusk after the performance, under soft grey clouds and pale fading light. The mood is quiet and thoughtful, neither triumphant nor sad: the moment between one role and the next.
+After the performance, under soft beige clouds and a pale cream sky. The mood is quiet and thoughtful, neither triumphant nor sad: the moment between one role and the next.
 
 ## Archetypal Essence
 

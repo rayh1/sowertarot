@@ -20,7 +20,7 @@ joplin_note: "7868cd7c7c944ead9622dfd5d221d8dc"
 ## Visual Description
 
 ### Composition
-A bearded sailor in a long grey canvas coat with a red sash and a plain red knitted cap stands on a sandy shore with one hand resting on a huge old iron anchor. The anchor is half sunk in the wet sand, wound with green vines and small purple flowers, its heavy chain running across the beach. Calm turquoise sea stretches to a tall sailing ship on the horizon. Gulls circle overhead.
+A bearded sailor in a long grey canvas coat with a red sash and a plain red knitted cap stands on a sandy shore with one hand resting on a huge old iron anchor. The anchor stands upright on the sand, its crown pressed into it, wound with green vines and small purple flowers, its heavy chain running across the beach. Calm turquoise sea stretches to a tall sailing ship on the horizon. Gulls circle overhead.
 
 ### Symbolism
 The anchor is stability: what holds us in place while the world moves around us. The hand resting on it is trust in what is solid. The vines and flowers growing over the iron show that what is steady can also become a home for new life. The ship far out at sea is the pull of the voyage, always there, which the anchor makes it safe to wait out.

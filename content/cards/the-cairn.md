@@ -20,7 +20,7 @@ joplin_note: "eef11cb2186f4c0c95b1a6aeb6b61ec5"
 ## Visual Description
 
 ### Composition
-On a windswept mountain pass an old traveller with a white beard, in a long brown checked wool cloak, bends to set a smooth white stone on top of a waist-high cairn of grey stones. A small girl in a red knitted hood and a green coat stands beside him, reaching toward the cairn. Behind them the stony path winds down between rocky slopes into a misty valley, marked along the way by two smaller cairns. A faint pale sun shows through the haze above the far mountains.
+On a windswept mountain pass an old traveller with a white beard, in a long brown checked wool cloak, bends to set a smooth round grey stone on top of a waist-high cairn of grey stones balanced one on another. A small girl in a red knitted hood and a green coat stands beside him, reaching toward the cairn. Behind them the stony path winds down between rocky slopes into a grassy valley, marked along the way by two smaller cairns. A faint pale sun shows through the haze above the far mountains.
 
 ### Symbolism
 The cairn is cumulative testimony: each traveller adds one stone, and together they mark the way for those who come after. The old traveller and the child are that gift passing between generations, the knowledge of the road handed from the one who has walked it to the one who will. The smaller cairns along the path show that others have walked here before.

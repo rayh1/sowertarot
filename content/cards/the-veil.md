@@ -20,7 +20,7 @@ joplin_note: "6d3d5d979df64714883c4fca279cec12"
 ## Visual Description
 
 ### Composition
-A woman in a pale blue linen gown, her long auburn hair tied back with a white clasp, stands at the edge of a vast curtain of deep violet cloth that hangs across the whole scene. Seen from behind, her face turned in profile, she draws the curtain aside with one raised hand; her other arm hangs at her side. Through the gap lies a still lake rippled with silver under a black night sky full of stars, low golden hills along its far shore and a faint rose glow at the horizon. On her side a sandy path runs through the grass to the water, and white flowers grow at her bare feet.
+A woman in a pale blue linen gown, her long auburn hair tied back with a white clasp, stands at the edge of a vast curtain of deep violet cloth that hangs across the whole scene. Seen from behind, her face turned in profile, she draws the curtain aside with one raised hand; her other arm hangs at her side. Through the gap lies a still lake rippled with silver under a black night sky full of stars, low golden hills along its far shore and a coral-red hill rising between them on the horizon. On her side a sandy path runs through the grass to the water, and white flowers grow at her bare feet.
 
 ### Symbolism
 The curtain is the boundary between the known and the unknown; it spans the whole world, so there is no way around it. The hand that parts it is the readiness to look. The arm at her side and the step not yet taken are the hesitation and reverence the threshold asks for. The starlit lake is the mystery beyond: still, deep, reflecting. The path stops at the water's edge, where knowing ends. The white flowers are purity of intention.

@@ -20,10 +20,10 @@ joplin_note: "6db1564af0c94d3098f5eb03ccae551a"
 ## Visual Description
 
 ### Composition
-A tall unfinished arch of dressed grey stone fills the card. At its crown a wedge-shaped golden keystone has just been set, and a thin trail of stone dust falls from it down the open archway. Below, a mason in a leather apron and rolled-up linen shirt kneels at a low wooden bench, shaping stone. Through the arch a pale city lies on the horizon under a soft cream sky.
+A tall unfinished arch of dressed grey stone fills the card, and thick stone walls run from it to both edges of the card. At its crown a wedge-shaped golden keystone has just been set, and a thin trail of stone dust falls from it down the open archway. Below, a mason in a leather apron and linen shirt kneels at a low wooden bench, his empty hands resting beside a small golden block. Through the arch a pale city lies on the horizon under a soft cream sky.
 
 ### Symbolism
-The keystone is the one essential piece that bears the load and completes the whole. The falling dust marks the instant it locks into place. The mason working on below shows that the work which makes completion possible is humble and unseen.
+The keystone is the one essential piece that bears the load and completes the whole. The falling dust marks the instant it locks into place. The mason bowed over his bench below shows that the work which makes completion possible is humble and unseen.
 
 ### Atmosphere
 Still morning air, hushed and reverent, the quiet just after long labour is completed.
