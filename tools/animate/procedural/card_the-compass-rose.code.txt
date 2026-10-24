@@ -1,3 +1,3 @@
-Made in code, no AI model (2026-10-08). Script: tools/animate/procedural/flow_strokes.py
-python3 flow_strokes.py --art compass_art.png --water card_the-compass-rose_water.png --title "The Compass Rose" --out compass_flow_v3 --count 300 --speed 2.8 --star 670,285,860,520
-(compass_art.png = the card art; seed 1, 96 frames at 24 fps)
+Made in code, no AI model (2026-10-24); deck clip the-compass-rose_code_v4 replaces the-compass-rose_code_v3: the same river, slowed to about 60 % (--speed 2.8 -> 1.7) after the user found it too fast. Script: tools/animate/procedural/flow_strokes.py
+python3 flow_strokes.py --art ../batch/the-compass-rose/art.png --water card_the-compass-rose_water.png --title "The Compass Rose" --out the-compass-rose_code_v4 --count 300 --speed 1.7 --star 670,285,860,520
+(art = tools/animate/batch/the-compass-rose/art.png: the card's art (its record's comfy_file tarot_flux_final_00950_.png; copy in dropbox:Tarot/animations/source/procedural/the-compass-rose_full_art.png) trimmed 3.5 % per side and resized to 1024 x 1792, as frame_card.py --art-crop 0.035; seed 1, 96 frames at 24 fps; run in tools/animate/procedural. v3 used compass_art.png, a slightly different copy of the art (mean difference 3 levels). The water mask leaves some water still: the strip left of the boy's legs, the stretch right of his hand and the far bend near the horizon)

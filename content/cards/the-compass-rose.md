@@ -7,7 +7,7 @@ seed: 334979220
 image_status: "present"
 prompt_status: "original"
 image: "card_the-compass-rose.png"
-clip: "the-compass-rose_code_v3.mp4"
+clip: "the-compass-rose_code_v4.mp4"
 joplin_note: "3928ce57f90448b090c9fe217d270ada"
 ---
 
