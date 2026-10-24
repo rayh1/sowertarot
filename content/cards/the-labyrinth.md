@@ -7,7 +7,7 @@ seed: 100376223
 image_status: "present"
 prompt_status: "original"
 image: "card_the-labyrinth.png"
-clip: "the-labyrinth_code_v1.mp4"
+clip: "the-labyrinth_code_v2.mp4"
 joplin_note: "00ff2218166d4c9aa791ac849be13a8d"
 ---
 
