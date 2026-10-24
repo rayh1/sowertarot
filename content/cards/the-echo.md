@@ -20,7 +20,7 @@ joplin_note: "779d5558183447a3be52f2f0f5d37160"
 ## Visual Description
 
 ### Composition
-A woman in a long blue dress and a white headscarf stands on a low rock ledge in a deep canyon, hands pressed together at her mouth, calling out across the gorge. Sheer layered walls of red, ochre and violet rock rise on both sides. Just below her, a green river runs through the canyon toward a small sun setting at its far end. High in the sky a larger sun is ringed with concentric circles, and swallows wheel between the cliffs.
+A woman in a long blue dress and a white headscarf stands on a low rock ledge in a deep canyon, hands raised to her lips in the hush after her call, listening for the canyon's answer. Sheer layered walls of red, ochre and violet rock rise on both sides. Just below her, a green river runs through the canyon toward a small sun setting at its far end. High in the sky a larger sun is ringed with concentric circles, and swallows wheel between the cliffs.
 
 ### Symbolism
 Her call is the act sent out into the world; the canyon walls are the world that answers. The rings around the sun are resonance made visible, the call spreading and returning, changed by its passage. The river carries everything onward toward the horizon, as consequences travel beyond what we can see. The swallows moving between the walls are the messages going back and forth.
