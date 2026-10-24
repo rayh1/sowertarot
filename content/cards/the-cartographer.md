@@ -7,7 +7,7 @@ seed: 524449389
 image_status: "present"
 prompt_status: "original"
 image: "card_the-cartographer.png"
-clip: "the-cartographer_code_v2.mp4"
+clip: "the-cartographer_code_v3.mp4"
 joplin_note: "a4264b3376e94331bc7c0b9d1223ed89"
 ---
 
