@@ -20,10 +20,10 @@ joplin_note: "4b28373ab3304ca58611ef4364827f10"
 ## Visual Description
 
 ### Composition
-An old pilgrim in a long charcoal-grey wool cloak and a small round cap walks with a wooden staff along a path trodden into deep snow, seen from a little above. The path winds across a wide white meadow and coils inward in several turns to a single dark standing stone at its centre, then runs on beyond the stone toward the far hills. Bare silver birches stand at both edges of the meadow, and low blue-grey hills lie under a quiet grey dusk sky.
+An old pilgrim in a long charcoal-grey wool cloak and a small brimmed straw hat walks with a wooden staff along a path trodden into deep snow, seen from a little above. The path winds across a wide white meadow loops once around a single dark standing stone and closes in three tighter rings around it, then runs on beyond the stone toward the far hills. Bare silver birches stand at both edges of the meadow, and low blue-grey hills lie under a quiet grey dusk sky.
 
 ### Symbolism
-The spiral is growth that returns to the same place at a deeper level each time round, the path of learning and of the soul. Walking it is patience: the centre can only be reached by following every turn. The standing stone at the heart is the still point the journey circles toward. The pilgrim's staff and heavy cloak are the long road already travelled; the trodden snow shows that every step leaves its mark.
+The spiral is growth that returns to the same place at a deeper level each time round, the path of learning and of the soul. Walking it is patience: the stone is circled again and again, each time closer, before it is reached. The standing stone at the heart is the still point the journey circles toward. The pilgrim's staff and heavy cloak are the long road already travelled; the trodden snow shows that every step leaves its mark.
 
 ### Atmosphere
 Winter dusk, still and cold, the snow holding the last grey light. The mood is quiet, patient and inward-turning.
