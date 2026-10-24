@@ -7,7 +7,7 @@ seed: 640312
 image_status: "present"
 prompt_status: "original"
 image: "card_the-hollow-crown.png"
-clip: "the-hollow-crown_code_v1.mp4"
+clip: "the-hollow-crown_code_v4.mp4"
 joplin_note: "a2a0783f4bab402dbd825c6864de014f"
 ---
 
@@ -65,12 +65,14 @@ Style specifications:
 <details>
 <summary>Seed 640312 · tarot_flux_final_00090_.png — full render recipe</summary>
 
-Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`. The model files named below must exist in ComfyUI.
+Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file — `render_card.py --from-note "<title>"` does all of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first apply it to the unframed art: a Qwen edit runs its `workflow` and keeps the result only inside `box` (soft edge `feather`), then, if `tone_match` is true, evens the box's tone (`repair_tools.tone_match`), as `edit_card.py` does; a `method: fill_disc` entry fills the disc in `box` from the sky around it with its `grow`/`thresh` (`repair_tools.fill_disc`, no AI model); a `method: fill_halo` entry fills the light rim round the linework in `box` from the sky with its `grow` (`repair_tools.fill_halo`, no AI model). The model files named below must exist in ComfyUI.
 
 - Rendered: None · ComfyUI 0.35.0 or earlier · output `tarot_flux_final_00090_.png`
 - Seed: 640312
-- Models: `flux1-dev-fp8.safetensors`, `4x-UltraSharp.pth`, `sowtarot_woodcut-v1.safetensors` (LoRA, strength 1.0)
+- Models: `flux1-dev-fp8.safetensors`, `4x-UltraSharp.pth`, `sowtarot_woodcut-v1.safetensors` (LoRA, strength 1.0), `qwen_image_2.1_int8_convrot.safetensors`, `qwen3vl_8b_int8_convrot.safetensors`, `qwen_image_2.1_vae_bf16.safetensors`
 - Frame flags: `--art-crop 0.035 --paper 216,199,158 --ink 26,22,18 --margin-frac 0.020 --border-frac 0.008 --banner-frac 0.085`
+- Repair: Replace the wooden floorboards outside the doorway, under the walking figure's feet, with the same green grassy field that lies behind him, so the figure walks on grass. Keep the figure, his legs and shoes exactly the same. (box [350, 985, 772, 1122], seed 3, output `tarot_qwen21_edit_00154_.png`, tone-matched, 2026-10-24T18:49:34+02:00)
+- Repair: Remove the small brass door handle floating in the dark gap to the right of the open door's edge. Fill its place with the same plain black shadow. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [915, 740, 1015, 865], seed 3, output `tarot_qwen21_edit_00157_.png`, tone-matched, 2026-10-24T18:53:22+02:00)
 - Note: Backfilled 2026-09-24 from the ComfyUI output tarot_flux_final_00090_.png, matched to the attached image by pixel comparison (mean difference 1.1 on 0-255 after re-framing with these frame flags; next-best tarot_flux_final_00088_.png at 62.1). Render date unknown.
 
 ```json
@@ -288,7 +290,275 @@ Written by `attach_image.py` with the image above. It holds everything needed to
       }
     }
   },
-  "note": "Backfilled 2026-09-24 from the ComfyUI output tarot_flux_final_00090_.png, matched to the attached image by pixel comparison (mean difference 1.1 on 0-255 after re-framing with these frame flags; next-best tarot_flux_final_00088_.png at 62.1). Render date unknown."
+  "note": "Backfilled 2026-09-24 from the ComfyUI output tarot_flux_final_00090_.png, matched to the attached image by pixel comparison (mean difference 1.1 on 0-255 after re-framing with these frame flags; next-best tarot_flux_final_00088_.png at 62.1). Render date unknown.",
+  "repairs": [
+    {
+      "edited": "2026-10-24T18:49:34+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00154_.png",
+      "seed": 3,
+      "instruction": "Replace the wooden floorboards outside the doorway, under the walking figure's feet, with the same green grassy field that lies behind him, so the figure walks on grass. Keep the figure, his legs and shoes exactly the same.",
+      "box": [
+        350,
+        985,
+        772,
+        1122
+      ],
+      "feather": 6,
+      "tone_match": true,
+      "tone_offset": [
+        37.4,
+        15.2,
+        38.5
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_747ca8b7.png"
+          },
+          "is_changed": [
+            "47ca4ebee6b92ed103e79345bccaf99014ba245da7fb58c8cc1749ab1779cad7"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Replace the wooden floorboards outside the doorway, under the walking figure's feet, with the same green grassy field that lies behind him, so the figure walks on grass. Keep the figure, his legs and shoes exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 3,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T18:53:22+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00157_.png",
+      "seed": 3,
+      "instruction": "Remove the small brass door handle floating in the dark gap to the right of the open door's edge. Fill its place with the same plain black shadow. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        915,
+        740,
+        1015,
+        865
+      ],
+      "feather": 6,
+      "tone_match": true,
+      "tone_offset": [
+        1.7,
+        1.5,
+        0.3
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_8a17b9ef.png"
+          },
+          "is_changed": [
+            "47ca4ebee6b92ed103e79345bccaf99014ba245da7fb58c8cc1749ab1779cad7"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the small brass door handle floating in the dark gap to the right of the open door's edge. Fill its place with the same plain black shadow. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 3,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    }
+  ]
 }
 ```
 

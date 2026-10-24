@@ -8,7 +8,8 @@ The masked plants are shifted sideways; the shift is zero at each column's lowes
 roots) and grows towards the top of the mask (tips move most). Two travelling waves - a broad gust
 and a finer ripple - make neighbouring parts move out of step. The shift fades to zero near the
 --still mask (figures, animals), so they are never smeared. Where a tip moves away, the sky or field
-behind it is filled along each row (--fill rows) or by diffusion. Waves run whole cycles per clip, so the loop is seamless.
+behind it is filled along each row (--fill rows) or by diffusion. --depth shrinks the sway towards the horizon
+(perspective), so far grass moves less than near grass. Waves run whole cycles per clip, so the loop is seamless.
 """
 import argparse, os, subprocess, sys, tempfile
 import numpy as np
@@ -66,6 +67,8 @@ def main():
     ap.add_argument("--gust", type=float, default=520, help="wavelength in px of the broad gust")
     ap.add_argument("--ripple", type=float, default=150, help="wavelength in px of the finer ripple")
     ap.add_argument("--pin", type=float, default=60, help="px over which the sway fades out near --still")
+    ap.add_argument("--depth", help="far_y,near_y,share: perspective - the sway shrinks to `share` of --amp at row far_y "
+                                    "(the horizon) and is full from row near_y down")
     ap.add_argument("--fill", choices=("rows", "diffuse", "copy"), default="rows",
                     help="how to fill behind moving plants: along rows (keeps horizontal texture) or diffusion")
     ap.add_argument("--star", help="x0,y0,x1,y1: box around a gold star on a smooth sky; makes it twinkle")
@@ -125,7 +128,11 @@ def main():
         rad = np.hypot(X - pvx, Y - pvy)
         Lmax = rad[mask].max()
         reach = nd.binary_dilation(mask, iterations=int(np.radians(a.swing) * Lmax) + 4)
-    amp = nd.gaussian_filter(a.amp * hf * pin, 3)
+    depth = np.ones((H, W))
+    if a.depth:                                                         # far plants sway less
+        fy, ny, share = [float(v) for v in a.depth.split(",")]
+        depth = share + (1 - share) * np.clip((Y - fy) / max(1.0, ny - fy), 0, 1)
+    amp = nd.gaussian_filter(a.amp * hf * pin * depth, 3)
 
     hole = nd.binary_dilation(mask, iterations=2)
     if a.fill == "copy":
