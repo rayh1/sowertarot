@@ -13,6 +13,10 @@ fill_disc   — removes a sun/moon disc from a FLAT sky with no AI edit: the dis
               and very light drawn detail are walls that give no colour), plus random grain
               sampled from that sky. Deterministic: the same art and parameters give the same
               pixels.
+fill_halo   — removes a light rim (halo) round dark linework on a FLAT sky with no AI edit: the
+              rim is what differs from the sky next to the ink, outside the drawn shape; it is
+              filled the same way. Qwen either deletes the whole figure or widens the rim (The
+              Anchor's gull, 2026-10-24). Deterministic.
 """
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
@@ -122,3 +126,29 @@ def fill_disc(art, box, grow=14, thresh=18):
     m = ndimage.gaussian_filter(disc.astype(float), 1.5)[..., None]   # soften the seam
     res = np.clip(o * (1 - m) + out * m, 0, 255).astype(np.uint8)
     return Image.fromarray(res), int(disc.sum())
+
+
+def fill_halo(art, box, grow=2):
+    """Return (filled PIL image, rim pixel count). art: PIL RGB unframed art.
+    grow: pixels the rim mask is widened by (2 cleared The Anchor's gull)."""
+    x0, y0, x1, y1 = box
+    o = np.asarray(art.convert("RGB")).astype(float)
+    c = o[y0:y1, x0:x1]
+    ink = c.mean(2) < 90
+    lab, _ = ndimage.label(~ink)                    # outside = not enclosed by the linework
+    border = set(np.unique(np.r_[lab[0], lab[-1], lab[:, 0], lab[:, -1]])) - {0}
+    outside = np.isin(lab, list(border))
+    sky = outside & ~ndimage.binary_dilation(ink, iterations=10)
+    if sky.sum() < 1500:
+        raise SystemExit(f"fill_halo: only {int(sky.sum())} sky pixels in the box; widen it")
+    dev = np.abs(c - np.median(c[sky], 0)).sum(2)
+    rim = outside & ndimage.binary_dilation(ink, iterations=8) & (dev > 14)
+    rim = ndimage.binary_dilation(rim, iterations=grow) & outside & ~ink
+    if not rim.any():
+        raise SystemExit("fill_halo: no rim found in the box")
+    ys, xs, sol = _laplace(sky | (outside & ~rim), rim, c, walls=ink)
+    grain = c[sky] - ndimage.gaussian_filter(c, (4, 4, 0))[sky]
+    rng = np.random.default_rng(0)
+    res = c.copy(); res[ys, xs] = sol + grain[rng.integers(0, len(grain), len(ys))]
+    out = o.copy(); out[y0:y1, x0:x1] = res
+    return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)), int(rim.sum())

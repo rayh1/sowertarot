@@ -15,7 +15,7 @@ success: {"ok":true,"out":...,"seed":...,"comfy_file":...,"raw":...}.
 
 --from-note "<Card Name>" regenerates a card from its Joplin note alone: it runs
 the record's base workflow, re-applies each recorded repair (a Qwen edit pasted back
-inside its box and tone-matched when recorded so, or a fill_disc sky fill), frames with the recorded title and frame flags, and writes the
+inside its box and tone-matched when recorded so, or a fill_disc / fill_halo sky fill), frames with the recorded title and frame flags, and writes the
 same record into the output PNG.
 
 The framed card PNG carries a render record (PNG text chunk `tarot_render`):
@@ -179,11 +179,15 @@ def from_note(args):
     art = args.keep_raw or os.path.join(outdir, ".render_raw.png")
     urllib.request.urlretrieve(f"{url}/view?filename={base}&type=output", art)
     edits = []
-    from repair_tools import fill_disc, tone_match
+    from repair_tools import fill_disc, fill_halo, tone_match
     for rep in record.get("repairs", []):
         if rep.get("method") == "fill_disc":          # deterministic sky fill, no ComfyUI
             fill_disc(Image.open(art), rep["box"], rep["grow"], rep["thresh"])[0].save(art)
             edits.append("fill_disc")
+            continue
+        if rep.get("method") == "fill_halo":          # deterministic rim fill, no ComfyUI
+            fill_halo(Image.open(art), rep["box"], rep["grow"])[0].save(art)
+            edits.append("fill_halo")
             continue
         fn = post_graph(url, repair_graph(rep, upload_image(url, art)))[0]
         tmp = os.path.join(outdir, ".edit_out.png")

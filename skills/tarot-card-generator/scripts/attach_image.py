@@ -244,7 +244,9 @@ def record_section(record):
         "edit runs its `workflow` and keeps the result only inside `box` (soft edge `feather`), then, "
         "if `tone_match` is true, evens the box's tone (`repair_tools.tone_match`), as `edit_card.py` "
         "does; a `method: fill_disc` entry fills the disc in `box` from the sky around it with its "
-        "`grow`/`thresh` (`repair_tools.fill_disc`, no AI model). The model files named below must "
+        "`grow`/`thresh` (`repair_tools.fill_disc`, no AI model); a `method: fill_halo` entry fills "
+        "the light rim round the linework in `box` from the sky with its `grow` (`repair_tools.fill_halo`, "
+        "no AI model). The model files named below must "
         "exist in ComfyUI.", "",
         f"- Rendered: {record.get('rendered')} · ComfyUI {record.get('comfyui_version')} "
         f"· output `{record.get('comfy_file')}`",
@@ -256,6 +258,9 @@ def record_section(record):
         if r.get("method") == "fill_disc":
             lines.append(f"- Repair: sun/moon filled from the sky, no AI edit (box {r.get('box')}, "
                          f"grow {r.get('grow')}, thresh {r.get('thresh')}, {r.get('edited')})")
+        elif r.get("method") == "fill_halo":
+            lines.append(f"- Repair: light rim round the linework filled from the sky, no AI edit "
+                         f"(box {r.get('box')}, grow {r.get('grow')}, {r.get('edited')})")
         else:
             lines.append(f"- Repair: {r.get('instruction')} (box {r.get('box')}, seed {r.get('seed')}, "
                          f"output `{r.get('comfy_file')}`{', tone-matched' if r.get('tone_match') else ''}, "
