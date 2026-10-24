@@ -148,6 +148,8 @@ def swirl(a, rng, T):
     edge = np.zeros((H, W), bool); edge[8:H - 8, 8:W - 8] = True       # the art's own border line stays
     flock = nd.binary_fill_holes(nd.binary_closing(flock & keep, iterations=2)) & edge
     print("flock px", int(flock.sum()))
+    if a.base_frames:
+        print("base frames: used below the flock only (rows below its reach)")
     bg = local_fill(px, nd.binary_dilation(flock, iterations=2), rng, grain=True)
     soft = nd.gaussian_filter(flock.astype(float), 0.7)
     cx, cy = [float(v) for v in a.centre.split(",")]
@@ -177,6 +179,9 @@ def swirl(a, rng, T):
         al = nd.map_coordinates(soft, [sy, sx], order=1, mode="nearest")[..., None]
         col = np.stack([nd.map_coordinates(px[..., ch], [sy, sx], order=1, mode="nearest") for ch in range(3)], -1)
         out = bg.copy()
+        if a.base_frames:                                               # below the flock: the other animation
+            raw = np.array(Image.open(os.path.join(a.base_frames, f"f{f:04d}.png")).convert("RGB")).astype(float)
+            out[rows:] = raw[rows:]
         out[:rows] = bg[:rows] * (1 - al) + col * al
         frame = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
         interior = cover_resize(frame, ir - il, ib - it).crop((0, 0, ir - il, banner_top - it))
