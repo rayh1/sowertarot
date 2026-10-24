@@ -20,7 +20,7 @@ joplin_note: "0767d0fad2334ac3beb68154ab23e52c"
 ## Visual Description
 
 ### Composition
-A young woman in a green dress, a wicker basket on her arm, stands on a narrow path between dense thickets of thorny bramble, reaching carefully into the thorns to pick a dark blackberry. A small bird with an orange breast perches among the canes beside her hand. Behind the hedge, golden fields roll away to low hills under a pink-and-gold evening sky, where a single bright evening star shines.
+A young woman in a green dress, a wicker basket in her hand, stands on a narrow path between dense thickets of thorny bramble, reaching carefully into the thorns to pick a dark blackberry. A small bird with an orange back and a white breast perches among the canes beside her hand. Behind the hedge, golden fields roll away to low hills under a pink-and-gold evening sky, where a single bright evening star shines.
 
 ### Symbolism
 The bramble is the defended wilderness: fierce and thorny, yet it shelters birds and gives its fruit to those who reach in with care. Her careful hand is respect for the wild, taking only what is offered. The little bird nesting safely in the thorns shows what the bramble protects. The cultivated fields beyond mark the boundary between tamed and untamed land.
