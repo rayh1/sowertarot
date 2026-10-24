@@ -7,7 +7,7 @@ seed: 573733418
 image_status: "present"
 prompt_status: "original"
 image: "card_the-anchor.png"
-clip: "the-anchor_code_v3.mp4"
+clip: "the-anchor_code_v6.mp4"
 joplin_note: "7868cd7c7c944ead9622dfd5d221d8dc"
 ---
 
@@ -68,7 +68,7 @@ Style specifications:
 <details>
 <summary>Seed 573733418 · tarot_flux_final_00659_.png — full render recipe</summary>
 
-Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file — `render_card.py --from-note "<title>"` does all of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first apply it to the unframed art: a Qwen edit runs its `workflow` and keeps the result only inside `box` (soft edge `feather`), then, if `tone_match` is true, evens the box's tone (`repair_tools.tone_match`), as `edit_card.py` does; a `method: fill_disc` entry fills the disc in `box` from the sky around it with its `grow`/`thresh` (`repair_tools.fill_disc`, no AI model). The model files named below must exist in ComfyUI.
+Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file — `render_card.py --from-note "<title>"` does all of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first apply it to the unframed art: a Qwen edit runs its `workflow` and keeps the result only inside `box` (soft edge `feather`), then, if `tone_match` is true, evens the box's tone (`repair_tools.tone_match`), as `edit_card.py` does; a `method: fill_disc` entry fills the disc in `box` from the sky around it with its `grow`/`thresh` (`repair_tools.fill_disc`, no AI model); a `method: fill_halo` entry fills the light rim round the linework in `box` from the sky with its `grow` (`repair_tools.fill_halo`, no AI model). The model files named below must exist in ComfyUI.
 
 - Rendered: 2026-10-01T15:54:22+02:00 · ComfyUI 0.37.0 · output `tarot_flux_final_00659_.png`
 - Seed: 573733418
@@ -76,6 +76,10 @@ Written by `attach_image.py` with the image above. It holds everything needed to
 - Frame flags: `--art-crop 0.035 --paper 216,199,158 --ink 26,22,18 --margin-frac 0.020 --border-frac 0.008 --banner-frac 0.085`
 - Repair: Replace the man's red bobble beanie in <image1> with a plain close-fitting red knitted woollen cap with a rolled brim and no bobble on top. Keep his face, hair and beard the same. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [240, 290, 430, 470], seed 1, output `tarot_qwen21_edit_00030_.png`, 2026-10-02T01:53:05+02:00)
 - Repair: sun/moon filled from the sky, no AI edit (box [330, 80, 690, 410], grow 14, thresh 45, 2026-10-03T23:23:59+02:00)
+- Repair: light rim round the linework filled from the sky, no AI edit (box [400, 140, 620, 265], grow 2, 2026-10-24T14:10:59+02:00)
+- Repair: Remove the short dangling string of dark beads hanging at the man's hip below the end of his red sash in <image1>. Fill its place with the back edge of his grey coat and the turquoise sea behind it. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [355, 770, 425, 890], seed 1, output `tarot_qwen21_edit_00067_.png`, tone-matched, 2026-10-24T13:44:21+02:00)
+- Repair: Remove the small round metal ring threaded on the green vine at the left side of the anchor shank in <image1>. The vine continues as one smooth curving dark stem with its yellow-green leaves, on the plain sand. Keep the anchor the same. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [520, 1210, 650, 1340], seed 3, output `tarot_qwen21_edit_00078_.png`, tone-matched, 2026-10-24T14:13:49+02:00)
+- Note: 2026-10-24: replaying the base workflow no longer reproduces this picture (the FLUX render drifted: it draws a chain over the anchor). The art after the fill_disc repair is dropbox:Tarot/seed-sheets/discs/the-anchor_f_art.png; the art after all repairs is dropbox:Tarot/animations/source/procedural/the-anchor_full_art.png. Edit those, not a replay.
 
 ```json
 {
@@ -432,8 +436,287 @@ Written by `attach_image.py` with the image above. It holds everything needed to
       "grow": 14,
       "disc_pixels": 50903,
       "thresh": 45
+    },
+    {
+      "edited": "2026-10-24T14:10:59+02:00",
+      "method": "fill_halo",
+      "box": [
+        400,
+        140,
+        620,
+        265
+      ],
+      "grow": 2,
+      "rim_pixels": 3327
+    },
+    {
+      "edited": "2026-10-24T13:44:21+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00067_.png",
+      "seed": 1,
+      "instruction": "Remove the short dangling string of dark beads hanging at the man's hip below the end of his red sash in <image1>. Fill its place with the back edge of his grey coat and the turquoise sea behind it. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        355,
+        770,
+        425,
+        890
+      ],
+      "feather": 24,
+      "tone_match": true,
+      "tone_offset": [
+        -43.8,
+        -87.9,
+        -77.7
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_d45337fc.png"
+          },
+          "is_changed": [
+            "b47d92167b3cc0db8de041791af801e1cc0abe1227eb4e049314eda1626fd25d"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the short dangling string of dark beads hanging at the man's hip below the end of his red sash in <image1>. Fill its place with the back edge of his grey coat and the turquoise sea behind it. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 1,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    },
+    {
+      "edited": "2026-10-24T14:13:49+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00078_.png",
+      "seed": 3,
+      "instruction": "Remove the small round metal ring threaded on the green vine at the left side of the anchor shank in <image1>. The vine continues as one smooth curving dark stem with its yellow-green leaves, on the plain sand. Keep the anchor the same. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        520,
+        1210,
+        650,
+        1340
+      ],
+      "feather": 24,
+      "tone_match": true,
+      "tone_offset": [
+        2.2,
+        3.2,
+        1.6
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_77692a1c.png"
+          },
+          "is_changed": [
+            "b47d92167b3cc0db8de041791af801e1cc0abe1227eb4e049314eda1626fd25d"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "Remove the small round metal ring threaded on the green vine at the left side of the anchor shank in <image1>. The vine continues as one smooth curving dark stem with its yellow-green leaves, on the plain sand. Keep the anchor the same. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 3,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
     }
-  ]
+  ],
+  "note": "2026-10-24: replaying the base workflow no longer reproduces this picture (the FLUX render drifted: it draws a chain over the anchor). The art after the fill_disc repair is dropbox:Tarot/seed-sheets/discs/the-anchor_f_art.png; the art after all repairs is dropbox:Tarot/animations/source/procedural/the-anchor_full_art.png. Edit those, not a replay."
 }
 ```
 
