@@ -7,7 +7,7 @@ seed: 454674838
 image_status: "present"
 prompt_status: "original"
 image: "card_the-garden-gate.png"
-clip: "the-garden-gate_code_v2.mp4"
+clip: "the-garden-gate_code_v3.mp4"
 joplin_note: "bd8aef6b87964d26a84c686f278fa7f3"
 ---
 
@@ -66,12 +66,13 @@ Style specifications:
 <details>
 <summary>Seed 454674838 · tarot_flux_final_01316_.png — full render recipe</summary>
 
-Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file — `render_card.py --from-note "<title>"` does all of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first run its `workflow` on the unframed art and keep the result only inside `box` (soft edge `feather`), as `edit_card.py` does. The model files named below must exist in ComfyUI.
+Written by `attach_image.py` with the image above. It holds everything needed to re-render that image without the ComfyUI output file — `render_card.py --from-note "<title>"` does all of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title <title> <frame_flags>`; for each entry in `repairs`, first apply it to the unframed art: a Qwen edit runs its `workflow` and keeps the result only inside `box` (soft edge `feather`), then, if `tone_match` is true, evens the box's tone (`repair_tools.tone_match`), as `edit_card.py` does; a `method: fill_disc` entry fills the disc in `box` from the sky around it with its `grow`/`thresh` (`repair_tools.fill_disc`, no AI model); a `method: fill_halo` entry fills the light rim round the linework in `box` from the sky with its `grow` (`repair_tools.fill_halo`, no AI model). The model files named below must exist in ComfyUI.
 
 - Rendered: 2026-10-02T09:17:08+02:00 · ComfyUI 0.37.0 · output `tarot_flux_final_01316_.png`
 - Seed: 454674838
-- Models: `flux1-dev-fp8.safetensors`, `4x-UltraSharp.pth`, `sowtarot_woodcut-v1.safetensors` (LoRA, strength 1.0)
+- Models: `flux1-dev-fp8.safetensors`, `4x-UltraSharp.pth`, `sowtarot_woodcut-v1.safetensors` (LoRA, strength 1.0), `qwen_image_2.1_int8_convrot.safetensors`, `qwen3vl_8b_int8_convrot.safetensors`, `qwen_image_2.1_vae_bf16.safetensors`
 - Frame flags: `--art-crop 0.035 --paper 216,199,158 --ink 26,22,18 --margin-frac 0.020 --border-frac 0.008 --banner-frac 0.085`
+- Repair: The bee lying on the stone path at the lower right of <image1> is malformed, like a striped grub with stubby wings: redraw it as a proper small honeybee with a striped body, legs and two pairs of clear wings, in the same place and size. Also remove the small red bead lying on the path above it, filling its place with the same pale stone. Keep everything else, including the woodcut linework and hatching, exactly the same. (box [530, 1340, 710, 1540], seed 1, output `tarot_qwen21_edit_00130_.png`, tone-matched, 2026-10-24T17:59:05+02:00)
 
 ```json
 {
@@ -287,7 +288,142 @@ Written by `attach_image.py` with the image above. It holds everything needed to
         "title": "Load LoRA (Model and CLIP)"
       }
     }
-  }
+  },
+  "repairs": [
+    {
+      "edited": "2026-10-24T17:59:05+02:00",
+      "comfyui_version": "0.37.0",
+      "comfy_file": "tarot_qwen21_edit_00130_.png",
+      "seed": 1,
+      "instruction": "The bee lying on the stone path at the lower right of <image1> is malformed, like a striped grub with stubby wings: redraw it as a proper small honeybee with a striped body, legs and two pairs of clear wings, in the same place and size. Also remove the small red bead lying on the path above it, filling its place with the same pale stone. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+      "box": [
+        530,
+        1340,
+        710,
+        1540
+      ],
+      "feather": 24,
+      "tone_match": true,
+      "tone_offset": [
+        5.1,
+        5.5,
+        2.5
+      ],
+      "workflow": {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+            "type": "qwen_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "QwenImage21Cache",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "device": "auto",
+            "dtype": "default"
+          }
+        },
+        "5": {
+          "class_type": "LoadImage",
+          "inputs": {
+            "image": "tarot_src_342d31ac.png"
+          },
+          "is_changed": [
+            "40713b1d2e61a14f8d5e79beaab0718c67a395ede29ca5204478d23b960fe786"
+          ]
+        },
+        "6": {
+          "class_type": "TextEncodeQwenImage21",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ],
+            "prompt": "The bee lying on the stone path at the lower right of <image1> is malformed, like a striped grub with stubby wings: redraw it as a proper small honeybee with a striped body, legs and two pairs of clear wings, in the same place and size. Also remove the small red bead lying on the path above it, filling its place with the same pale stone. Keep everything else, including the woodcut linework and hatching, exactly the same.",
+            "negative_prompt": "",
+            "resolution": 0,
+            "images.image_1": [
+              "5",
+              0
+            ]
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "4",
+              0
+            ],
+            "positive": [
+              "6",
+              0
+            ],
+            "negative": [
+              "6",
+              1
+            ],
+            "latent_image": [
+              "6",
+              2
+            ],
+            "seed": 1,
+            "steps": 40,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "tarot_qwen21_edit"
+          }
+        }
+      }
+    }
+  ]
 }
 ```
 
