@@ -7,7 +7,7 @@ seed: 600000
 image_status: "present"
 prompt_status: "original"
 image: "card_the-ember.png"
-clip: "the-ember_s5_v2.mp4"
+clip: "the-ember_s7_v10.mp4"
 joplin_note: "3967e8b4e43f4d4bb581112a69225df9"
 ---
 
