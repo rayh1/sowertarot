@@ -14,6 +14,12 @@ lamp=nd.binary_dilation(nd.binary_fill_holes(nd.binary_closing(((R-B>40)&(R>90))
 floor=poly([(0,1530),(100,1490),(110,1270),(300,1210),(700,1345),(790,1385),(940,1480),(1024,1505),(1024,1792),(0,1792)])
 heap=poly([(50,1030),(130,1000),(210,1015),(270,1110),(260,1265),(80,1275),(50,1180)])
 rock=~(fig|lamp|floor|heap)
+# timber props (added 2026-10-25 with the props repair): warm brown wood inside the rock area, cut out so it does not flicker as lit rock
+P=12; wood=np.pad((R-B>22)&(R>G+5)&(R<190)&rock,P,mode='edge')
+timber=nd.binary_fill_holes(nd.binary_closing(wood,iterations=4))[P:-P,P:-P]
+lab,n=nd.label(timber); sz=nd.sum(timber,lab,range(1,n+1)); timber=nd.binary_dilation(np.isin(lab,[i+1 for i,s in enumerate(sz) if s>=3000]),iterations=3)
+Image.fromarray((timber*255).astype(np.uint8)).save('miner_timber.png')
+rock&=~timber
 Image.fromarray((rock*255).astype(np.uint8)).save('miner_rock_mask.png')
 soft=nd.gaussian_filter(rock.astype(float),6)
 Y,X=np.mgrid[0:H,0:W].astype(float); w=np.exp(-np.hypot(X-860,Y-1160)/850)

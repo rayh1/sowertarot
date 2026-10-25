@@ -1,5 +1,5 @@
-Made in code, no AI model (2026-10-16). Scripts: tools/animate/procedural/flicker.py + glow.py; masks made by miner_masks.py
+Made in code, no AI model (2026-10-16; v2 2026-10-25 on the art with timber props, new pick and smudge removed). Scripts: tools/animate/procedural/flicker.py + glow.py; masks made by miner_masks.py (miner_timber.png keeps the timber out of the lit-rock flicker)
 python3 miner_masks.py
-python3 flicker.py --art ../batch/the-miner/art.png --title "The Miner" --out miner_flicker_p4 --box 790,1030,940,1262 --glow-mask miner_lamplight_rock.png --glow-soft --glow-amp 0.08 --save-raw miner_raw_p4
-python3 glow.py --art ../batch/the-miner/art.png --title "The Miner" --out miner_flame_glints_p4 --base-frames miner_raw_p4 --star-mask miner_gold.png --flash 0.09 --grow 0.15 --star-colour 255,236,170 --rays 7 --ray-max 75 --halo 1.2
-(art = tools/animate/batch/the-miner/art.png; 96 frames at 24 fps; run in tools/animate/procedural; masks: card_the-miner_gold.png = miner_gold.png, card_the-miner_lamplight_rock.png = miner_lamplight_rock.png)
+python3 flicker.py --art ../batch/the-miner/art.png --title "The Miner" --out miner_flicker_v2 --box 790,1030,940,1262 --glow-mask miner_lamplight_rock.png --glow-soft --glow-amp 0.08 --save-raw miner_raw_v2
+python3 glow.py --art ../batch/the-miner/art.png --title "The Miner" --out the-miner_code_v2 --base-frames miner_raw_v2 --star-mask miner_gold.png --flash 0.09 --grow 0.15 --star-colour 255,236,170 --rays 7 --ray-max 75 --halo 1.2
+(art = tools/animate/batch/the-miner/art.png; 96 frames at 24 fps; run in tools/animate/procedural; the clip is the-miner_code_v2.mp4; masks: card_the-miner_gold.png = miner_gold.png, card_the-miner_lamplight_rock.png = miner_lamplight_rock.png)
