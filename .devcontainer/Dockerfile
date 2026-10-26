@@ -17,6 +17,10 @@ ENV TZ=Europe/Amsterdam \
     PLAYWRIGHT_BROWSERS_PATH=/opt/playwright \
     HISTFILE=/home/devuser/.bash_history_dir/.bash_history
 
+# Upgrade the base image packages to pick up the latest security fixes
+RUN apt-get update && apt-get upgrade -y \
+    && rm -rf /var/lib/apt/lists/*
+
 # Base tooling
 RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates curl wget jq ripgrep sudo unzip zip gpg bash-completion xz-utils less procps openssh-client tzdata nano vim tree bc rclone file \
     && ln -snf "/usr/share/zoneinfo/${TZ}" /etc/localtime && echo "${TZ}" > /etc/timezone \

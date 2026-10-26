@@ -1,5 +1,5 @@
 # Changes here will be overwritten by Copier; do NOT edit manually.
-_commit: v0.7.0
+_commit: v0.7.1
 _src_path: http://git.charm.nl:3000/Charm/tdp-template.git
 charm_internal: false
 description: The Sower tarot deck and its daily card
