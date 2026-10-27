@@ -23,7 +23,7 @@ Paths in this file are relative to the repository root (the folder two levels ab
   - `4x-UltraSharp.pth` in `models/upscale_models/` — upscaler.
 
   If any of this is missing, use the § External-render fallback.
-- Prereq (§ Find something new): `uv` on PATH; `scripts/novelty_rank.py` installs its own dependencies and downloads its embedding model once (~420 MB).
+- Prereq (§ Find something new): `uv` on PATH; `scripts/novelty_rank.py` installs its own dependencies and downloads its embedding model once (~420 MB), both at pinned versions (packages in `scripts/novelty_rank.py.lock`, the model's revision in the script), so scores stay comparable across rounds and after a lost cache.
 
 ## Inputs
 Required: none.

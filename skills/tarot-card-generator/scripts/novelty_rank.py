@@ -36,8 +36,10 @@ Miner" entered it.
 
 Runs with uv (it installs the dependencies, CPU-only torch; --no-config keeps uv from demanding the
 devcontainer's exact Python in .python-version); the first run downloads MODEL from Hugging Face (about 420 MB,
-cached in ~/.cache/huggingface), then a run takes about 10 s on CPU. Scores from different models do not compare:
-keep MODEL pinned. Chosen 2026-10-27 over all-MiniLM-L6-v2, all-mpnet-base-v2 and bge-small-en-v1.5: given
+cached in ~/.cache/huggingface), then a run takes about 10 s on CPU. Scores from different models do not compare,
+so both are pinned: the model by MODEL and REVISION, every package by novelty_rank.py.lock next to this script
+(uv uses it by itself; refresh it on purpose with `uv lock --no-config --script novelty_rank.py`, then check
+that the deck spacing printed by a run is unchanged). Chosen 2026-10-27 over all-MiniLM-L6-v2, all-mpnet-base-v2 and bge-small-en-v1.5: given
 plain-word paraphrases of four card essences and a loose description of The Anchor, it was the only one that
 named the source card every time with a clear margin (similarity to the source 0.74-0.81, to the runner-up
 0.07-0.10 lower).
@@ -49,6 +51,7 @@ import sys
 from pathlib import Path
 
 MODEL = "BAAI/bge-base-en-v1.5"
+REVISION = "a5beb1e3e68b9ab74eb54cfd186867f64f240e1a"   # the model's Hugging Face commit; a newer one may score differently
 REPO = Path(os.environ.get("TAROT_REPO") or Path(__file__).resolve().parents[3])
 WORDS = (75, 150)        # an existing card's essence length; a much shorter candidate would skew its score
 
@@ -70,7 +73,7 @@ def load_model():
     os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
     os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
     from sentence_transformers import SentenceTransformer
-    return SentenceTransformer(MODEL, device="cpu")
+    return SentenceTransformer(MODEL, revision=REVISION, device="cpu")
 
 
 def gaps(top):
