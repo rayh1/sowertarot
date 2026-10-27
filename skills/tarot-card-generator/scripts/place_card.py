@@ -4,7 +4,7 @@ registry note): one card file content/cards/<slug>.md, its picture and clip in c
 their checksums in content/checksums.txt.
 
   place_card.py terms                   every card's title, concept and key_terms (for the uniqueness check)
-  place_card.py new --title T --concept C --key-terms "a, b, c" --body FILE [--sown-by DATE]
+  place_card.py new --title T --concept C --key-terms "a, b, c" --body FILE --sown-by DATE
                                         write a new card file (image pending); FILE holds its sections
                                         (## Visual Description, ## Archetypal Essence, ## Render Prompt)
   place_card.py attach --card T --image PNG [--renders N] [--replace]
