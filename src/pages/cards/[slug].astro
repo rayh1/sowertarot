@@ -1,7 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import CardMedia from "../../components/CardMedia.astro";
-import { cardByTitle, cardUrl, deck, media, previewUrl, readings, readingUrl, sections, shortDate, type Card } from "../../lib/deck";
+import { cardByTitle, cardUrl, deck, media, originVerb, previewUrl, readings, readingUrl, sections, shortDate, type Card } from "../../lib/deck";
 
 export async function getStaticPaths() {
   return (await deck()).map((card) => ({ params: { slug: card.id }, props: { card } }));
@@ -17,6 +17,7 @@ const drawn = await Promise.all(
     .filter((r) => r.data.card === c.title)
     .map(async (r) => ({ r, lens: await cardByTitle(r.data.lens) })),
 );
+const trigger = c.sown_by ? (await readings()).find((r) => r.id === c.sown_by) : undefined;
 ---
 
 <Base title={c.title} description={c.concept} image={previewUrl(card)} imageAlt={`${c.title}, a card of the Sower Tarot deck.`}>
@@ -25,6 +26,14 @@ const drawn = await Promise.all(
       <h1 class="card-title">{c.title}</h1>
       <p class="concept">{c.concept}</p>
       <ul class="key-terms" aria-label="Key terms">{c.key_terms.map((t) => <li>{t}</li>)}</ul>
+      {
+        trigger && (
+          <p class="origin">
+            {originVerb(trigger)} from the draw of {trigger.data.card} on{" "}
+            <a href={readingUrl(trigger)}>{shortDate(trigger.data.date)}</a>
+          </p>
+        )
+      }
     </header>
 
     <div class="card-body">

@@ -55,6 +55,9 @@ def cmd_new(a):
     path = card_path(a.title)
     if path.exists():
         fail(f"{path.relative_to(REPO)} already exists")
+    pending = [r["date"] for r in daily.pending_triggers()]
+    if a.sown_by not in pending:   # a new card comes only through a trigger draw that has no card yet
+        fail(f"--sown-by {a.sown_by} is no trigger draw waiting for a card; waiting: {', '.join(pending) or 'none'}")
     terms = [t.strip().lower() for t in a.key_terms.split(",") if t.strip()]
     if not 3 <= len(terms) <= 6:
         fail(f"give 3 to 6 key terms, not {len(terms)}")
@@ -201,6 +204,13 @@ def cmd_publish(a):
                   "--quiet", "-m", msg, "--", *pathspec)
         print(f"committed: {daily.git('log', '-1', '--format=%h %s').stdout.strip()}")
     daily.cmd_push(a)
+    if fields.get("sown_by"):      # the trigger draw now has its card: close its Parked note
+        commit = daily.git("log", "-1", "--format=%h", "--", str(path.relative_to(REPO))).stdout.strip()
+        try:
+            print(daily.close_trigger(fields["sown_by"], fields["title"], commit))
+        except (RuntimeError, OSError) as e:
+            print(f"warning: the card is published, but its trigger's Parked note was not closed: {e}. Close it by "
+                  "hand (SKILL.md Step 6).", file=sys.stderr)
 
 
 def main():
@@ -212,7 +222,8 @@ def main():
     s.add_argument("--concept", required=True, help="3-6 words")
     s.add_argument("--key-terms", required=True, help="comma-separated, 3-6")
     s.add_argument("--body", required=True, help="file with the card's ## sections")
-    s.add_argument("--sown-by", help="date of the trigger reading this card grew from (YYYY-MM-DD)")
+    s.add_argument("--sown-by", required=True,
+                   help="date of the trigger reading this card grew from (YYYY-MM-DD; daily.py triggers lists them)")
     s = sub.add_parser("attach")
     s.add_argument("--card", required=True)
     s.add_argument("--image", required=True)

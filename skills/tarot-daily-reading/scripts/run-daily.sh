@@ -36,5 +36,12 @@ fi
 if "$SCRIPTS/daily.py" status >/dev/null; then
   out=$("$SCRIPTS/daily.py" push 2>&1) || log "FAILED to push the reading: $out"
 fi
+# Trigger draws (The Sower or The Miner as the day's card): a Parked note and an email, once per draw. A failure
+# is logged and never fails the reading; an unannounced draw is tried again the next morning.
+if out=$("$SCRIPTS/daily.py" notify 2>&1); then
+  [ -n "$out" ] && printf '%s\n' "$out" | while IFS= read -r line; do log "$line"; done
+else
+  log "FAILED to notify: $(printf '%s' "$out" | tr '\n' ' ')"
+fi
 # Back up content/ (also catches hand edits to card files and media); a failure never fails the reading.
 out=$("$SCRIPTS/daily.py" backup 2>&1) || log "FAILED to back up: $out"

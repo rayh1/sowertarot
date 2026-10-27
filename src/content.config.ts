@@ -13,6 +13,8 @@ const cards = defineCollection({
     created: z.coerce.date(),
     image: z.string(),
     clip: z.string().optional(),
+    // The trigger reading (its date) this card grew from: The Sower or The Miner drawn as the day's card.
+    sown_by: z.string().optional(),
   }),
 });
 

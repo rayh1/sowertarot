@@ -23,6 +23,21 @@ export async function cardByTitle(title: string): Promise<Card | undefined> {
   return (await deck()).find((c) => c.data.title === title);
 }
 
+/** Cards that grew from a trigger reading (sown_by), newest trigger first, with that reading if it exists. */
+export async function sownCards(): Promise<{ card: Card; trigger?: Reading }[]> {
+  const all = await readings();
+  return (await deck())
+    .filter((c) => c.data.sown_by)
+    .sort((a, b) => b.data.sown_by!.localeCompare(a.data.sown_by!))
+    .map((card) => ({ card, trigger: all.find((r) => r.id === card.data.sown_by) }));
+}
+
+/** How long the home page names a new card (counted from its created date). */
+export const NEW_CARD_DAYS = 30;
+
+/** "Sown from the draw of The Sower" or "Mined from the draw of The Miner". */
+export const originVerb = (trigger: Reading) => (trigger.data.card === "The Miner" ? "Mined" : "Sown");
+
 export const readingUrl = (r: Reading) => `/readings/${r.id}/`;
 export const cardUrl = (c: Card) => `/cards/${c.id}/`;
 

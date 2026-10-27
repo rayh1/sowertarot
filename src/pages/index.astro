@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import ReadingView from "../components/ReadingView.astro";
-import { cardByTitle, deck, previewUrl, readings, readingUrl, shortDate } from "../lib/deck";
+import { cardByTitle, cardUrl, deck, NEW_CARD_DAYS, originVerb, previewUrl, readings, readingUrl, shortDate, sownCards } from "../lib/deck";
 
 const [today, ...earlier] = await readings();
 const cards = await deck();
@@ -9,6 +9,9 @@ const cards = await deck();
 const recent = earlier.slice(0, 5);
 // The link preview shows today's card, as the page does.
 const todayCard = today && (await cardByTitle(today.data.card));
+// "New in the deck" names the newest card grown from a trigger draw, for NEW_CARD_DAYS after it was made.
+const cutoff = Date.now() - NEW_CARD_DAYS * 86400e3;
+const fresh = (await sownCards()).find(({ card }) => card.data.created.getTime() >= cutoff);
 ---
 
 <Base
@@ -23,6 +26,20 @@ const todayCard = today && (await cardByTitle(today.data.card));
       seven a public random number picks one card, and it is read for the day.
     </p>
   </section>
+
+  {
+    fresh && (
+      <p class="new-card">
+        New in the deck: <a href={cardUrl(fresh.card)}>{fresh.card.data.title}</a>
+        {fresh.trigger && (
+          <span>
+            , {originVerb(fresh.trigger).toLowerCase()} from the draw of{" "}
+            <a href={readingUrl(fresh.trigger)}>{shortDate(fresh.trigger.data.date)}</a>
+          </span>
+        )}
+      </p>
+    )
+  }
 
   {
     recent.length > 0 && (

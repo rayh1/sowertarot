@@ -10,6 +10,8 @@
   daily.py push                        push main if it has commits GitHub lacks (save does this itself)
   daily.py phrases                     list the stock phrases the next reading must avoid (also in draw.json)
   daily.py backup                      copy content/ to the backup location SOWER_BACKUP (rclone, never deletes)
+  daily.py triggers                    list the trigger draws still waiting for their new card, oldest first
+  daily.py notify [--dry-run]          announce each waiting trigger draw once: a Parked note and an email
   daily.py settings                    print the settings as shell assignments (run-daily.sh, install-cron.sh)
 
 Everything comes from the repository this skill lives in (the folder two levels above this script, after
@@ -20,7 +22,15 @@ before the draw time, so a later manual run that day draws from the same deck.
 
 Environment overrides (for tests): TAROT_DATE (YYYY-MM-DD), TAROT_REPO (repository root), TAROT_NO_GIT=1
 (no git at all: the deck is the working tree's content/cards/, save neither commits nor pushes, pull and push
-do nothing), TAROT_DAILY_DIR (working folder for draw.json and reading.md, instead of <SOWER_DAILY_DIR>/draw).
+do nothing), TAROT_DAILY_DIR (working folder for draw.json and reading.md, instead of <SOWER_DAILY_DIR>/draw),
+TAROT_TRIGGER_START (YYYY-MM-DD, instead of TRIGGER_START).
+
+Trigger cards: when The Sower or The Miner is the day's card of a drand draw on or after TRIGGER_START (upright
+or reversed; never the lens card, never a manual draw), exactly one new card is due, and no card enters the deck
+any other way. A trigger waits until a card file names its reading's date in `sown_by`; that follows from the
+repository alone, so there is no queue to keep. `notify` tells the user once per trigger draw: it opens a note
+in the Joplin notebook SOWER_PARKED and emails SOWER_NOTIFY_TO with SOWER_MAIL_COMMAND (each skipped when its
+setting is empty; without SOWER_PARKED a file notified-<date> in SOWER_DAILY_DIR marks a trigger as announced).
 
 Verifiable draw: drand (League of Entropy's public randomness beacon) publishes a signed random value every
 30 seconds. The draw takes the round of 07:00 Europe/Amsterdam on the draw date, reads its randomness as one
@@ -55,7 +65,8 @@ BRANCH = "main"
 COMMITTER = ("Sower Tarot", "daily@sowertarot.com")
 # Defaults when settings.env lacks a key (settings.env explains each one).
 SETTING_DEFAULTS = {"SOWER_WORK": "work", "SOWER_DAILY_DIR": "work/daily-card", "SOWER_GH_USER": "",
-                    "SOWER_BACKUP": "", "SOWER_REVIEW": "", "SOWER_CLAUDE_DIR": "."}
+                    "SOWER_BACKUP": "", "SOWER_REVIEW": "", "SOWER_CLAUDE_DIR": ".", "SOWER_NOTIFY_TO": "",
+                    "SOWER_MAIL_COMMAND": "", "SOWER_PARKED": ""}
 SETTING_PATHS = {"SOWER_WORK", "SOWER_DAILY_DIR", "SOWER_CLAUDE_DIR"}
 
 
@@ -94,6 +105,13 @@ DRAW_TZ = zoneinfo.ZoneInfo("Europe/Amsterdam")
 
 SECTIONS = ["The card", "Essence", "For today"]
 # Reading file front matter, in this order; every value is written as a JSON string.
+MANUAL_DRAND = "none (manual draw)"    # the drand field of a draw set by hand (draw --card/--orientation/--lens)
+# Trigger rule. TRIGGER_START is the first draw the rule applies to: the first 07:00 draw after the commit that
+# put the rule on the about page (src/pages/about.astro says the same date). None: no draw triggers yet.
+TRIGGER_CARDS = ("The Sower", "The Miner")
+TRIGGER_START = None
+SITE = "https://sowertarot.com"         # astro.config.mjs `site`; the email links to the reading there
+PARKED_TAGS = ("parked", "handoff", "project:tarot-deck")
 READING_KEYS = ["date", "card", "orientation", "lens", "lead", "drand", "deck", "deck_list", "lede", "alt"]
 
 # Cliche mirror: 3-5 word phrases used in PHRASE_MIN_READINGS or more readings are passed to the writer to avoid.
@@ -443,7 +461,7 @@ def cmd_save(a):
     if not NO_GIT:
         on_branch()
     fields = {"date": draw["date"], "card": draw["card"], "orientation": draw["orientation"], "lens": draw["lens"],
-              "lead": r["lead"], "drand": str(draw["drand"] or "none (manual draw)"), "deck": str(draw["deck"]),
+              "lead": r["lead"], "drand": str(draw["drand"] or MANUAL_DRAND), "deck": str(draw["deck"]),
               "deck_list": " | ".join(draw["deck_list"]), "lede": r["lede"], "alt": r["alt"]}
     head = "".join(f"{k}: {json.dumps(fields[k], ensure_ascii=False)}\n" for k in READING_KEYS)
     body = "\n\n".join(f"## {s}\n\n{r['sections'][s]}" for s in SECTIONS)
@@ -499,6 +517,140 @@ def cmd_backup(_):
     print(f"backed up to {dest}/content: " + (", ".join(copied) if copied else "nothing new"))
 
 
+def pending_triggers():
+    """Trigger readings that no card file names in `sown_by`, oldest first."""
+    start = os.environ.get("TAROT_TRIGGER_START") or TRIGGER_START
+    if not start:
+        return []
+    sown = {c["fields"].get("sown_by") for c in tree_cards().values()}
+    return sorted((r for r in readings() if r["date"] >= start and r.get("card") in TRIGGER_CARDS
+                   and r.get("drand") != MANUAL_DRAND and r["date"] not in sown), key=lambda r: r["date"])
+
+
+def cmd_triggers(_):
+    for r in pending_triggers():
+        print(f"{r['date']} {r['card']} ({r['orientation']})")
+
+
+def trigger_title(r):
+    return f"Make the new card from the {r['card'].removeprefix('The ')} draw of {r['date']}"
+
+
+def joplink(*args, check=True):
+    r = subprocess.run(["joplink", "--json", *args], capture_output=True, text=True)
+    if check and r.returncode != 0:
+        raise RuntimeError(f"joplink {' '.join(args[:2])}: {(r.stderr or r.stdout).strip()}")
+    return r
+
+
+def parked_note(title):
+    """The id of the note with this title in SOWER_PARKED or its Done folder, or None. By exact path, not search:
+    Joplin's search index lags new notes."""
+    for folder in (SETTINGS["SOWER_PARKED"], SETTINGS["SOWER_PARKED"] + "/Done"):
+        r = joplink("note", "get", f"{folder}/{title}", "--fields", "id", check=False)
+        if r.returncode == 0:
+            return json.loads(r.stdout)["id"]
+        if r.returncode != 3:                  # 3 = not found; anything else means Joplin did not answer
+            raise RuntimeError(f"joplink note get: {(r.stderr or r.stdout).strip()}")
+    return None
+
+
+def trigger_texts(r):
+    """(Parked note body, email body) for trigger reading r."""
+    url = f"{SITE}/readings/{r['date']}/"
+    origin = ("an idea from outside the deck (The Sower)" if r["card"] == "The Sower"
+              else "a gap in the deck (The Miner)")
+    note = (f"Decided: {r['date']} — {r['card']} was drawn as the day's card ({url}). Under the Sower deck's trigger "
+            f"rule exactly one new card is now due, grown from {origin}; no card enters the deck any other way.\n\n"
+            f"Next: run § Find something new in skills/tarot-card-generator/SKILL.md (repository {REPO}) for this "
+            f"draw, with trigger {r['date']}.\n\n"
+            f"Done when: the new card is committed to main with this reading named as its origin (sown_by "
+            f"\"{r['date']}\").\n\nHistory:\n- {today()} — Opened by the 07:00 job.\n")
+    mail = (f"# A new card is due\n\n{r['card']} was drawn as the day's card on {r['date']} "
+            f"([the reading]({url})). Under the trigger rule exactly one new card is now due, grown from {origin}.\n\n"
+            f"Make it with § Find something new in the card skill; the Parked note \"{trigger_title(r)}\" "
+            f"holds the steps.\n")
+    return note, mail
+
+
+def cmd_notify(a):
+    """Announce each pending trigger once: a note in SOWER_PARKED (tagged PARKED_TAGS), then an email. A trigger
+    with a note (or, without SOWER_PARKED, a notified-<date> file) was announced before and is skipped, so a rerun
+    sends nothing. The note comes first: a failed email (the mail server is reachable only on the Charm network)
+    is reported and not retried, because the note already reaches the user. Exit 1 if anything failed."""
+    parked, to, mail_cmd = SETTINGS["SOWER_PARKED"], SETTINGS["SOWER_NOTIFY_TO"], SETTINGS["SOWER_MAIL_COMMAND"]
+    marks = Path(SETTINGS["SOWER_DAILY_DIR"])
+    failed = False
+    for r in pending_triggers():
+        title = trigger_title(r)
+        note, mail = trigger_texts(r)
+        try:
+            if parked:
+                if parked_note(title):
+                    continue
+                if a.dry_run:
+                    print(f"dry run: would open Parked note {parked}/{title}")
+                else:
+                    tmp = DRAW_DIR / f"trigger-{r['date']}-note.md"
+                    tmp.parent.mkdir(parents=True, exist_ok=True)
+                    tmp.write_text(note, encoding="utf-8")
+                    joplink("note", "save", f"{parked}/{title}", "--file", str(tmp))
+                    nid = parked_note(title)
+                    if not nid:
+                        raise RuntimeError(f"note {parked}/{title} not found after saving it")
+                    for tag in PARKED_TAGS:
+                        joplink("tag", "tag-note", nid, tag)
+                    print(f"trigger {r['date']} ({r['card']}): Parked note {nid}")
+            else:
+                if (marks / f"notified-{r['date']}").exists():
+                    continue
+                if not a.dry_run:
+                    marks.mkdir(parents=True, exist_ok=True)
+                    (marks / f"notified-{r['date']}").write_text(today() + "\n")
+        except (RuntimeError, OSError) as e:
+            print(f"trigger {r['date']}: no Parked note: {e}", file=sys.stderr)
+            failed = True
+            continue                    # without a note there is no record of the notice: no email either
+        if not (to and mail_cmd):
+            if not parked:
+                print(f"trigger {r['date']} ({r['card']}): a new card is due")
+            continue
+        body = DRAW_DIR / f"trigger-{r['date']}-mail.md"
+        body.parent.mkdir(parents=True, exist_ok=True)
+        body.write_text(mail, encoding="utf-8")
+        cmd = [mail_cmd, "--to", to, "--subject", f"Sower Tarot: a new card is due ({r['card']}, {r['date']})",
+               "--markdown", str(body), "--allow-domain", to.rpartition("@")[2], "--allow-link", f"{SITE}/"]
+        res = subprocess.run(cmd + (["--dry-run"] if a.dry_run else []), capture_output=True, text=True)
+        if res.returncode != 0:
+            print(f"trigger {r['date']}: email to {to} failed: {(res.stderr or res.stdout).strip()}", file=sys.stderr)
+            failed = True
+        else:
+            print(f"trigger {r['date']} ({r['card']}): email {'checked (dry run)' if a.dry_run else 'sent'} to {to}")
+    sys.exit(1 if failed else 0)
+
+
+
+def close_trigger(date, card, commit):
+    """Close the Parked note of trigger draw DATE once its new card CARD is on main in COMMIT: prepend the status
+    line, remove the parked and handoff tags, move the note to <SOWER_PARKED>/Done. Found by exact path, then
+    handled by id (a write by path to a moved note would create a duplicate). Returns what was done."""
+    parked = SETTINGS["SOWER_PARKED"]
+    if not parked:
+        return "no Parked note to close (SOWER_PARKED is empty)"
+    title = trigger_title(parse_reading(reading_path(date).read_text(encoding="utf-8")))
+    r = joplink("note", "get", f"{parked}/{title}", "--fields", "id", check=False)
+    if r.returncode == 3:
+        return f"no open note {parked}/{title} to close"
+    if r.returncode != 0:
+        raise RuntimeError(f"joplink note get: {(r.stderr or r.stdout).strip()}")
+    nid = json.loads(r.stdout)["id"]
+    joplink("note", "prepend", nid, "--text", f"Status: closed {today()} — {card} committed ({commit})",
+            "--separator", "\n\n---\n\n")
+    for tag in ("parked", "handoff"):
+        joplink("tag", "untag-note", nid, tag)
+    joplink("note", "move", nid, f"{parked}/Done")
+    return f"closed Parked note {nid} ({title})"
+
 def cmd_settings(a):
     """Shell assignments for run-daily.sh and install-cron.sh: eval "$(daily.py settings)"."""
     for key, val in SETTINGS.items():
@@ -526,6 +678,10 @@ def main():
     sub.add_parser("phrases").set_defaults(fn=cmd_phrases)
     sub.add_parser("backup").set_defaults(fn=cmd_backup)
     sub.add_parser("settings").set_defaults(fn=cmd_settings)
+    sub.add_parser("triggers").set_defaults(fn=cmd_triggers)
+    n = sub.add_parser("notify")
+    n.add_argument("--dry-run", action="store_true", help="open no note, write no marker; send-mail --dry-run")
+    n.set_defaults(fn=cmd_notify)
     a = p.parse_args()
     a.fn(a)
 
