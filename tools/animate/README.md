@@ -12,4 +12,4 @@ the site plan), so a fork can remake them.
   commands read (`--art ../batch/<slug>/art.png`); the card skill makes it (§ Animate a card).
 
 The one-off scripts that delivered the first clips to the old Dropbox archive are left out. The card skill's
-§ Animate a card points here after its rewrite at step 26; until then it names the old folder.
+§ Animate a card (`skills/tarot-card-generator/SKILL.md`) says how a new clip is made and delivered.

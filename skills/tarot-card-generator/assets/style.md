@@ -17,7 +17,7 @@ Do not add a gold-accent phrase back. "with a single warm gold accent on the
 focal symbol" was cut on 2026-10-09: in a same-seed A/B (8 scenes × 3 seeds) it put a stray
 gold badge, glyph or floating shape in 10 of 24 renders and none without it; palette and
 atmosphere were unchanged. Gold that a card needs goes in its scene text. Renders from before
-the cut replay their recorded prompt (`--from-note`), so existing cards are unaffected.
+the cut replay their recorded prompt (`render_card.py --from-card`), so existing cards are unaffected.
 
 ## Frame-agnostic tail (prompt suffix)
 
@@ -44,7 +44,7 @@ Baked into `assets/tarot-card-flux.json`; listed here as the contract.
 | guidance (FluxGuidance) | 3.5 |
 | cfg (KSampler) | 1.0 |
 | upscale | 4x-UltraSharp → ImageScale 1024 × 1792 (center) |
-| seed | **per card** — record it in the registry entry |
+| seed | **per card** — recorded in the card file (`seed` and `## Render Record`) |
 
 ## Frame flags (frozen)
 

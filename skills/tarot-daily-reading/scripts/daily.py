@@ -55,7 +55,7 @@ BRANCH = "main"
 COMMITTER = ("Sower Tarot", "daily@sowertarot.com")
 # Defaults when settings.env lacks a key (settings.env explains each one).
 SETTING_DEFAULTS = {"SOWER_WORK": "work", "SOWER_DAILY_DIR": "work/daily-card", "SOWER_GH_USER": "",
-                    "SOWER_BACKUP": "", "SOWER_CLAUDE_DIR": "."}
+                    "SOWER_BACKUP": "", "SOWER_REVIEW": "", "SOWER_CLAUDE_DIR": "."}
 SETTING_PATHS = {"SOWER_WORK", "SOWER_DAILY_DIR", "SOWER_CLAUDE_DIR"}
 
 
@@ -361,9 +361,15 @@ def cmd_push(_):
         return
     if int(git("rev-list", "--count", f"{BRANCH}..origin/{BRANCH}").stdout):
         # main moved on GitHub since the pull: replay the local commits (the reading) on top of it
-        if git("rebase", "--quiet", f"origin/{BRANCH}", check=False).returncode != 0:
+        # --autostash: uncommitted work in the clone (a card in progress) must not block the push
+        if git("rebase", "--quiet", "--autostash", f"origin/{BRANCH}", check=False).returncode != 0:
             git("rebase", "--abort", check=False)
             fail(f"{BRANCH} and origin/{BRANCH} have diverged and the local commits do not rebase cleanly", 1)
+        clash = git("diff", "--name-only", "--diff-filter=U").stdout.split()
+        if clash:   # the autostash did not reapply over the new commits: keep the committed files, the edits stay stashed
+            git("checkout", "HEAD", "--", *clash)
+            print(f"warning: uncommitted changes to {', '.join(clash)} clashed with origin/{BRANCH}; those files are "
+                  "back at the committed version and the changes are kept in `git stash list`", file=sys.stderr)
         print(f"rebased {ahead} local commit(s) onto origin/{BRANCH}")
     r = git("push", "--quiet", "origin", BRANCH, auth=True, check=False)
     if r.returncode != 0:

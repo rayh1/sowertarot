@@ -5,9 +5,9 @@ Use this instead of edit_card.py for a disc on a plain or gently graded sky: the
 filled from the sky around it, so there is no box-shaped patch. Clouds, linework or texture
 crossing the disc need edit_card.py (Qwen, tone-matched) instead. The card's render record
 gains a `repairs` entry {"method": "fill_disc", box, grow, thresh}, which
-render_card.py --from-note replays exactly. Attach the result with attach_image.py --replace.
+render_card.py --from-card replays exactly. Attach the result with place_card.py attach --replace.
 
-    python3 fill_disc.py --note "The Weaver" --art <unframed art> --box 570,90,800,320 \\
+    python3 fill_disc.py --name "The Weaver" --art <unframed art> --box 570,90,800,320 \\
         --out <scratchpad>/weaver_fill.png --keep-art <scratchpad>/weaver_fill_art.png
 
 --box must enclose the whole disc and its glow with plain sky on every side (the disc is
@@ -31,7 +31,8 @@ from repair_tools import fill_disc, fill_halo  # noqa: E402
 def main():
     ap = argparse.ArgumentParser()
     src = ap.add_mutually_exclusive_group(required=True)
-    src.add_argument("--note", help="card name; the render record is read from its Joplin note")
+    src.add_argument("--name", "--note", dest="note",
+                     help="card name; the render record is read from its card file content/cards/<slug>.md")
     src.add_argument("--card", help="card PNG carrying a tarot_render record")
     ap.add_argument("--art", required=True, help="the card's current unframed art (with earlier repairs applied)")
     ap.add_argument("--box", required=True, help="x0,y0,x1,y1 in unframed-art pixels around the disc and its glow")

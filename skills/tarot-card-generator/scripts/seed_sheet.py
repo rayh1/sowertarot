@@ -3,10 +3,10 @@
 contact sheet of thumbnails labelled with seed and image number.
 
 Resumable: renders already on disk are skipped, so a stalled run can be restarted.
-Only renders — no note, registry or attach change (SKILL.md § Scope fence).
+Only renders — no card file, media or commit change (SKILL.md § Scope fence).
 
   python3 scripts/seed_sheet.py --card "The Well" --scene "<scene>" \
-      --seeds 24 --out-dir /workspace/tarot/seed-sheets/the-well
+      --seeds 24 --out-dir work/cards/the-well/seed-sheet
 """
 import argparse
 import json

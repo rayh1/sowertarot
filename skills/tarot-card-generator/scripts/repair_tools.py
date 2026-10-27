@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Two repairs that do not show as a patch, shared by edit_card.py, fill_disc.py and
-render_card.py --from-note (which must replay them exactly).
+render_card.py --from-card (which must replay them exactly).
 
 tone_match  — Qwen Image 2.1 returns its whole edit a few levels lighter or darker than the
               original (measured 4–16 levels on the 2026-10-03 sun removals), so a pasted box

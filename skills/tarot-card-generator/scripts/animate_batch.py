@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
 """Unattended batch of card animations over one or more ComfyUI instances (§ Animate a card).
 
-  animate_batch.py --dir <batch dir> --worker local|remote [--dropbox dropbox:Tarot/animations/batch]
+  animate_batch.py --dir <batch dir> --worker local|remote [--copy-to <rclone destination>]
 
 <batch dir>/jobs.json is a list of {"slug", "name", "seed"}; each <batch dir>/<slug>/ holds art.png,
 input_576x1024.png, mask.png, prompt.txt, optionally crop.txt (see animate_mask.py crop) and, once the mask is checked, an empty READY file;
 jobs of cards without READY wait. Run one worker per instance (e.g. under setsid nohup);
 workers claim jobs from <batch dir>/state.json under a file lock, so two instances share one queue.
 Per job: animate_wan.py (5B, through `with-comfy <worker>`), animate_compose.py, then the MP4 is
-copied to --dropbox. A job that fails is retried once (possibly by the other worker); when the
+copied to --copy-to (default <SOWER_REVIEW>/animations/batch from the repository's settings; with
+SOWER_REVIEW empty the MP4 stays in the batch folder only). A job that fails is retried once (possibly by the other worker); when the
 worker's instance is down (with-comfy exit 69, e.g. the remote after 07:00) the worker releases its
 job and exits. Progress: <batch dir>/run.log and state.json.
 """
-import argparse, fcntl, json, os, subprocess, time
+import argparse, fcntl, json, os, subprocess, sys, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from card_repo import SETTINGS, review_root  # noqa: E402
 WITH_COMFY = "/workspace/.claude/tools/with-comfy/with-comfy"
 
 
@@ -81,7 +84,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dir", required=True)
     ap.add_argument("--worker", required=True)
-    ap.add_argument("--dropbox", default="dropbox:Tarot/animations/batch")
+    review = SETTINGS.get("SOWER_REVIEW", "").strip()
+    ap.add_argument("--copy-to", "--dropbox", dest="dropbox", default=f"{review_root()}/animations/batch" if review else "")
     a = ap.parse_args()
     d = os.path.abspath(a.dir)
     log(d, f"[{a.worker}] start")
@@ -109,7 +113,7 @@ def main():
             rc, out = run([WITH_COMFY, a.worker, "python3", f"{HERE}/animate_compose.py", "--frames-prefix", prefix,
                            "--count", "121", "--fps", "24", "--art", "art.png", "--mask", "mask.png",
                            "--title", j["name"], "--out", jid, "--crossfade", "0.5", *crop_arg(cd)], cd)
-        if rc == 0:
+        if rc == 0 and a.dropbox:
             rc, out = run(["rclone", "copy", f"{jid}.mp4", a.dropbox], cd)
         if rc == 0:
             update(d, finish(jid, "done"))

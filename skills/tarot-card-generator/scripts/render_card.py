@@ -7,20 +7,20 @@ inputs are the scene description, the title, and the seed.
 
     python3 render_card.py \
         --scene "A hooded figure sets a glowing keystone into a stone arch..." \
-        --title "The Keystone" --seed 271828 --out /workspace/tarot/card_the-keystone.png
+        --title "The Keystone" --seed 271828 --out work/cards/the-keystone/the-keystone_271828.png
 
 Prereqs: ComfyUI running locally with flux1-dev-fp8.safetensors and
 4x-UltraSharp.pth installed; the `comfy` CLI on PATH. Emits a JSON line on
 success: {"ok":true,"out":...,"seed":...,"comfy_file":...,"raw":...}.
 
---from-note "<Card Name>" regenerates a card from its Joplin note alone: it runs
+--from-card "<Card Name>" regenerates a card from its card file (content/cards/<slug>.md) alone: it runs
 the record's base workflow, re-applies each recorded repair (a Qwen edit pasted back
 inside its box and tone-matched when recorded so, or a fill_disc / fill_halo sky fill), frames with the recorded title and frame flags, and writes the
 same record into the output PNG.
 
 The framed card PNG carries a render record (PNG text chunk `tarot_render`):
 seed, title, scene, full prompt, frame flags, ComfyUI version and the executed
-ComfyUI graph. attach_image.py copies it into the card note.
+ComfyUI graph. place_card.py attach copies it into the card file.
 """
 import argparse, json, os, re, subprocess, sys, time, urllib.request, uuid
 from datetime import datetime
@@ -32,7 +32,7 @@ SKILL = os.path.dirname(HERE)
 STYLE_MD = os.path.join(SKILL, "assets", "style.md")
 WORKFLOW = os.path.join(SKILL, "assets", "tarot-card-flux.json")
 FRAME = os.path.join(HERE, "frame_card.py")
-RECORD_KEY = "tarot_render"  # PNG text chunk read by attach_image.py
+RECORD_KEY = "tarot_render"  # PNG text chunk read by place_card.py attach
 
 def read_frame_flags():
     """Parse the frozen frame flags from assets/style.md § Frame flags.
@@ -87,8 +87,8 @@ def comfy_version(url):
 def embed_record(card_png, raw_png, record):
     """Write the render record into the framed card as PNG text chunk `tarot_render`.
 
-    The record travels with the file, so copying the card keeps it; attach_image.py
-    copies it into the Joplin note. `workflow` is the executed ComfyUI graph (API
+    The record travels with the file, so copying the card keeps it; place_card.py attach
+    copies it into the card file. `workflow` is the executed ComfyUI graph (API
     format) that ComfyUI embedded in the raw output: models, LoRA, sampler, size,
     upscaler — everything needed to re-render without the ComfyUI output file.
     """
@@ -109,17 +109,9 @@ def write_record(card_png, record):
 
 
 def note_record(card):
-    """Return the render record JSON from note Tarot/Cards/<card> § Render Record."""
-    r = subprocess.run(["joplink", "--json", "note", "get", f"Tarot/Cards/{card}", "--fields", "body"],
-                       capture_output=True, text=True)
-    if r.returncode:
-        raise SystemExit(f"note Tarot/Cards/{card} not readable:\n{r.stdout}{r.stderr}")
-    data = json.loads(r.stdout)
-    body = data.get("data", data)["body"]
-    if "## Render Record" not in body:
-        raise SystemExit(f"Tarot/Cards/{card} has no ## Render Record — render the card with --scene instead")
-    m = re.search(r"```json\n(.*?)\n```", body[body.index("## Render Record"):], re.S)
-    return json.loads(m.group(1))
+    """Return the render record JSON from the card file content/cards/<slug>.md § Render Record."""
+    from card_repo import card_record
+    return card_record(card)
 
 
 def post_graph(url, graph):
@@ -170,7 +162,7 @@ def repair_graph(repair, image_name):
 
 
 def from_note(args):
-    """Regenerate a card from its note's render record: base render, repairs, frame."""
+    """Regenerate a card from its card file's render record: base render, repairs, frame."""
     url, record = args.comfy_url, note_record(args.from_note)
     outdir = os.path.dirname(os.path.abspath(args.out))
     os.makedirs(outdir, exist_ok=True)
@@ -222,8 +214,9 @@ def main():
     ap.add_argument("--scene", help="card-specific scene description")
     ap.add_argument("--title")
     ap.add_argument("--seed", type=int)
-    ap.add_argument("--from-note", metavar="CARD", help="regenerate CARD from its Joplin note's "
-                    "## Render Record (base render + recorded repairs); replaces --scene/--title/--seed")
+    ap.add_argument("--from-card", "--from-note", dest="from_note", metavar="CARD",
+                    help="regenerate CARD from its card file's ## Render Record (base render + recorded repairs); "
+                    "replaces --scene/--title/--seed (--from-note is the old name)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--comfy-url", default=os.environ.get("COMFY_LOCAL_URL", "http://127.0.0.1:8188"))
     ap.add_argument("--workflow", default=WORKFLOW)
@@ -231,10 +224,10 @@ def main():
     args = ap.parse_args()
     if args.from_note:
         if args.scene or args.title or args.seed is not None:
-            ap.error("--from-note takes the scene, title and seed from the note; omit them")
+            ap.error("--from-card takes the scene, title and seed from the card file; omit them")
         return from_note(args)
     if not (args.scene and args.title and args.seed is not None):
-        ap.error("--scene, --title and --seed are required (or use --from-note)")
+        ap.error("--scene, --title and --seed are required (or use --from-card)")
 
     style_block, tail = read_style_blocks()
     prompt = f"{style_block}\n\n{args.scene.strip()}\n\n{tail}"

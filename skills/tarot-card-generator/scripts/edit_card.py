@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """Repair one defect in a rendered card: Qwen Image 2.1 edit -> masked paste-back -> frame.
 
-The card's render record (from its Joplin note `Tarot/Cards/<name>` § Render Record, or
+The card's render record (from its card file content/cards/<slug>.md § Render Record, or
 from a card PNG's `tarot_render` chunk via --card) names the unframed ComfyUI output,
 title and frame flags. The script edits that unframed art at full size with
 assets/tarot-card-qwen-edit.json, keeps the edit only inside --box (soft edge
 --feather), evens the box's tone to the original (repair_tools.tone_match; Qwen shifts
 it 4-16 levels, which shows as a patch; --no-tone-match to skip), frames the result and writes a card PNG whose record gains a `repairs`
-entry. Attach it with attach_image.py --replace.
+entry. Attach it with place_card.py attach --replace.
 
-    python3 edit_card.py --note "The Forge" --seed 1 --box 380,0,660,200 \
+    python3 edit_card.py --name "The Forge" --seed 1 --box 380,0,660,200 \
         --instruction "Remove the gold star at the top." --out <scratchpad>/forge_s1.png
 
 Repairs stack: pass the output of a previous repair as --card (with --art pointing
@@ -34,7 +34,8 @@ KEEP = (" Keep everything else, including the woodcut linework and hatching, exa
 def main():
     ap = argparse.ArgumentParser()
     src = ap.add_mutually_exclusive_group(required=True)
-    src.add_argument("--note", help="card name; the render record is read from its Joplin note")
+    src.add_argument("--name", "--note", dest="note",
+                     help="card name; the render record is read from its card file content/cards/<slug>.md")
     src.add_argument("--card", help="card PNG carrying a tarot_render record")
     ap.add_argument("--art", help="unframed art to edit (default: the record's comfy_file from ComfyUI)")
     ap.add_argument("--instruction", required=True, help="what to change, in plain words")
