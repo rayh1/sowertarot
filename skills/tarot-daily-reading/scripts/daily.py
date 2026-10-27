@@ -109,7 +109,7 @@ MANUAL_DRAND = "none (manual draw)"    # the drand field of a draw set by hand (
 # Trigger rule. TRIGGER_START is the first draw the rule applies to: the first 07:00 draw after the commit that
 # put the rule on the about page (src/pages/about.astro says the same date). None: no draw triggers yet.
 TRIGGER_CARDS = ("The Sower", "The Miner")
-TRIGGER_START = None
+TRIGGER_START = "2026-10-28"
 SITE = "https://sowertarot.com"         # astro.config.mjs `site`; the email links to the reading there
 PARKED_TAGS = ("parked", "handoff", "project:tarot-deck")
 READING_KEYS = ["date", "card", "orientation", "lens", "lead", "drand", "deck", "deck_list", "lede", "alt"]
