@@ -2,28 +2,25 @@
 """Mechanical steps of the daily tarot reading. The model only writes the reading text.
 
   daily.py pull                        bring the repository's main up to date (fast-forward only)
-  daily.py status [--published]        exit 0 if today's reading file exists (and, with --published,
-                                       the page was marked published today), else 1
+  daily.py status                      exit 0 if today's reading file exists, else 1
   daily.py draw [--card NAME] [--orientation upright|reversed] [--lens NAME]
-                                       draw a card and a lens card from drand, prepare image and animation -> draw.json
+                                       draw a card and a lens card from drand -> draw.json
   daily.py verify [DATE]               recompute a saved draw from its drand round and deck list (default: today)
   daily.py save [--file reading.md]    write content/readings/<date>.md, commit it to main and push
   daily.py push                        push main if it has commits GitHub lacks (save does this itself)
   daily.py phrases                     list the stock phrases the next reading must avoid (also in draw.json)
-  daily.py build-page                  render index.html (latest reading + archive) for publishing
-  daily.py mark-published              record that today's page is published (run-daily.sh waits for it)
+  daily.py backup                      copy content/ to the backup location SOWER_BACKUP (rclone, never deletes)
   daily.py settings                    print the settings as shell assignments (run-daily.sh, install-cron.sh)
 
 Everything comes from the repository this skill lives in (the folder two levels above this script, after
 following links): card files in content/cards/, readings in content/readings/, pictures and clips in
-content/media/. Personal values (GitHub account, page, folders) come from the repository's settings.env and
+content/media/. Personal values (GitHub account, backup, folders) come from the repository's settings.env and
 settings.local.env (see settings.env). The deck of a draw is the card files on `main` at the last commit that changed content/cards/
 before the draw time, so a later manual run that day draws from the same deck.
 
 Environment overrides (for tests): TAROT_DATE (YYYY-MM-DD), TAROT_REPO (repository root), TAROT_NO_GIT=1
 (no git at all: the deck is the working tree's content/cards/, save neither commits nor pushes, pull and push
-do nothing), TAROT_DAILY_DIR (page build folder, instead of <SOWER_DAILY_DIR>/page), TAROT_PAGE_URL (Artifact
-page, instead of SOWER_PAGE_URL).
+do nothing), TAROT_DAILY_DIR (working folder for draw.json and reading.md, instead of <SOWER_DAILY_DIR>/draw).
 
 Verifiable draw: drand (League of Entropy's public randomness beacon) publishes a signed random value every
 30 seconds. The draw takes the round of 07:00 Europe/Amsterdam on the draw date, reads its randomness as one
@@ -36,13 +33,11 @@ The reading file stores the round and the sorted deck list, so anyone can recomp
 import argparse
 import datetime as dt
 import hashlib
-import html
 import json
 import os
 import random
 import re
 import shlex
-import string
 import subprocess
 import sys
 import time
@@ -60,7 +55,7 @@ BRANCH = "main"
 COMMITTER = ("Sower Tarot", "daily@sowertarot.com")
 # Defaults when settings.env lacks a key (settings.env explains each one).
 SETTING_DEFAULTS = {"SOWER_WORK": "work", "SOWER_DAILY_DIR": "work/daily-card", "SOWER_GH_USER": "",
-                    "SOWER_PAGE_URL": "", "SOWER_CLAUDE_DIR": "."}
+                    "SOWER_BACKUP": "", "SOWER_CLAUDE_DIR": "."}
 SETTING_PATHS = {"SOWER_WORK", "SOWER_DAILY_DIR", "SOWER_CLAUDE_DIR"}
 
 
@@ -87,10 +82,7 @@ def load_settings():
 
 SETTINGS = load_settings()
 GH_USER = SETTINGS["SOWER_GH_USER"]         # GitHub account whose gh token pulls and pushes; "" = gh's active one
-BUILD = Path(os.environ.get("TAROT_DAILY_DIR") or Path(SETTINGS["SOWER_DAILY_DIR"]) / "page")
-PAGE_URL = os.environ.get("TAROT_PAGE_URL", SETTINGS["SOWER_PAGE_URL"]) or None
-IMAGE_WIDTH = 900
-ANIM_WIDTH = 540                             # animated WebP width; ~0.5-1 MB per card
+DRAW_DIR = Path(os.environ.get("TAROT_DAILY_DIR") or Path(SETTINGS["SOWER_DAILY_DIR"]) / "draw")
 
 # drand mainnet ("default" chain: 30-second rounds since genesis 2020-07-22); the chain hash pins it.
 DRAND_API = "https://api.drand.sh"
@@ -303,52 +295,6 @@ def card_sections(body):
     return {k: "\n".join(v).strip() for k, v in out.items()}
 
 
-def media_file(name):
-    path = MEDIA / name
-    if not path.is_file():
-        fail(f"{path} is missing (content/media/ is filled by scripts/migrate.py until the media are committed)")
-    return path
-
-
-def fetch_image(card, fields):
-    """Write the card PNG as an IMAGE_WIDTH-wide JPEG into BUILD. Returns its path."""
-    from PIL import Image
-    BUILD.mkdir(parents=True, exist_ok=True)
-    jpg = BUILD / f"{today()}-{slug(card)}.jpg"
-    with Image.open(media_file(fields.get("image") or f"card_{slug(card)}.png")) as im:
-        im = im.convert("RGB")
-        im = im.resize((IMAGE_WIDTH, round(im.height * IMAGE_WIDTH / im.width)), Image.LANCZOS)
-        im.save(jpg, "JPEG", quality=85, optimize=True)
-    for old in BUILD.glob("*.jpg"):
-        if old != jpg:
-            old.unlink()
-    return jpg
-
-
-def fetch_animation(card, fields):
-    """Write the card's looping clip (its `clip` field) as an ANIM_WIDTH-wide animated WebP into BUILD.
-    An <img> plays animated WebP everywhere (a <video> did not play on the published page, 2026-10-08).
-    libwebp_anim stores only the changed parts of each frame, which keeps it small: most of a card is still.
-    Returns its path, or None when the card has no clip (the page then shows the still image)."""
-    BUILD.mkdir(parents=True, exist_ok=True)
-    for old in [*BUILD.glob("*.mp4"), *BUILD.glob("*.webp")]:
-        old.unlink()
-    if not fields.get("clip"):
-        return None
-    src = MEDIA / fields["clip"]
-    if not src.is_file():
-        print(f"warning: no animation, {src} is missing", file=sys.stderr)
-        return None
-    anim = BUILD / f"{today()}-{slug(card)}.webp"
-    r = subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), "-vf", f"fps=24,scale={ANIM_WIDTH}:-2",
-                        "-an", "-c:v", "libwebp_anim", "-loop", "0", "-quality", "70", str(anim)],
-                       capture_output=True, text=True)
-    if r.returncode != 0:
-        print(f"warning: no animation, ffmpeg: {r.stderr.strip()}", file=sys.stderr)
-        return None
-    return anim
-
-
 # --- Verifiable draw (drand) -------------------------------------------------
 
 def drand_round(date):
@@ -425,20 +371,10 @@ def cmd_push(_):
     print(f"pushed {ahead} commit(s) to origin/{BRANCH}")
 
 
-def cmd_status(a):
+def cmd_status(_):
     path = reading_path(today())
     print(f"done: {path}" if path.exists() else f"missing: no reading for {today()} in {READINGS}")
-    if path.exists() and a.published:
-        marker = BUILD / "published"
-        ok = marker.exists() and marker.read_text().strip() == today()
-        print("published" if ok else "not published yet")
-        sys.exit(0 if ok else 1)
     sys.exit(0 if path.exists() else 1)
-
-
-def cmd_mark_published(_):
-    (BUILD / "published").write_text(today() + "\n")
-    print(f"marked published: {today()}")
 
 
 def cmd_draw(a):
@@ -472,9 +408,7 @@ def cmd_draw(a):
         "deck": len(deck),
         "deck_list": deck_list,
         "deck_source": deck_source,
-        "image": str(fetch_image(card, deck[card]["fields"])),
-        "animation": str(v) if (v := fetch_animation(card, deck[card]["fields"])) else None,
-        "reading_file": str(BUILD / "reading.md"),
+        "reading_file": str(DRAW_DIR / "reading.md"),
         "card_note": card_sections(deck[card]["body"]),
         "lens_note": card_sections(deck[lens]["body"]),
         "earlier_readings": [
@@ -484,15 +418,16 @@ def cmd_draw(a):
         ],
         "avoid_phrases": stock_phrases(all_readings),
     }
-    (BUILD / "draw.json").write_text(json.dumps(draw, indent=2, ensure_ascii=False))
+    DRAW_DIR.mkdir(parents=True, exist_ok=True)
+    (DRAW_DIR / "draw.json").write_text(json.dumps(draw, indent=2, ensure_ascii=False))
     print(json.dumps(draw, indent=2, ensure_ascii=False))
 
 
 def cmd_save(a):
-    draw = json.loads((BUILD / "draw.json").read_text())
+    draw = json.loads((DRAW_DIR / "draw.json").read_text())
     if draw["date"] != today():
         fail(f"draw.json is for {draw['date']}, not {today()}; run draw first")
-    text = Path(a.file or BUILD / "reading.md").read_text()
+    text = Path(a.file or DRAW_DIR / "reading.md").read_text()
     r = parse_draft(text)
     missing = [k for k in ("lead", "lede", "alt") if not r.get(k)] + [s for s in SECTIONS if not r["sections"].get(s)]
     if missing:
@@ -543,61 +478,19 @@ def cmd_phrases(_):
     print("\n".join(stock_phrases(readings())) or "(none yet)")
 
 
-def paragraphs(text):
-    return "\n".join(f"      <p>{html.escape(' '.join(p.split()))}</p>"
-                     for p in re.split(r"\n\s*\n", text.strip()) if p.strip())
-
-
-def long_date(iso):
-    d = dt.date.fromisoformat(iso)
-    return f"{d:%A} {d.day} {d:%B %Y}"
-
-
-def cmd_build(_):
-    all_r = readings()
-    if not all_r:
-        fail(f"no readings in {READINGS}")
-    cur, older = all_r[0], all_r[1:]
-    fields = tree_cards().get(cur["card"], {}).get("fields", {})
-    os.environ["TAROT_DATE"] = cur["date"]    # media names carry the reading's date
-    jpg = BUILD / f"{cur['date']}-{slug(cur['card'])}.jpg"
-    if not jpg.exists():
-        jpg = fetch_image(cur["card"], fields)
-    anim = BUILD / f"{cur['date']}-{slug(cur['card'])}.webp"
-    if not anim.exists():
-        anim = fetch_animation(cur["card"], fields)
-    from PIL import Image
-    with Image.open(jpg) as im:
-        w, h = im.size
-    alt = html.escape(cur.get("alt", ""), quote=True)
-    if anim:    # animated card; viewers who ask for reduced motion get the still
-        media = (f'<picture><source srcset="{jpg.name}" media="(prefers-reduced-motion: reduce)">'
-                 f'<img src="{anim.name}" width="{w}" height="{h}" alt="{alt}"></picture>')
-    else:
-        media = f'<img src="{jpg.name}" width="{w}" height="{h}" alt="{alt}">'
-    archive = ""
-    if older:
-        items = "\n".join(
-            f'        <li><span class="d">{html.escape(long_date(r["date"]))}</span> '
-            f'{html.escape(r["card"])}, {html.escape(r.get("orientation", ""))}</li>' for r in older)
-        archive = f'    <section class="archive">\n      <h2>Earlier draws</h2>\n      <ul>\n{items}\n      </ul>\n    </section>'
-    page = string.Template((SKILL / "assets" / "page.html").read_text()).substitute(
-        long_date=html.escape(long_date(cur["date"])),
-        orientation=html.escape(cur.get("orientation", "").capitalize()),
-        card=html.escape(cur["card"]),
-        lede=html.escape(cur.get("lede", "")),
-        deck=html.escape(str(cur.get("deck", ""))),
-        media_html=media,
-        card_html=paragraphs(cur["sections"].get("The card", "")),
-        essence_html=paragraphs(cur["sections"].get("Essence", "")),
-        today_html=paragraphs(cur["sections"].get("For today", "")),
-        archive_html=archive,
-    )
-    (BUILD / "index.html").write_text(page)
-    print(json.dumps({"url": PAGE_URL, "page": str(BUILD / "index.html"),
-                      "image": jpg.name, "image_path": str(jpg),
-                      "animation": anim.name if anim else None, "animation_path": str(anim) if anim else None,
-                      "date": cur["date"]}, indent=2))
+def cmd_backup(_):
+    """Copy content/ (card files, readings, media, checksums.txt) to <SOWER_BACKUP>/content with rclone copy:
+    new and changed files only, nothing deleted there. Skipped when SOWER_BACKUP is empty."""
+    dest = SETTINGS["SOWER_BACKUP"].rstrip("/")
+    if not dest:
+        print("backup skipped (SOWER_BACKUP is empty)")
+        return
+    r = subprocess.run(["rclone", "copy", str(REPO / "content"), f"{dest}/content", "--stats-one-line", "-v"],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        fail(f"rclone copy to {dest}/content: {r.stderr.strip()}", 1)
+    copied = re.findall(r"INFO\s*: (.+?): Copied", r.stderr)
+    print(f"backed up to {dest}/content: " + (", ".join(copied) if copied else "nothing new"))
 
 
 def cmd_settings(a):
@@ -611,9 +504,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("pull").set_defaults(fn=cmd_pull)
-    st = sub.add_parser("status")
-    st.add_argument("--published", action="store_true")
-    st.set_defaults(fn=cmd_status)
+    sub.add_parser("status").set_defaults(fn=cmd_status)
     d = sub.add_parser("draw")
     d.add_argument("--card")
     d.add_argument("--orientation", choices=["upright", "reversed"])
@@ -627,8 +518,7 @@ def main():
     s.set_defaults(fn=cmd_save)
     sub.add_parser("push").set_defaults(fn=cmd_push)
     sub.add_parser("phrases").set_defaults(fn=cmd_phrases)
-    sub.add_parser("build-page").set_defaults(fn=cmd_build)
-    sub.add_parser("mark-published").set_defaults(fn=cmd_mark_published)
+    sub.add_parser("backup").set_defaults(fn=cmd_backup)
     sub.add_parser("settings").set_defaults(fn=cmd_settings)
     a = p.parse_args()
     a.fn(a)

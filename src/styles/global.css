@@ -237,7 +237,7 @@ a:hover {
   margin: 0 0 1em;
 }
 
-/* "For today" stands out as a panel, as on the Card of the Day page. */
+/* "For today" stands out as a panel. */
 .prose .today {
   margin-top: 2rem;
   padding: 0.25rem 1.5rem 0.6rem;
