@@ -17,7 +17,7 @@ make the cards and the daily reading.
 - `skills/tarot-card-generator/`: how the cards are made.
 - `tools/animate/`: the code that makes the clips (see its `README.md`).
 - `scripts/`: `checksums.py` and `label_media.sh` for the reference files, `draw_check.py` to check a
-  day's draw, and `migrate.py` and `check_migration.py`, which copied the deck from its old archive.
+  day's draw.
 - `settings.env`: the settings of the skills and tools, each explained in the file. Put your own
   values in `settings.local.env` next to it (ignored by git).
 
