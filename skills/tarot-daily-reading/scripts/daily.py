@@ -562,14 +562,14 @@ def trigger_texts(r):
               else "a gap in the deck (The Miner)")
     note = (f"Decided: {r['date']} — {r['card']} was drawn as the day's card ({url}). Under the Sower deck's trigger "
             f"rule exactly one new card is now due, grown from {origin}; no card enters the deck any other way.\n\n"
-            f"Next: run § Find something new in skills/tarot-card-generator/SKILL.md (repository {REPO}) for this "
-            f"draw, with trigger {r['date']}.\n\n"
+            f"Next: in Claude Code, type `/tarot-card-generator trigger {r['date']}` (the skill runs § Find something "
+            f"new in skills/tarot-card-generator/SKILL.md, repository {REPO}, for this draw).\n\n"
             f"Done when: the new card is committed to main with this reading named as its origin (sown_by "
             f"\"{r['date']}\").\n\nHistory:\n- {today()} — Opened by the 07:00 job.\n")
     mail = (f"# A new card is due\n\n{r['card']} was drawn as the day's card on {r['date']} "
             f"([the reading]({url})). Under the trigger rule exactly one new card is now due, grown from {origin}.\n\n"
-            f"Make it with § Find something new in the card skill; the Parked note \"{trigger_title(r)}\" "
-            f"holds the steps.\n")
+            f"Make it in Claude Code with `/tarot-card-generator trigger {r['date']}`; the Parked note "
+            f"\"{trigger_title(r)}\" holds the steps.\n")
     return note, mail
 
 
