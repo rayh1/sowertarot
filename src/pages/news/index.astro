@@ -1,0 +1,29 @@
+---
+import Base from "../../layouts/Base.astro";
+import { news } from "../../lib/news";
+import { shortDate } from "../../lib/deck";
+
+const items = await news();
+---
+
+<Base title="News" description="News of the Sower Tarot deck and site: new cards, milestones and changes.">
+  <header class="page-head">
+    <h1>News</h1>
+    <p>New cards, milestones and changes to the site, newest first. <a href="/rss.xml">RSS feed</a></p>
+  </header>
+  <ol class="reading-list news-list">
+    {
+      items.map((item) => (
+        <li>
+          <a href={item.url}>
+            <span class="reading-list-text">
+              <time>{shortDate(item.date)}</time>
+              <strong>{item.title}</strong>
+              <span>{item.summary}</span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</Base>

@@ -32,9 +32,6 @@ export async function sownCards(): Promise<{ card: Card; trigger?: Reading }[]> 
     .map((card) => ({ card, trigger: all.find((r) => r.id === card.data.sown_by) }));
 }
 
-/** How long the home page names a new card (counted from its created date). */
-export const NEW_CARD_DAYS = 30;
-
 /** "Sown from the draw of The Sower" or "Mined from the draw of The Miner". */
 export const originVerb = (trigger: Reading) => (trigger.data.card === "The Miner" ? "Mined" : "Sown");
 

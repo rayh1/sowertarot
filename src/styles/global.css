@@ -138,6 +138,11 @@ a:hover {
   .site-header nav {
     letter-spacing: min(var(--label-tracking), 0.08em);
     font-size: 0.85rem;
+    column-gap: 0.85rem;
+  }
+
+  .site-header .theme-toggle {
+    margin-left: 0;
   }
 }
 
@@ -419,7 +424,7 @@ a:hover {
   font-style: italic;
 }
 
-.new-card {
+.news-line {
   max-width: 40rem;
   margin: 1.5rem auto 0;
   text-align: center;
@@ -538,17 +543,30 @@ a:hover {
   font-size: 1.35rem;
 }
 
-.about {
+.about,
+.post {
   max-width: 40rem;
 }
 
-.about h1 {
+.about h1,
+.post h1 {
   font-family: var(--font-display);
   font-size: var(--title-size);
   font-weight: var(--title-weight);
   text-transform: var(--title-case);
   letter-spacing: var(--title-tracking);
   margin: 2rem 0 1rem;
+}
+
+/* A news post: its date above the title. */
+.post .kicker {
+  margin-top: 2rem;
+  color: var(--muted);
+}
+
+.post h1 {
+  margin-top: 0.25rem;
+  line-height: 1.05;
 }
 
 /* The seed mark beside "The deck": centred above the text on phones, to its right where there is room. */

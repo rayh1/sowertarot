@@ -32,4 +32,14 @@ const readings = defineCollection({
   }),
 });
 
-export const collections = { cards, readings };
+// Hand-written news posts, content/news/<date>-<slug>.md. New cards and milestones are added by src/lib/news.ts.
+const news = defineCollection({
+  loader: glob({ pattern: "*.md", base: `${content}/news` }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    summary: z.string(),
+  }),
+});
+
+export const collections = { cards, readings, news };

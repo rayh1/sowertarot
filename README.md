@@ -8,6 +8,9 @@ make the cards and the daily reading.
 - `content/cards/<slug>.md`: one file per card (front matter with title, concept, key terms and the
   picture and clip; then the card's sections).
 - `content/readings/<date>.md`: one file per daily reading.
+- `content/news/<date>-<slug>.md`: hand-written news posts (front matter with title, date and a
+  one-line summary). The news page and feed add new cards and milestones by themselves
+  (`src/lib/news.ts`); a post dated in the future waits for the first build on or after its date.
 - `content/media/`: the reference files, the original card PNGs and their MP4 clips;
   `content/checksums.txt` lists their SHA-256 checksums.
 - `src/`: the Astro site. It reads `content/` (another folder through the environment variable

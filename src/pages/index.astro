@@ -1,7 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
 import ReadingView from "../components/ReadingView.astro";
-import { cardByTitle, cardUrl, deck, NEW_CARD_DAYS, originVerb, previewUrl, readings, readingUrl, shortDate, sownCards } from "../lib/deck";
+import { cardByTitle, deck, previewUrl, readings, readingUrl, shortDate } from "../lib/deck";
+import { news, NEWS_DAYS } from "../lib/news";
 
 const [today, ...earlier] = await readings();
 const cards = await deck();
@@ -9,9 +10,9 @@ const cards = await deck();
 const recent = earlier.slice(0, 5);
 // The link preview shows today's card, as the page does.
 const todayCard = today && (await cardByTitle(today.data.card));
-// "New in the deck" names the newest card grown from a trigger draw, for NEW_CARD_DAYS after it was made.
-const cutoff = Date.now() - NEW_CARD_DAYS * 86400e3;
-const fresh = (await sownCards()).find(({ card }) => card.data.created.getTime() >= cutoff);
+// One line names the newest news item (a post, a new card, a milestone) for NEWS_DAYS after its date.
+const cutoff = Date.now() - NEWS_DAYS * 86400e3;
+const fresh = (await news()).find((item) => item.date.getTime() >= cutoff);
 ---
 
 <Base
@@ -29,14 +30,8 @@ const fresh = (await sownCards()).find(({ card }) => card.data.created.getTime()
 
   {
     fresh && (
-      <p class="new-card">
-        New in the deck: <a href={cardUrl(fresh.card)}>{fresh.card.data.title}</a>
-        {fresh.trigger && (
-          <span>
-            , {originVerb(fresh.trigger).toLowerCase()} from the draw of{" "}
-            <a href={readingUrl(fresh.trigger)}>{shortDate(fresh.trigger.data.date)}</a>
-          </span>
-        )}
+      <p class="news-line">
+        <span class="kicker">News</span> <a href={fresh.url}>{fresh.title}</a>
       </p>
     )
   }
@@ -65,5 +60,5 @@ const fresh = (await sownCards()).find(({ card }) => card.data.created.getTime()
     )
   }
 
-  <p class="more"><a href="/readings/">All readings</a> · <a href="/cards/">See the whole deck</a></p>
+  <p class="more"><a href="/readings/">All readings</a> · <a href="/cards/">See the whole deck</a> · <a href="/news/">News</a></p>
 </Base>

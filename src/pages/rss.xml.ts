@@ -1,11 +1,12 @@
 import rss from "@astrojs/rss";
 import type { APIContext } from "astro";
-import { cardUrl, readings, readingUrl, sownCards } from "../lib/deck";
+import { readings, readingUrl } from "../lib/deck";
+import { news } from "../lib/news";
 
 export async function GET(context: APIContext) {
   return rss({
     title: "Sower Tarot",
-    description: "One card from the Sower Tarot deck each morning, with its reading.",
+    description: "One card from the Sower Tarot deck each morning, with its reading, and news of the deck.",
     site: context.site!,
     items: [
       ...(await readings()).map((r) => ({
@@ -14,12 +15,12 @@ export async function GET(context: APIContext) {
         description: r.data.lede,
         link: readingUrl(r),
       })),
-      // A card grown from a trigger draw gets an item of its own.
-      ...(await sownCards()).map(({ card }) => ({
-        title: `New card: ${card.data.title}`,
-        pubDate: card.data.created,
-        description: card.data.concept,
-        link: cardUrl(card),
+      // News: hand-written posts, new cards grown from trigger draws, milestones.
+      ...(await news()).map((item) => ({
+        title: item.title,
+        pubDate: item.date,
+        description: item.summary,
+        link: item.url,
       })),
     ].sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime()),
   });

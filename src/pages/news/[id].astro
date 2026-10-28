@@ -1,0 +1,22 @@
+---
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { longDate } from "../../lib/deck";
+import { posts, type Post } from "../../lib/news";
+
+export async function getStaticPaths() {
+  return (await posts()).map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props as { post: Post };
+const { Content } = await render(post);
+---
+
+<Base title={post.data.title} description={post.data.summary} type="article">
+  <article class="post prose">
+    <p class="kicker"><time>{longDate(post.data.date)}</time></p>
+    <h1>{post.data.title}</h1>
+    <Content />
+    <p class="more"><a href="/news/">All news</a></p>
+  </article>
+</Base>
