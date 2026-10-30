@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 
 # Every version pin comes from .devcontainer/.env through compose build.args.
 ARG TARGETARCH

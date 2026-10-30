@@ -63,6 +63,9 @@ The home directory is `HOME` on Linux and macOS and `USERPROFILE` on Windows (co
 
 - `README.md` — the project's own README at the top of the repository: written once, a short
   stub to replace with the project's documentation.
+- `package.json` — the project's Node manifest at the top of the repository: written once from a
+  stub, then the project's own to change or replace (a starter may bring its own). An update that
+  drops node from the languages removes it.
 - `.devcontainer/extra-packages.txt` — apt packages, one per line, installed at image build.
 - `.devcontainer/extra.sh` — runs as root at the end of the image build.
 - `.devcontainer/compose.extra.yaml` — extra compose services next to `main` (a PostgreSQL
@@ -74,6 +77,6 @@ The home directory is `HOME` on Linux and macOS and `USERPROFILE` on Windows (co
   (for example `work/, tmp/`): each becomes its own line of `.dockerignore`, after the template's
   own lines, so those paths stay out of the image build.
 
-`copier update` carries template changes into this project and never overwrites the four
+`copier update` carries template changes into this project and never overwrites the
 project-owned files above; it keeps the two answers and renders them again. To change an answer,
 pass it to the update, for example `copier update --trust --data extra_dockerignore='work/, tmp/'`.
