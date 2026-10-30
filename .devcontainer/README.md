@@ -51,6 +51,38 @@ The home directory is `HOME` on Linux and macOS and `USERPROFILE` on Windows (co
   `.devcontainer/.env`, so a `NODE_VERSION` or `PYTHON_VERSION` exported in your shell would
   replace the pin; unset such variables before building.
 
+## Checks and continuous integration
+
+`.devcontainer/check.sh` is the project's check. It installs the dependencies with
+`TDP_CI=1 bash .devcontainer/update.sh`, then runs the default checks of every language whose
+manifest is at the top of the repository: `uv run ruff check` and `uv run pytest` for
+`pyproject.toml` (no tests collected counts as a pass); `npm run check` for `package.json` when it
+has a `check` script, otherwise `npm run lint` and `npm test` where present; `mvn -B verify` for
+`pom.xml`; `flutter analyze`, and `flutter test` when a `test` folder exists, for `pubspec.yaml`.
+Every check runs even when an earlier one fails; the exit code is 1 when any failed. The file is
+project-owned: change the checks there.
+
+- In the dev container, the **Run Checks** task (the default test task) runs
+  `bash .devcontainer/check.sh`.
+- `.devcontainer/ci.sh` runs the same check the way CI does, on any host with Docker (not inside
+  the dev container): it builds the image from the working tree with the pins in
+  `.devcontainer/.env`, starts the services of `.devcontainer/compose.extra.yaml` when it
+  declares any, runs `bash .devcontainer/check.sh` in a fresh container from that image, then
+  removes the image and the services, pass or fail. Its exit code is the check's.
+- This project has no CI workflow. To add one, run `bash .devcontainer/ci.sh` from your CI
+  system's job on a host with Docker.
+
+CI starts the services of `compose.extra.yaml` as a compose project of its own and runs the
+checks on that project's network, so a check reaches each service by its service name (`db`,
+port `5432`), the same as `main` does. A service declared there must therefore:
+
+- publish container ports only (`"5432"`), never a fixed host mapping such as `"5432:5432"`,
+  which collides with another run or project on the same host;
+- set none of `networks:`, `network_mode:` and `container_name:`.
+
+Give a service a `healthcheck` (the PostgreSQL example has one), so that CI's
+`docker compose up --wait` returns only once the service accepts connections.
+
 ## Troubleshooting
 
 - The container create fails with `all predefined address pools have been fully subnetted`:
@@ -72,6 +104,8 @@ The home directory is `HOME` on Linux and macOS and `USERPROFILE` on Windows (co
   database, an object store), with their volumes and ports. `compose.yaml` pulls it in through
   compose's `include`, so a service written there joins the project's network and is reachable
   from `main` by its service name. The rendered file is a commented-out PostgreSQL example.
+- `.devcontainer/check.sh` — the project's checks, run by the **Run Checks** task and by
+  `.devcontainer/ci.sh`; see "Checks and continuous integration" above.
 - `extra_extensions` in `.copier-answers.yml` — extra VS Code extension ids, comma-separated.
 - `extra_dockerignore` in `.copier-answers.yml` — extra `.dockerignore` patterns, comma-separated
   (for example `work/, tmp/`): each becomes its own line of `.dockerignore`, after the template's

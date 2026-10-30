@@ -1,6 +1,6 @@
 FROM ubuntu:26.04
 
-# Every version pin comes from .devcontainer/.env through compose build.args.
+# Every version pin comes from .devcontainer/.env, through compose build.args or ci.sh's --build-arg.
 ARG TARGETARCH
 ARG PYTHON_VERSION
 ARG UV_VERSION

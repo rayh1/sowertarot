@@ -7,5 +7,16 @@
       "type": "shell",
       "command": "bash .devcontainer/update.sh",
       "problemMatcher": []
+    },
+    {
+      "label": "Run Checks",
+      "detail": "Install the dependencies, then run each language's default checks: what CI runs (.devcontainer/check.sh)",
+      "type": "shell",
+      "command": "bash .devcontainer/check.sh",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
     }  ]
 }
