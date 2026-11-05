@@ -55,12 +55,22 @@ The home directory is `HOME` on Linux and macOS and `USERPROFILE` on Windows (co
 
 `.devcontainer/check.sh` is the project's check. It installs the dependencies with
 `TDP_CI=1 bash .devcontainer/update.sh`, then runs the default checks of every language whose
-manifest is at the top of the repository: `uv run ruff check` and `uv run pytest` for
-`pyproject.toml` (no tests collected counts as a pass); `npm run check` for `package.json` when it
-has a `check` script, otherwise `npm run lint` and `npm test` where present; `mvn -B verify` for
-`pom.xml`; `flutter analyze`, and `flutter test` when a `test` folder exists, for `pubspec.yaml`.
-Every check runs even when an earlier one fails; the exit code is 1 when any failed. The file is
-project-owned: change the checks there.
+manifest is at the top of the repository: `uv run ruff check`,
+`uv run ruff format --check --extend-exclude '*.md'` and `uv run pytest` for `pyproject.toml` (no
+tests collected counts as a pass); `npm run check` for `package.json` when it has a `check`
+script, otherwise `npm run lint` and `npm test` where present; `mvn -B verify` for `pom.xml`;
+`flutter analyze`, `dart format --output=none --set-exit-if-changed .`, and `flutter test` when a
+`test` folder exists, for `pubspec.yaml`. Every check runs even when an earlier one fails; the exit
+code is 1 when any failed. The file is project-owned: change the checks there.
+
+The two format checks change no file: they fail when a file is not formatted the way
+`uv run ruff format` or `dart format .` would write it, and running that command fixes it. The
+Python format check leaves Markdown files out, so a Python example in the docs never fails it;
+drop `--extend-exclude '*.md'` to check those too. Each tool takes its style from its own settings
+(for example `[tool.ruff]` in `pyproject.toml`). Dart's style follows the language version: with
+the seed's `sdk: ">=3.0.0 <4.0.0"` in `pubspec.yaml`, `dart format` writes the older short style.
+Raising a Flutter project's SDK lower bound to 3.7 or later switches `dart format` to the tall
+style, which reformats many of its files: the check fails until you run `dart format .`.
 
 - In the dev container, the **Run Checks** task (the default test task) runs
   `bash .devcontainer/check.sh`.
