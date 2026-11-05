@@ -22,6 +22,7 @@ check() {
 
 if [ -f pyproject.toml ]; then
   check uv run ruff check
+  check uv run ruff format --check --extend-exclude '*.md'
   echo "==> uv run pytest"
   rc=0
   uv run pytest || rc=$?

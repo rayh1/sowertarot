@@ -13,18 +13,22 @@ SOWER_REVIEW empty the MP4 stays in the batch folder only). A job that fails is 
 worker's instance is down (with-comfy exit 69, e.g. the remote after 07:00) the worker releases its
 job and exits. Progress: <batch dir>/run.log and state.json.
 """
+
 import argparse, fcntl, json, os, subprocess, sys, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from card_repo import SETTINGS, review_root  # noqa: E402
+
 WITH_COMFY = "/workspace/.claude/tools/with-comfy/with-comfy"
 
 
 def log(d, msg):
     line = f"{time.strftime('%Y-%m-%d %H:%M:%S')} {msg}"
     print(line, flush=True)
-    with open(os.path.join(d, ".lock"), "w") as lk:  # two workers append at once; the mount does not keep that atomic
+    with open(
+        os.path.join(d, ".lock"), "w"
+    ) as lk:  # two workers append at once; the mount does not keep that atomic
         fcntl.flock(lk, fcntl.LOCK_EX)
         with open(os.path.join(d, "run.log"), "a") as f:
             f.write(line + "\n")
@@ -54,19 +58,27 @@ def claim(worker, d):
             s = state.get(job_id(j), {})
             if s.get("status") not in (None, "retry"):
                 continue
-            if not os.path.exists(os.path.join(d, j["slug"], "READY")):  # mask and prompt not checked yet
+            if not os.path.exists(
+                os.path.join(d, j["slug"], "READY")
+            ):  # mask and prompt not checked yet
                 waiting = True
                 continue
-            state[job_id(j)] = {"status": "running", "worker": worker, "tries": s.get("tries", 0) + 1,
-                                "started": time.strftime("%H:%M:%S")}
+            state[job_id(j)] = {
+                "status": "running",
+                "worker": worker,
+                "tries": s.get("tries", 0) + 1,
+                "started": time.strftime("%H:%M:%S"),
+            }
             return j
         return "wait" if waiting else None
+
     return fn
 
 
 def finish(jid, status, **kw):
     def fn(state, jobs):
         state[jid].update(status=status, ended=time.strftime("%H:%M:%S"), **kw)
+
     return fn
 
 
@@ -85,15 +97,23 @@ def main():
     ap.add_argument("--dir", required=True)
     ap.add_argument("--worker", required=True)
     review = SETTINGS.get("SOWER_REVIEW", "").strip()
-    ap.add_argument("--copy-to", "--dropbox", dest="dropbox", default=f"{review_root()}/animations/batch" if review else "")
+    ap.add_argument(
+        "--copy-to",
+        "--dropbox",
+        dest="dropbox",
+        default=f"{review_root()}/animations/batch" if review else "",
+    )
     a = ap.parse_args()
     d = os.path.abspath(a.dir)
     log(d, f"[{a.worker}] start")
 
-    def reset_stale(state, jobs):  # this worker's jobs left "running" by a killed earlier run
+    def reset_stale(
+        state, jobs
+    ):  # this worker's jobs left "running" by a killed earlier run
         for s in state.values():
             if s.get("status") == "running" and s.get("worker") == a.worker:
                 s["status"] = "retry"
+
     update(d, reset_stale)
     while True:
         j = update(d, claim(a.worker, d))
@@ -106,13 +126,52 @@ def main():
         jid, cd = job_id(j), os.path.join(d, j["slug"])
         prefix = f"anim_{jid}"
         log(d, f"[{a.worker}] {jid} render")
-        rc, out = run([WITH_COMFY, a.worker, "python3", f"{HERE}/animate_wan.py", "--model", "5b",
-                       "--image", "input_576x1024.png", "--seed", str(j["seed"]), "--prefix", prefix,
-                       "--prompt", open(os.path.join(cd, "prompt.txt")).read().strip()], cd)
+        rc, out = run(
+            [
+                WITH_COMFY,
+                a.worker,
+                "python3",
+                f"{HERE}/animate_wan.py",
+                "--model",
+                "5b",
+                "--image",
+                "input_576x1024.png",
+                "--seed",
+                str(j["seed"]),
+                "--prefix",
+                prefix,
+                "--prompt",
+                open(os.path.join(cd, "prompt.txt")).read().strip(),
+            ],
+            cd,
+        )
         if rc == 0:
-            rc, out = run([WITH_COMFY, a.worker, "python3", f"{HERE}/animate_compose.py", "--frames-prefix", prefix,
-                           "--count", "121", "--fps", "24", "--art", "art.png", "--mask", "mask.png",
-                           "--title", j["name"], "--out", jid, "--crossfade", "0.5", *crop_arg(cd)], cd)
+            rc, out = run(
+                [
+                    WITH_COMFY,
+                    a.worker,
+                    "python3",
+                    f"{HERE}/animate_compose.py",
+                    "--frames-prefix",
+                    prefix,
+                    "--count",
+                    "121",
+                    "--fps",
+                    "24",
+                    "--art",
+                    "art.png",
+                    "--mask",
+                    "mask.png",
+                    "--title",
+                    j["name"],
+                    "--out",
+                    jid,
+                    "--crossfade",
+                    "0.5",
+                    *crop_arg(cd),
+                ],
+                cd,
+            )
         if rc == 0 and a.dropbox:
             rc, out = run(["rclone", "copy", f"{jid}.mp4", a.dropbox], cd)
         if rc == 0:
@@ -120,10 +179,12 @@ def main():
             log(d, f"[{a.worker}] {jid} done")
             continue
         down = rc == 69 or "exit 69" in out or "is down" in out
+
         def fail(state, jobs, jid=jid, out=out):
             s = state[jid]
             s["status"] = "retry" if (down or s["tries"] < 2) else "failed"
             s["error"] = out[-400:]
+
         update(d, fail)
         log(d, f"[{a.worker}] {jid} FAILED rc={rc}: {out[-300:]!r}")
         if down:

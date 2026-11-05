@@ -11,6 +11,7 @@ trimmed 1024 x 1792 art (art.png in the card's folder).
                                                          at full-card size; the box is drawn green on preview.png
 --include polygons are filled white, then --exclude polygons black (figures, faces, hands, with a margin).
 """
+
 import argparse, os
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -31,24 +32,37 @@ def main():
     art = Image.open(os.path.join(a.dir, "art.png")).convert("RGB")
     W, H = art.size
     if a.cmd == "grid":
-        g = art.copy(); d = ImageDraw.Draw(g)
+        g = art.copy()
+        d = ImageDraw.Draw(g)
         for x in range(0, W, 100):
             d.line([(x, 0), (x, H)], fill=(255, 0, 0), width=2)
-            for y in range(50, H, 300): d.text((x + 4, y), str(x), fill=(255, 0, 0))
+            for y in range(50, H, 300):
+                d.text((x + 4, y), str(x), fill=(255, 0, 0))
         for y in range(0, H, 100):
             d.line([(0, y), (W, y)], fill=(255, 0, 0), width=2)
-            for x in range(50, W, 300): d.text((x, y + 4), str(y), fill=(255, 0, 0))
+            for x in range(50, W, 300):
+                d.text((x, y + 4), str(y), fill=(255, 0, 0))
         g.resize((W // 2, H // 2)).save(os.path.join(a.dir, "grid.png"))
     elif a.cmd == "make":
-        m = Image.new("L", (W, H), 0); d = ImageDraw.Draw(m)
-        for p in a.include: d.polygon(pts(p), fill=255)
-        for p in a.exclude: d.polygon(pts(p), fill=0)
-        if a.blur: m = m.filter(ImageFilter.GaussianBlur(a.blur))
+        m = Image.new("L", (W, H), 0)
+        d = ImageDraw.Draw(m)
+        for p in a.include:
+            d.polygon(pts(p), fill=255)
+        for p in a.exclude:
+            d.polygon(pts(p), fill=0)
+        if a.blur:
+            m = m.filter(ImageFilter.GaussianBlur(a.blur))
         m.save(os.path.join(a.dir, "mask.png"))
-        prev = Image.composite(Image.new("RGB", (W, H), (255, 0, 255)), art, m.point(lambda v: v // 2))
+        prev = Image.composite(
+            Image.new("RGB", (W, H), (255, 0, 255)), art, m.point(lambda v: v // 2)
+        )
         cp = os.path.join(a.dir, "crop.txt")
         if os.path.exists(cp):
-            ImageDraw.Draw(prev).rectangle([int(v) for v in open(cp).read().split(",")], outline=(0, 200, 0), width=6)
+            ImageDraw.Draw(prev).rectangle(
+                [int(v) for v in open(cp).read().split(",")],
+                outline=(0, 200, 0),
+                width=6,
+            )
         prev.resize((W // 2, H // 2)).save(os.path.join(a.dir, "preview.png"))
     elif a.cmd == "crop":
         x0, y0, x1 = (int(v) for v in a.box.split(",")[:3])
@@ -56,12 +70,16 @@ def main():
         if x0 < 0 or x1 > W or y0 < 0 or y1 > H:
             raise SystemExit(f"box {x0},{y0},{x1},{y1} leaves the {W}x{H} art")
         open(os.path.join(a.dir, "crop.txt"), "w").write(f"{x0},{y0},{x1},{y1}\n")
-        art.crop((x0, y0, x1, y1)).resize((576, 1024), Image.LANCZOS).save(os.path.join(a.dir, "input_576x1024.png"))
+        art.crop((x0, y0, x1, y1)).resize((576, 1024), Image.LANCZOS).save(
+            os.path.join(a.dir, "input_576x1024.png")
+        )
         print(f"crop.txt = {x0},{y0},{x1},{y1}")
     else:
         x0, y0, x1, y1 = (int(v) for v in a.box.split(","))
         m = Image.open(os.path.join(a.dir, "mask.png"))
-        Image.composite(Image.new("RGB", (W, H), (255, 0, 255)), art, m.point(lambda v: v // 2)).crop((x0, y0, x1, y1)).save(os.path.join(a.dir, "zoom.png"))
+        Image.composite(
+            Image.new("RGB", (W, H), (255, 0, 255)), art, m.point(lambda v: v // 2)
+        ).crop((x0, y0, x1, y1)).save(os.path.join(a.dir, "zoom.png"))
 
 
 if __name__ == "__main__":

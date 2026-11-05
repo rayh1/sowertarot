@@ -44,6 +44,7 @@ plain-word paraphrases of four card essences and a loose description of The Anch
 named the source card every time with a clear margin (similarity to the source 0.74-0.81, to the runner-up
 0.07-0.10 lower).
 """
+
 import json
 import os
 import re
@@ -51,9 +52,12 @@ import sys
 from pathlib import Path
 
 MODEL = "BAAI/bge-base-en-v1.5"
-REVISION = "a5beb1e3e68b9ab74eb54cfd186867f64f240e1a"   # the model's Hugging Face commit; a newer one may score differently
+REVISION = "a5beb1e3e68b9ab74eb54cfd186867f64f240e1a"  # the model's Hugging Face commit; a newer one may score differently
 REPO = Path(os.environ.get("TAROT_REPO") or Path(__file__).resolve().parents[3])
-WORDS = (75, 150)        # an existing card's essence length; a much shorter candidate would skew its score
+WORDS = (
+    75,
+    150,
+)  # an existing card's essence length; a much shorter candidate would skew its score
 
 
 def essences():
@@ -73,12 +77,14 @@ def load_model():
     os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
     os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
     from sentence_transformers import SentenceTransformer
+
     return SentenceTransformer(MODEL, revision=REVISION, device="cpu")
 
 
 def gaps(top):
     """Print the `top` widest gaps between two cards, each card in at most one listed pair."""
     import numpy as np
+
     cards = essences()
     titles = list(cards)
     vecs = load_model().encode(list(cards.values()), normalize_embeddings=True)
@@ -99,10 +105,16 @@ def gaps(top):
             used.update(p[1:3])
         if len(picked) == top:
             break
-    print(f"The {len(picked)} widest gaps between two of {len(cards)} cards ({MODEL}); widest first. Width = distance from")
-    print("the meaning the pair shares to the nearest third card; each card appears in one pair at most.\n")
+    print(
+        f"The {len(picked)} widest gaps between two of {len(cards)} cards ({MODEL}); widest first. Width = distance from"
+    )
+    print(
+        "the meaning the pair shares to the nearest third card; each card appears in one pair at most.\n"
+    )
     for n, (width, i, j, k) in enumerate(picked, 1):
-        print(f"{n}. **between {titles[i]} and {titles[j]}** — width {width:.3f}, nearest third card: {titles[k]}")
+        print(
+            f"{n}. **between {titles[i]} and {titles[j]}** — width {width:.3f}, nearest third card: {titles[k]}"
+        )
 
 
 def main():
@@ -114,14 +126,22 @@ def main():
     if len(sys.argv) != 2:
         sys.exit(__doc__)
     cands = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
-    bad = [c.get("title", "?") for c in cands if not all(c.get(k) for k in ("title", "seed", "seed_source", "essence"))]
+    bad = [
+        c.get("title", "?")
+        for c in cands
+        if not all(c.get(k) for k in ("title", "seed", "seed_source", "essence"))
+    ]
     if bad:
-        sys.exit(f"candidates lack title, seed, seed_source or essence: {', '.join(bad)}")
+        sys.exit(
+            f"candidates lack title, seed, seed_source or essence: {', '.join(bad)}"
+        )
     cards = essences()
     model = load_model()
     card_vecs = model.encode(list(cards.values()), normalize_embeddings=True)
     cand_vecs = model.encode([c["essence"] for c in cands], normalize_embeddings=True)
-    sims = cand_vecs @ card_vecs.T            # cosine similarity, since the vectors are normalised
+    sims = (
+        cand_vecs @ card_vecs.T
+    )  # cosine similarity, since the vectors are normalised
     titles = list(cards)
     deck = card_vecs @ card_vecs.T
     deck[range(len(titles)), range(len(titles))] = -1
@@ -131,13 +151,23 @@ def main():
         i = int(row.argmax())
         rows.append((1 - float(row[i]), c, titles[i]))
     rows.sort(key=lambda r: -r[0])
-    print(f"Ranked by distance in meaning to the nearest of {len(cards)} cards ({MODEL}); most distant first.")
-    print(f"For scale: each existing card's distance to its nearest other card runs from {spacing[0]:.2f} to "
-          f"{spacing[-1]:.2f}, median {spacing[len(spacing) // 2]:.2f}.\n")
+    print(
+        f"Ranked by distance in meaning to the nearest of {len(cards)} cards ({MODEL}); most distant first."
+    )
+    print(
+        f"For scale: each existing card's distance to its nearest other card runs from {spacing[0]:.2f} to "
+        f"{spacing[-1]:.2f}, median {spacing[len(spacing) // 2]:.2f}.\n"
+    )
     for n, (dist, c, near) in enumerate(rows, 1):
         words = len(c["essence"].split())
-        warn = f" (essence is {words} words; cards have {WORDS[0]}–{WORDS[1]})" if not WORDS[0] <= words <= WORDS[1] else ""
-        print(f"{n}. **{c['title']}** — distance {dist:.3f}, nearest card: {near}{warn}")
+        warn = (
+            f" (essence is {words} words; cards have {WORDS[0]}–{WORDS[1]})"
+            if not WORDS[0] <= words <= WORDS[1]
+            else ""
+        )
+        print(
+            f"{n}. **{c['title']}** — distance {dist:.3f}, nearest card: {near}{warn}"
+        )
         print(f"   - Seed: {c['seed']} ({c['seed_source']})")
         print(f"   - Essence: {c['essence']}\n")
 

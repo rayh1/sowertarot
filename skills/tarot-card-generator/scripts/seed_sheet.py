@@ -8,6 +8,7 @@ Only renders — no card file, media or commit change (SKILL.md § Scope fence).
   python3 scripts/seed_sheet.py --card "The Well" --scene "<scene>" \
       --seeds 24 --out-dir work/cards/the-well/seed-sheet
 """
+
 import argparse
 import json
 import math
@@ -37,19 +38,34 @@ def pick_seeds(key, n):
 def render(card, scene, seed, out, retries):
     for attempt in range(1, retries + 1):
         p = subprocess.run(
-            [sys.executable, str(HERE / "render_card.py"), "--scene", scene,
-             "--title", card, "--seed", str(seed), "--out", str(out),
-             # keep the unframed art: repairs start from it, and the server may not keep its output
-             "--keep-raw", str(out.with_name(out.stem + "_art.png"))],
-            capture_output=True, text=True)
+            [
+                sys.executable,
+                str(HERE / "render_card.py"),
+                "--scene",
+                scene,
+                "--title",
+                card,
+                "--seed",
+                str(seed),
+                "--out",
+                str(out),
+                # keep the unframed art: repairs start from it, and the server may not keep its output
+                "--keep-raw",
+                str(out.with_name(out.stem + "_art.png")),
+            ],
+            capture_output=True,
+            text=True,
+        )
         last = (p.stdout.strip().splitlines() or [""])[-1]
         if p.returncode == 0 and out.exists():
             try:
                 return json.loads(last)
             except json.JSONDecodeError:
                 return {"ok": True, "seed": seed}
-        log(f"  seed {seed} attempt {attempt} failed (rc {p.returncode}): "
-            f"{(p.stderr or last).strip()[-400:]}")
+        log(
+            f"  seed {seed} attempt {attempt} failed (rc {p.returncode}): "
+            f"{(p.stderr or last).strip()[-400:]}"
+        )
         time.sleep(30)
     return None
 
@@ -63,8 +79,11 @@ def contact_sheet(items, dest, cols, thumb_w):
     th = max(t.height for _, t in tiles)
     label_h, pad = 34, 10
     rows = math.ceil(len(tiles) / cols)
-    sheet = Image.new("RGB", (cols * (thumb_w + pad) + pad,
-                              rows * (th + label_h + pad) + pad), "white")
+    sheet = Image.new(
+        "RGB",
+        (cols * (thumb_w + pad) + pad, rows * (th + label_h + pad) + pad),
+        "white",
+    )
     draw = ImageDraw.Draw(sheet)
     font = ImageFont.truetype(FONT, 20)
     for i, (it, t) in enumerate(tiles):
@@ -109,18 +128,30 @@ def main():
         digits = "".join(c for c in cf if c.isdigit())
         index[str(seed)] = {"comfy_file": cf, "num": int(digits) if digits else None}
         index_path.write_text(json.dumps(index, indent=1))
-        log(f"{a.card} {i}/{len(seeds)} seed {seed} {cf} ({time.time()-t0:.0f}s)")
+        log(f"{a.card} {i}/{len(seeds)} seed {seed} {cf} ({time.time() - t0:.0f}s)")
 
-    items = [{"seed": s, "path": out_dir / f"{slug}_{s}.png", **index[str(s)]}
-             for s in seeds if str(s) in index and (out_dir / f"{slug}_{s}.png").exists()]
+    items = [
+        {"seed": s, "path": out_dir / f"{slug}_{s}.png", **index[str(s)]}
+        for s in seeds
+        if str(s) in index and (out_dir / f"{slug}_{s}.png").exists()
+    ]
     if not items:
         log(f"{a.card}: no renders, no sheet")
         sys.exit(1)
     dest = out_dir.parent / f"{out_dir.name}.jpg"
     contact_sheet(items, dest, a.cols, a.thumb_w)
     log(f"{a.card}: sheet {dest} ({len(items)}/{len(seeds)} renders)")
-    print(json.dumps({"ok": True, "card": a.card, "sheet": str(dest),
-                      "rendered": len(items), "wanted": len(seeds)}))
+    print(
+        json.dumps(
+            {
+                "ok": True,
+                "card": a.card,
+                "sheet": str(dest),
+                "rendered": len(items),
+                "wanted": len(seeds),
+            }
+        )
+    )
 
 
 if __name__ == "__main__":

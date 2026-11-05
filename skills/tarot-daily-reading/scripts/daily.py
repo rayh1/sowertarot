@@ -40,6 +40,7 @@ integer n, and with the deck sorted by name (N cards):
   orientation = ["upright", "reversed"][(n // (N * (N - 1))) % 2]
 The reading file stores the round and the sorted deck list, so anyone can recompute the draw later.
 """
+
 import argparse
 import datetime as dt
 import hashlib
@@ -64,9 +65,17 @@ NO_GIT = os.environ.get("TAROT_NO_GIT") == "1"
 BRANCH = "main"
 COMMITTER = ("Sower Tarot", "daily@sowertarot.com")
 # Defaults when settings.env lacks a key (settings.env explains each one).
-SETTING_DEFAULTS = {"SOWER_WORK": "work", "SOWER_DAILY_DIR": "work/daily-card", "SOWER_GH_USER": "",
-                    "SOWER_BACKUP": "", "SOWER_REVIEW": "", "SOWER_CLAUDE_DIR": ".", "SOWER_NOTIFY_TO": "",
-                    "SOWER_MAIL_COMMAND": "", "SOWER_PARKED": ""}
+SETTING_DEFAULTS = {
+    "SOWER_WORK": "work",
+    "SOWER_DAILY_DIR": "work/daily-card",
+    "SOWER_GH_USER": "",
+    "SOWER_BACKUP": "",
+    "SOWER_REVIEW": "",
+    "SOWER_CLAUDE_DIR": ".",
+    "SOWER_NOTIFY_TO": "",
+    "SOWER_MAIL_COMMAND": "",
+    "SOWER_PARKED": "",
+}
 SETTING_PATHS = {"SOWER_WORK", "SOWER_DAILY_DIR", "SOWER_CLAUDE_DIR"}
 
 
@@ -92,8 +101,12 @@ def load_settings():
 
 
 SETTINGS = load_settings()
-GH_USER = SETTINGS["SOWER_GH_USER"]         # GitHub account whose gh token pulls and pushes; "" = gh's active one
-DRAW_DIR = Path(os.environ.get("TAROT_DAILY_DIR") or Path(SETTINGS["SOWER_DAILY_DIR"]) / "draw")
+GH_USER = SETTINGS[
+    "SOWER_GH_USER"
+]  # GitHub account whose gh token pulls and pushes; "" = gh's active one
+DRAW_DIR = Path(
+    os.environ.get("TAROT_DAILY_DIR") or Path(SETTINGS["SOWER_DAILY_DIR"]) / "draw"
+)
 
 # drand mainnet ("default" chain: 30-second rounds since genesis 2020-07-22); the chain hash pins it.
 DRAND_API = "https://api.drand.sh"
@@ -105,22 +118,37 @@ DRAW_TZ = zoneinfo.ZoneInfo("Europe/Amsterdam")
 
 SECTIONS = ["The card", "Essence", "For today"]
 # Reading file front matter, in this order; every value is written as a JSON string.
-MANUAL_DRAND = "none (manual draw)"    # the drand field of a draw set by hand (draw --card/--orientation/--lens)
+MANUAL_DRAND = "none (manual draw)"  # the drand field of a draw set by hand (draw --card/--orientation/--lens)
 # Trigger rule. TRIGGER_START is the first draw the rule applies to: the first 07:00 draw after the commit that
 # put the rule on the about page (src/pages/about.astro says the same date). None: no draw triggers yet.
 TRIGGER_CARDS = ("The Sower", "The Miner")
 TRIGGER_START = "2026-10-28"
-SITE = "https://sowertarot.com"         # astro.config.mjs `site`; the email links to the reading there
+SITE = "https://sowertarot.com"  # astro.config.mjs `site`; the email links to the reading there
 PARKED_TAGS = ("parked", "handoff", "project:tarot-deck")
-READING_KEYS = ["date", "card", "orientation", "lens", "lead", "drand", "deck", "deck_list", "lede", "alt"]
+READING_KEYS = [
+    "date",
+    "card",
+    "orientation",
+    "lens",
+    "lead",
+    "drand",
+    "deck",
+    "deck_list",
+    "lede",
+    "alt",
+]
 
 # Cliche mirror: 3-5 word phrases used in PHRASE_MIN_READINGS or more readings are passed to the writer to avoid.
 PHRASE_MIN_READINGS = 3
 PHRASE_MAX = 15
-PHRASE_MIN_CONTENT = 2     # a phrase needs this many words outside FILLER ("it is the" is not a cliche)
-FILLER = set("""a an the and or but of to in on at by for with from into as than then so
+PHRASE_MIN_CONTENT = (
+    2  # a phrase needs this many words outside FILLER ("it is the" is not a cliche)
+)
+FILLER = set(
+    """a an the and or but of to in on at by for with from into as than then so
 i you he she it we they me him her us them my your his its our their this that these those
-is are was were be been being am there here what which who where when how""".split())
+is are was were be been being am there here what which who where when how""".split()
+)
 
 
 def today():
@@ -138,6 +166,7 @@ def fail(msg, code=2):
 
 # --- Git --------------------------------------------------------------------
 
+
 def git(*args, auth=False, check=True):
     """Run git in the repository. With auth, the gh token of GH_USER answers GitHub's password prompt;
     it travels in the environment, never on the command line."""
@@ -148,10 +177,18 @@ def git(*args, auth=False, check=True):
         if tok.returncode != 0:
             fail(f"{' '.join(cmd)}: {tok.stderr.strip()}")
         env["SOWER_GIT_TOKEN"] = tok.stdout.strip()
-        user = GH_USER or "x-access-token"    # GitHub ignores the user name when the password is a token
-        pre = ["-c", "credential.helper=",
-               "-c", f'credential.helper=!f() {{ echo username={user}; echo "password=$SOWER_GIT_TOKEN"; }}; f']
-    r = subprocess.run(["git", "-C", str(REPO), *pre, *args], capture_output=True, text=True, env=env)
+        user = (
+            GH_USER or "x-access-token"
+        )  # GitHub ignores the user name when the password is a token
+        pre = [
+            "-c",
+            "credential.helper=",
+            "-c",
+            f'credential.helper=!f() {{ echo username={user}; echo "password=$SOWER_GIT_TOKEN"; }}; f',
+        ]
+    r = subprocess.run(
+        ["git", "-C", str(REPO), *pre, *args], capture_output=True, text=True, env=env
+    )
     if check and r.returncode != 0:
         fail(f"git {' '.join(args[:2])}: {(r.stderr or r.stdout).strip()}")
     return r
@@ -165,6 +202,7 @@ def on_branch():
 
 
 # --- Repository files --------------------------------------------------------
+
 
 def split_front_matter(text):
     """The `key: <JSON value>` lines between the --- lines (values that are not JSON stay text), and the body."""
@@ -180,7 +218,7 @@ def split_front_matter(text):
                 fields[k] = json.loads(v)
             except json.JSONDecodeError:
                 fields[k] = v
-    return fields, "\n".join(lines[end + 1:])
+    return fields, "\n".join(lines[end + 1 :])
 
 
 def card_files(texts):
@@ -204,12 +242,18 @@ def deck_at(date):
     GitHub). With TAROT_NO_GIT, the working tree."""
     if NO_GIT:
         return tree_cards(), "working tree (TAROT_NO_GIT)"
-    until = dt.datetime.combine(dt.date.fromisoformat(date), DRAW_TIME, DRAW_TZ).isoformat()
-    sha = git("log", "-1", "--format=%H", f"--until={until}", BRANCH, "--", "content/cards").stdout.strip()
+    until = dt.datetime.combine(
+        dt.date.fromisoformat(date), DRAW_TIME, DRAW_TZ
+    ).isoformat()
+    sha = git(
+        "log", "-1", "--format=%H", f"--until={until}", BRANCH, "--", "content/cards"
+    ).stdout.strip()
     if not sha:
         fail(f"no commit on {BRANCH} changed content/cards/ before {until}")
     names = git("ls-tree", "--name-only", sha, "content/cards/").stdout.split()
-    return card_files(git("show", f"{sha}:{n}").stdout for n in names if n.endswith(".md")), f"commit {sha[:7]}"
+    return card_files(
+        git("show", f"{sha}:{n}").stdout for n in names if n.endswith(".md")
+    ), f"commit {sha[:7]}"
 
 
 def parse_reading(text):
@@ -230,7 +274,11 @@ def parse_reading(text):
 def parse_draft(text):
     """The model's draft: 'key: value' lines up to the first blank line, then '## <section>' blocks."""
     head, _, rest = text.partition("\n\n")
-    fields = {k.strip(): v.strip() for k, sep, v in (line.partition(":") for line in head.splitlines()) if sep}
+    fields = {
+        k.strip(): v.strip()
+        for k, sep, v in (line.partition(":") for line in head.splitlines())
+        if sep
+    }
     fields["sections"] = parse_reading(rest)["sections"]
     return fields
 
@@ -241,7 +289,10 @@ def reading_path(date):
 
 def readings():
     """All readings in the repository, newest first."""
-    out = [parse_reading(p.read_text(encoding="utf-8")) for p in READINGS.glob("????-??-??.md")]
+    out = [
+        parse_reading(p.read_text(encoding="utf-8"))
+        for p in READINGS.glob("????-??-??.md")
+    ]
     return sorted(out, key=lambda r: r["date"], reverse=True)
 
 
@@ -252,7 +303,7 @@ def phrases(text):
         w = re.findall(r"[a-z']+", sentence)
         for n in (3, 4, 5):
             for i in range(len(w) - n + 1):
-                gram = w[i:i + n]
+                gram = w[i : i + n]
                 if sum(x not in FILLER for x in gram) >= PHRASE_MIN_CONTENT:
                     out.add(" ".join(gram))
     return out
@@ -262,7 +313,9 @@ def stock_phrases(rs):
     """Phrases the readings keep repeating, most used first; phrases taken from card notes are allowed."""
     counts = {}
     for r in rs:
-        for ph in phrases("\n".join([r.get("lede", "")] + list(r["sections"].values()))):
+        for ph in phrases(
+            "\n".join([r.get("lede", "")] + list(r["sections"].values()))
+        ):
             counts[ph] = counts.get(ph, 0) + 1
     common = {ph: c for ph, c in counts.items() if c >= PHRASE_MIN_READINGS}
     if not common:
@@ -271,7 +324,7 @@ def stock_phrases(rs):
     kept = []
     for ph in sorted(common, key=lambda ph: (-common[ph], -len(ph.split()), ph)):
         if ph in from_cards or any(f" {ph} " in f" {k} " for k in kept):
-            continue    # card wording, or part of a longer phrase already listed
+            continue  # card wording, or part of a longer phrase already listed
         kept.append(ph)
     return merge_overlaps(kept)[:PHRASE_MAX]
 
@@ -286,9 +339,16 @@ def merge_overlaps(kept):
             for b in words:
                 if a is b:
                     continue
-                n = next((n for n in range(min(len(a), len(b)) - 1, 2, -1) if a[-n:] == b[:n]), 0)
+                n = next(
+                    (
+                        n
+                        for n in range(min(len(a), len(b)) - 1, 2, -1)
+                        if a[-n:] == b[:n]
+                    ),
+                    0,
+                )
                 if n:
-                    a[len(a):] = b[n:]
+                    a[len(a) :] = b[n:]
                     words.remove(b)
                     merged = True
                     break
@@ -299,9 +359,14 @@ def merge_overlaps(kept):
 
 # --- Card data --------------------------------------------------------------
 
+
 def card_sections(body):
     """Keep the parts a reading draws on: Composition, Symbolism, Atmosphere, Archetypal Essence."""
-    keep, out, current = {"Composition", "Symbolism", "Atmosphere", "Archetypal Essence"}, {}, None
+    keep, out, current = (
+        {"Composition", "Symbolism", "Atmosphere", "Archetypal Essence"},
+        {},
+        None,
+    )
     for line in body.splitlines():
         m = re.match(r"^#{2,3}\s+(.+?)\s*$", line)
         if m:
@@ -315,9 +380,12 @@ def card_sections(body):
 
 # --- Verifiable draw (drand) -------------------------------------------------
 
+
 def drand_round(date):
     """The drand round published at DRAW_TIME (Europe/Amsterdam) on date, and its start as a Unix time."""
-    at = dt.datetime.combine(dt.date.fromisoformat(date), DRAW_TIME, DRAW_TZ).timestamp()
+    at = dt.datetime.combine(
+        dt.date.fromisoformat(date), DRAW_TIME, DRAW_TZ
+    ).timestamp()
     rnd = int(at - DRAND_GENESIS) // DRAND_PERIOD + 1
     return rnd, DRAND_GENESIS + (rnd - 1) * DRAND_PERIOD
 
@@ -326,8 +394,10 @@ def drand_randomness(rnd, start):
     """Fetch a round's randomness (hex). Fails when drand cannot be reached; a manual run later that day
     uses the same round and so gives the same draw."""
     if time.time() < start:
-        fail(f"drand round {rnd} is published at {dt.datetime.fromtimestamp(start, DRAW_TZ):%H:%M} "
-             f"Europe/Amsterdam; draw after that")
+        fail(
+            f"drand round {rnd} is published at {dt.datetime.fromtimestamp(start, DRAW_TZ):%H:%M} "
+            f"Europe/Amsterdam; draw after that"
+        )
     url = f"{DRAND_API}/{DRAND_CHAIN}/public/{rnd}"
     for attempt in range(4):
         try:
@@ -339,7 +409,11 @@ def drand_randomness(rnd, start):
                 fail(f"drand unreachable ({url}): {e}")
             time.sleep(10)
     # drand defines a round's randomness as the SHA-256 of its signature; check the two agree.
-    if beacon.get("round") != rnd or hashlib.sha256(bytes.fromhex(beacon["signature"])).hexdigest() != beacon["randomness"]:
+    if (
+        beacon.get("round") != rnd
+        or hashlib.sha256(bytes.fromhex(beacon["signature"])).hexdigest()
+        != beacon["randomness"]
+    ):
         fail(f"drand round {rnd}: response does not match its round or signature")
     return beacon["randomness"]
 
@@ -355,6 +429,7 @@ def derive(randomness, deck_list):
 
 
 # --- Commands ---------------------------------------------------------------
+
 
 def cmd_pull(_):
     if NO_GIT:
@@ -380,14 +455,25 @@ def cmd_push(_):
     if int(git("rev-list", "--count", f"{BRANCH}..origin/{BRANCH}").stdout):
         # main moved on GitHub since the pull: replay the local commits (the reading) on top of it
         # --autostash: uncommitted work in the clone (a card in progress) must not block the push
-        if git("rebase", "--quiet", "--autostash", f"origin/{BRANCH}", check=False).returncode != 0:
+        if (
+            git(
+                "rebase", "--quiet", "--autostash", f"origin/{BRANCH}", check=False
+            ).returncode
+            != 0
+        ):
             git("rebase", "--abort", check=False)
-            fail(f"{BRANCH} and origin/{BRANCH} have diverged and the local commits do not rebase cleanly", 1)
+            fail(
+                f"{BRANCH} and origin/{BRANCH} have diverged and the local commits do not rebase cleanly",
+                1,
+            )
         clash = git("diff", "--name-only", "--diff-filter=U").stdout.split()
-        if clash:   # the autostash did not reapply over the new commits: keep the committed files, the edits stay stashed
+        if clash:  # the autostash did not reapply over the new commits: keep the committed files, the edits stay stashed
             git("checkout", "HEAD", "--", *clash)
-            print(f"warning: uncommitted changes to {', '.join(clash)} clashed with origin/{BRANCH}; those files are "
-                  "back at the committed version and the changes are kept in `git stash list`", file=sys.stderr)
+            print(
+                f"warning: uncommitted changes to {', '.join(clash)} clashed with origin/{BRANCH}; those files are "
+                "back at the committed version and the changes are kept in `git stash list`",
+                file=sys.stderr,
+            )
         print(f"rebased {ahead} local commit(s) onto origin/{BRANCH}")
     r = git("push", "--quiet", "origin", BRANCH, auth=True, check=False)
     if r.returncode != 0:
@@ -397,7 +483,11 @@ def cmd_push(_):
 
 def cmd_status(_):
     path = reading_path(today())
-    print(f"done: {path}" if path.exists() else f"missing: no reading for {today()} in {READINGS}")
+    print(
+        f"done: {path}"
+        if path.exists()
+        else f"missing: no reading for {today()} in {READINGS}"
+    )
     sys.exit(0 if path.exists() else 1)
 
 
@@ -406,9 +496,13 @@ def cmd_draw(a):
         fail(f"a reading for {today()} already exists: {reading_path(today())}")
     deck, deck_source = deck_at(today())
     if len(deck) < 2:
-        fail(f"the deck needs at least 2 cards (card + lens card); {deck_source} has {len(deck)}")
+        fail(
+            f"the deck needs at least 2 cards (card + lens card); {deck_source} has {len(deck)}"
+        )
     deck_list = sorted(deck)
-    if a.card or a.orientation or a.lens:    # test run: no drand, so the reading marks it unverifiable
+    if (
+        a.card or a.orientation or a.lens
+    ):  # test run: no drand, so the reading marks it unverifiable
         rnd = None
         card = a.card or random.choice(deck_list)
         lens = a.lens or random.choice([c for c in deck_list if c != card])
@@ -436,8 +530,12 @@ def cmd_draw(a):
         "card_note": card_sections(deck[card]["body"]),
         "lens_note": card_sections(deck[lens]["body"]),
         "earlier_readings": [
-            {"date": r["date"], "orientation": r.get("orientation"), "lead": r.get("lead"),
-             "for_today": r["sections"].get("For today", "")}
+            {
+                "date": r["date"],
+                "orientation": r.get("orientation"),
+                "lead": r.get("lead"),
+                "for_today": r["sections"].get("For today", ""),
+            }
             for r in earlier
         ],
         "avoid_phrases": stock_phrases(all_readings),
@@ -453,17 +551,34 @@ def cmd_save(a):
         fail(f"draw.json is for {draw['date']}, not {today()}; run draw first")
     text = Path(a.file or DRAW_DIR / "reading.md").read_text()
     r = parse_draft(text)
-    missing = [k for k in ("lead", "lede", "alt") if not r.get(k)] + [s for s in SECTIONS if not r["sections"].get(s)]
+    missing = [k for k in ("lead", "lede", "alt") if not r.get(k)] + [
+        s for s in SECTIONS if not r["sections"].get(s)
+    ]
     if missing:
         fail(f"reading is missing: {', '.join(missing)}")
-    if draw["lens"] in text:    # case-sensitive: "the horizon" in a scene is fine, "The Horizon" names the card
-        fail(f"the reading names the lens card ({draw['lens']}); it must never be named")
+    if (
+        draw["lens"] in text
+    ):  # case-sensitive: "the horizon" in a scene is fine, "The Horizon" names the card
+        fail(
+            f"the reading names the lens card ({draw['lens']}); it must never be named"
+        )
     if not NO_GIT:
         on_branch()
-    fields = {"date": draw["date"], "card": draw["card"], "orientation": draw["orientation"], "lens": draw["lens"],
-              "lead": r["lead"], "drand": str(draw["drand"] or MANUAL_DRAND), "deck": str(draw["deck"]),
-              "deck_list": " | ".join(draw["deck_list"]), "lede": r["lede"], "alt": r["alt"]}
-    head = "".join(f"{k}: {json.dumps(fields[k], ensure_ascii=False)}\n" for k in READING_KEYS)
+    fields = {
+        "date": draw["date"],
+        "card": draw["card"],
+        "orientation": draw["orientation"],
+        "lens": draw["lens"],
+        "lead": r["lead"],
+        "drand": str(draw["drand"] or MANUAL_DRAND),
+        "deck": str(draw["deck"]),
+        "deck_list": " | ".join(draw["deck_list"]),
+        "lede": r["lede"],
+        "alt": r["alt"],
+    }
+    head = "".join(
+        f"{k}: {json.dumps(fields[k], ensure_ascii=False)}\n" for k in READING_KEYS
+    )
     body = "\n\n".join(f"## {s}\n\n{r['sections'][s]}" for s in SECTIONS)
     path = reading_path(draw["date"])
     READINGS.mkdir(parents=True, exist_ok=True)
@@ -474,8 +589,18 @@ def cmd_save(a):
     rel = str(path.relative_to(REPO))
     git("add", "--", rel)
     if git("diff", "--cached", "--quiet", "--", rel, check=False).returncode != 0:
-        git("-c", f"user.name={COMMITTER[0]}", "-c", f"user.email={COMMITTER[1]}", "commit", "--quiet",
-            "-m", f"Daily reading {draw['date']}: {draw['card']}, {draw['orientation']}", "--", rel)
+        git(
+            "-c",
+            f"user.name={COMMITTER[0]}",
+            "-c",
+            f"user.email={COMMITTER[1]}",
+            "commit",
+            "--quiet",
+            "-m",
+            f"Daily reading {draw['date']}: {draw['card']}, {draw['orientation']}",
+            "--",
+            rel,
+        )
         print(f"committed: {git('log', '-1', '--format=%h %s').stdout.strip()}")
     cmd_push(a)
 
@@ -487,14 +612,28 @@ def cmd_verify(a):
         fail(f"no reading for {date}: {path}")
     r = parse_reading(path.read_text(encoding="utf-8"))
     if not str(r.get("drand", "")).isdigit() or not r.get("deck_list"):
-        fail(f"the {date} reading has no drand round and deck list (drand: {r.get('drand', 'missing')})")
+        fail(
+            f"the {date} reading has no drand round and deck list (drand: {r.get('drand', 'missing')})"
+        )
     rnd = int(r["drand"])
-    card, lens, orientation = derive(drand_randomness(rnd, 0), r["deck_list"].split(" | "))
+    card, lens, orientation = derive(
+        drand_randomness(rnd, 0), r["deck_list"].split(" | ")
+    )
     got = {"card": card, "lens": lens, "orientation": orientation}
-    bad = [f"{k}: reading says {r.get(k)!r}, drand gives {v!r}" for k, v in got.items() if r.get(k) != v]
+    bad = [
+        f"{k}: reading says {r.get(k)!r}, drand gives {v!r}"
+        for k, v in got.items()
+        if r.get(k) != v
+    ]
     if drand_round(date)[0] != rnd:
-        bad.append(f"drand: reading says round {rnd}, the 07:00 round of {date} is {drand_round(date)[0]}")
-    print("\n".join(bad) if bad else f"verified: {date} {card}, {orientation}, lens {lens} (drand round {rnd})")
+        bad.append(
+            f"drand: reading says round {rnd}, the 07:00 round of {date} is {drand_round(date)[0]}"
+        )
+    print(
+        "\n".join(bad)
+        if bad
+        else f"verified: {date} {card}, {orientation}, lens {lens} (drand round {rnd})"
+    )
     sys.exit(1 if bad else 0)
 
 
@@ -509,12 +648,25 @@ def cmd_backup(_):
     if not dest:
         print("backup skipped (SOWER_BACKUP is empty)")
         return
-    r = subprocess.run(["rclone", "copy", str(REPO / "content"), f"{dest}/content", "--stats-one-line", "-v"],
-                       capture_output=True, text=True)
+    r = subprocess.run(
+        [
+            "rclone",
+            "copy",
+            str(REPO / "content"),
+            f"{dest}/content",
+            "--stats-one-line",
+            "-v",
+        ],
+        capture_output=True,
+        text=True,
+    )
     if r.returncode != 0:
         fail(f"rclone copy to {dest}/content: {r.stderr.strip()}", 1)
     copied = re.findall(r"INFO\s*: (.+?): Copied", r.stderr)
-    print(f"backed up to {dest}/content: " + (", ".join(copied) if copied else "nothing new"))
+    print(
+        f"backed up to {dest}/content: "
+        + (", ".join(copied) if copied else "nothing new")
+    )
 
 
 def pending_triggers():
@@ -523,8 +675,17 @@ def pending_triggers():
     if not start:
         return []
     sown = {c["fields"].get("sown_by") for c in tree_cards().values()}
-    return sorted((r for r in readings() if r["date"] >= start and r.get("card") in TRIGGER_CARDS
-                   and r.get("drand") != MANUAL_DRAND and r["date"] not in sown), key=lambda r: r["date"])
+    return sorted(
+        (
+            r
+            for r in readings()
+            if r["date"] >= start
+            and r.get("card") in TRIGGER_CARDS
+            and r.get("drand") != MANUAL_DRAND
+            and r["date"] not in sown
+        ),
+        key=lambda r: r["date"],
+    )
 
 
 def cmd_triggers(_):
@@ -539,7 +700,9 @@ def trigger_title(r):
 def joplink(*args, check=True):
     r = subprocess.run(["joplink", "--json", *args], capture_output=True, text=True)
     if check and r.returncode != 0:
-        raise RuntimeError(f"joplink {' '.join(args[:2])}: {(r.stderr or r.stdout).strip()}")
+        raise RuntimeError(
+            f"joplink {' '.join(args[:2])}: {(r.stderr or r.stdout).strip()}"
+        )
     return r
 
 
@@ -550,7 +713,9 @@ def parked_note(title):
         r = joplink("note", "get", f"{folder}/{title}", "--fields", "id", check=False)
         if r.returncode == 0:
             return json.loads(r.stdout)["id"]
-        if r.returncode != 3:                  # 3 = not found; anything else means Joplin did not answer
+        if (
+            r.returncode != 3
+        ):  # 3 = not found; anything else means Joplin did not answer
             raise RuntimeError(f"joplink note get: {(r.stderr or r.stdout).strip()}")
     return None
 
@@ -558,18 +723,25 @@ def parked_note(title):
 def trigger_texts(r):
     """(Parked note body, email body) for trigger reading r."""
     url = f"{SITE}/readings/{r['date']}/"
-    origin = ("an idea from outside the deck (The Sower)" if r["card"] == "The Sower"
-              else "a gap in the deck (The Miner)")
-    note = (f"Decided: {r['date']} — {r['card']} was drawn as the day's card ({url}). Under the Sower deck's trigger "
-            f"rule exactly one new card is now due, grown from {origin}; no card enters the deck any other way.\n\n"
-            f"Next: in Claude Code, type `/tarot-card-generator trigger {r['date']}` (the skill runs § Find something "
-            f"new in skills/tarot-card-generator/SKILL.md, repository {REPO}, for this draw).\n\n"
-            f"Done when: the new card is committed to main with this reading named as its origin (sown_by "
-            f"\"{r['date']}\").\n\nHistory:\n- {today()} — Opened by the 07:00 job.\n")
-    mail = (f"# A new card is due\n\n{r['card']} was drawn as the day's card on {r['date']} "
-            f"([the reading]({url})). Under the trigger rule exactly one new card is now due, grown from {origin}.\n\n"
-            f"Make it in Claude Code with `/tarot-card-generator trigger {r['date']}`; the Parked note "
-            f"\"{trigger_title(r)}\" holds the steps.\n")
+    origin = (
+        "an idea from outside the deck (The Sower)"
+        if r["card"] == "The Sower"
+        else "a gap in the deck (The Miner)"
+    )
+    note = (
+        f"Decided: {r['date']} — {r['card']} was drawn as the day's card ({url}). Under the Sower deck's trigger "
+        f"rule exactly one new card is now due, grown from {origin}; no card enters the deck any other way.\n\n"
+        f"Next: in Claude Code, type `/tarot-card-generator trigger {r['date']}` (the skill runs § Find something "
+        f"new in skills/tarot-card-generator/SKILL.md, repository {REPO}, for this draw).\n\n"
+        f"Done when: the new card is committed to main with this reading named as its origin (sown_by "
+        f'"{r["date"]}").\n\nHistory:\n- {today()} — Opened by the 07:00 job.\n'
+    )
+    mail = (
+        f"# A new card is due\n\n{r['card']} was drawn as the day's card on {r['date']} "
+        f"([the reading]({url})). Under the trigger rule exactly one new card is now due, grown from {origin}.\n\n"
+        f"Make it in Claude Code with `/tarot-card-generator trigger {r['date']}`; the Parked note "
+        f'"{trigger_title(r)}" holds the steps.\n'
+    )
     return note, mail
 
 
@@ -578,7 +750,11 @@ def cmd_notify(a):
     with a note (or, without SOWER_PARKED, a notified-<date> file) was announced before and is skipped, so a rerun
     sends nothing. The note comes first: a failed email (the mail server is reachable only on the Charm network)
     is reported and not retried, because the note already reaches the user. Exit 1 if anything failed."""
-    parked, to, mail_cmd = SETTINGS["SOWER_PARKED"], SETTINGS["SOWER_NOTIFY_TO"], SETTINGS["SOWER_MAIL_COMMAND"]
+    parked, to, mail_cmd = (
+        SETTINGS["SOWER_PARKED"],
+        SETTINGS["SOWER_NOTIFY_TO"],
+        SETTINGS["SOWER_MAIL_COMMAND"],
+    )
     marks = Path(SETTINGS["SOWER_DAILY_DIR"])
     failed = False
     for r in pending_triggers():
@@ -597,7 +773,9 @@ def cmd_notify(a):
                     joplink("note", "save", f"{parked}/{title}", "--file", str(tmp))
                     nid = parked_note(title)
                     if not nid:
-                        raise RuntimeError(f"note {parked}/{title} not found after saving it")
+                        raise RuntimeError(
+                            f"note {parked}/{title} not found after saving it"
+                        )
                     for tag in PARKED_TAGS:
                         joplink("tag", "tag-note", nid, tag)
                     print(f"trigger {r['date']} ({r['card']}): Parked note {nid}")
@@ -610,7 +788,7 @@ def cmd_notify(a):
         except (RuntimeError, OSError) as e:
             print(f"trigger {r['date']}: no Parked note: {e}", file=sys.stderr)
             failed = True
-            continue                    # without a note there is no record of the notice: no email either
+            continue  # without a note there is no record of the notice: no email either
         if not (to and mail_cmd):
             if not parked:
                 print(f"trigger {r['date']} ({r['card']}): a new card is due")
@@ -618,16 +796,33 @@ def cmd_notify(a):
         body = DRAW_DIR / f"trigger-{r['date']}-mail.md"
         body.parent.mkdir(parents=True, exist_ok=True)
         body.write_text(mail, encoding="utf-8")
-        cmd = [mail_cmd, "--to", to, "--subject", f"Sower Tarot: a new card is due ({r['card']}, {r['date']})",
-               "--markdown", str(body), "--allow-domain", to.rpartition("@")[2], "--allow-link", f"{SITE}/"]
-        res = subprocess.run(cmd + (["--dry-run"] if a.dry_run else []), capture_output=True, text=True)
+        cmd = [
+            mail_cmd,
+            "--to",
+            to,
+            "--subject",
+            f"Sower Tarot: a new card is due ({r['card']}, {r['date']})",
+            "--markdown",
+            str(body),
+            "--allow-domain",
+            to.rpartition("@")[2],
+            "--allow-link",
+            f"{SITE}/",
+        ]
+        res = subprocess.run(
+            cmd + (["--dry-run"] if a.dry_run else []), capture_output=True, text=True
+        )
         if res.returncode != 0:
-            print(f"trigger {r['date']}: email to {to} failed: {(res.stderr or res.stdout).strip()}", file=sys.stderr)
+            print(
+                f"trigger {r['date']}: email to {to} failed: {(res.stderr or res.stdout).strip()}",
+                file=sys.stderr,
+            )
             failed = True
         else:
-            print(f"trigger {r['date']} ({r['card']}): email {'checked (dry run)' if a.dry_run else 'sent'} to {to}")
+            print(
+                f"trigger {r['date']} ({r['card']}): email {'checked (dry run)' if a.dry_run else 'sent'} to {to}"
+            )
     sys.exit(1 if failed else 0)
-
 
 
 def close_trigger(date, card, commit):
@@ -644,12 +839,20 @@ def close_trigger(date, card, commit):
     if r.returncode != 0:
         raise RuntimeError(f"joplink note get: {(r.stderr or r.stdout).strip()}")
     nid = json.loads(r.stdout)["id"]
-    joplink("note", "prepend", nid, "--text", f"Status: closed {today()} — {card} committed ({commit})",
-            "--separator", "\n\n---\n\n")
+    joplink(
+        "note",
+        "prepend",
+        nid,
+        "--text",
+        f"Status: closed {today()} — {card} committed ({commit})",
+        "--separator",
+        "\n\n---\n\n",
+    )
     for tag in ("parked", "handoff"):
         joplink("tag", "untag-note", nid, tag)
     joplink("note", "move", nid, f"{parked}/Done")
     return f"closed Parked note {nid} ({title})"
+
 
 def cmd_settings(a):
     """Shell assignments for run-daily.sh and install-cron.sh: eval "$(daily.py settings)"."""
@@ -659,7 +862,9 @@ def cmd_settings(a):
 
 
 def main():
-    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("pull").set_defaults(fn=cmd_pull)
     sub.add_parser("status").set_defaults(fn=cmd_status)
@@ -680,7 +885,11 @@ def main():
     sub.add_parser("settings").set_defaults(fn=cmd_settings)
     sub.add_parser("triggers").set_defaults(fn=cmd_triggers)
     n = sub.add_parser("notify")
-    n.add_argument("--dry-run", action="store_true", help="open no note, write no marker; send-mail --dry-run")
+    n.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="open no note, write no marker; send-mail --dry-run",
+    )
     n.set_defaults(fn=cmd_notify)
     a = p.parse_args()
     a.fn(a)

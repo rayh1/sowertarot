@@ -17,6 +17,7 @@ found as what differs from the sky at the box edge). --grow 24 when a faint rim 
 {"method": "fill_halo", box, grow}); use --grow 2.
 Emits {"ok":true,"out":...,"disc_pixels":...}.
 """
+
 import argparse, json, os, subprocess, sys
 from datetime import datetime
 
@@ -31,14 +32,30 @@ from repair_tools import fill_disc, fill_halo  # noqa: E402
 def main():
     ap = argparse.ArgumentParser()
     src = ap.add_mutually_exclusive_group(required=True)
-    src.add_argument("--name", "--note", dest="note",
-                     help="card name; the render record is read from its card file content/cards/<slug>.md")
+    src.add_argument(
+        "--name",
+        "--note",
+        dest="note",
+        help="card name; the render record is read from its card file content/cards/<slug>.md",
+    )
     src.add_argument("--card", help="card PNG carrying a tarot_render record")
-    ap.add_argument("--art", required=True, help="the card's current unframed art (with earlier repairs applied)")
-    ap.add_argument("--box", required=True, help="x0,y0,x1,y1 in unframed-art pixels around the disc and its glow")
+    ap.add_argument(
+        "--art",
+        required=True,
+        help="the card's current unframed art (with earlier repairs applied)",
+    )
+    ap.add_argument(
+        "--box",
+        required=True,
+        help="x0,y0,x1,y1 in unframed-art pixels around the disc and its glow",
+    )
     ap.add_argument("--grow", type=int, default=14)
     ap.add_argument("--thresh", type=int, default=18)
-    ap.add_argument("--halo", action="store_true", help="fill the light rim round dark linework, not a disc")
+    ap.add_argument(
+        "--halo",
+        action="store_true",
+        help="fill the light rim round dark linework, not a disc",
+    )
     ap.add_argument("--out", required=True, help="framed card PNG to write")
     ap.add_argument("--keep-art", help="also save the filled unframed art here")
     a = ap.parse_args()
@@ -56,16 +73,39 @@ def main():
         entry = {"method": "fill_halo", "box": box, "grow": a.grow, "rim_pixels": n}
     else:
         filled, n = fill_disc(Image.open(a.art), box, a.grow, a.thresh)
-        entry = {"method": "fill_disc", "box": box, "grow": a.grow, "thresh": a.thresh, "disc_pixels": n}
-    art = os.path.abspath(a.keep_art) if a.keep_art else os.path.join(
-        os.path.dirname(os.path.abspath(a.out)), ".fill_art.png")
+        entry = {
+            "method": "fill_disc",
+            "box": box,
+            "grow": a.grow,
+            "thresh": a.thresh,
+            "disc_pixels": n,
+        }
+    art = (
+        os.path.abspath(a.keep_art)
+        if a.keep_art
+        else os.path.join(os.path.dirname(os.path.abspath(a.out)), ".fill_art.png")
+    )
     filled.save(art)
-    fr = subprocess.run([sys.executable, FRAME, "--art", art, "--title", record["title"],
-                         "--out", a.out] + record["frame_flags"], capture_output=True, text=True)
+    fr = subprocess.run(
+        [
+            sys.executable,
+            FRAME,
+            "--art",
+            art,
+            "--title",
+            record["title"],
+            "--out",
+            a.out,
+        ]
+        + record["frame_flags"],
+        capture_output=True,
+        text=True,
+    )
     if fr.returncode:
         raise SystemExit(f"frame_card.py failed:\n{fr.stdout}\n{fr.stderr}")
-    record.setdefault("repairs", []).append({
-        "edited": datetime.now().astimezone().isoformat(timespec="seconds"), **entry})
+    record.setdefault("repairs", []).append(
+        {"edited": datetime.now().astimezone().isoformat(timespec="seconds"), **entry}
+    )
     write_record(a.out, record)
     if not a.keep_art:
         os.remove(art)

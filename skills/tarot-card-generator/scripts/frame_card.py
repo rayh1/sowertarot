@@ -11,6 +11,7 @@ Usage:
 The art is center-cropped to fill the interior, so any input aspect works; pass
 art already close to the card aspect (~1:1.75) to avoid heavy cropping.
 """
+
 import argparse, random
 from PIL import Image, ImageDraw, ImageFont
 
@@ -29,7 +30,9 @@ def cover_resize(img, box_w, box_h):
     """Scale to cover (box_w, box_h), then center-crop to exactly that size."""
     src_w, src_h = img.size
     scale = max(box_w / src_w, box_h / src_h)
-    new = img.resize((max(1, round(src_w * scale)), max(1, round(src_h * scale))), Image.LANCZOS)
+    new = img.resize(
+        (max(1, round(src_w * scale)), max(1, round(src_h * scale))), Image.LANCZOS
+    )
     left = (new.width - box_w) // 2
     top = (new.height - box_h) // 2
     return new.crop((left, top, left + box_w, top + box_h))
@@ -56,7 +59,8 @@ def fit_title(draw, text, font_path, max_w, max_h):
         font = load_font(font_path, mid)
         l, t, r, b = draw.textbbox((0, 0), text, font=font)
         if (r - l) <= max_w and (b - t) <= max_h:
-            best = font; lo = mid + 1
+            best = font
+            lo = mid + 1
         else:
             hi = mid - 1
     return best or load_font(font_path, 8)
@@ -67,16 +71,22 @@ def main():
     ap.add_argument("--art", required=True)
     ap.add_argument("--title", required=True)
     ap.add_argument("--out", required=True)
-    ap.add_argument("--font", default=None, help="path to a .ttf; default serif auto-picked")
+    ap.add_argument(
+        "--font", default=None, help="path to a .ttf; default serif auto-picked"
+    )
     ap.add_argument("--paper", default="216,199,158", help="beige RGB")
     ap.add_argument("--ink", default="26,22,18", help="border/text RGB")
     ap.add_argument("--margin-frac", type=float, default=0.020)
     ap.add_argument("--border-frac", type=float, default=0.008)
     ap.add_argument("--banner-frac", type=float, default=0.085)
     ap.add_argument("--noise", type=int, default=6)
-    ap.add_argument("--art-crop", type=float, default=0.0,
-                    help="trim this fraction off each edge of the input art before framing "
-                         "(removes a border the model drew, e.g. 0.03 for FLUX)")
+    ap.add_argument(
+        "--art-crop",
+        type=float,
+        default=0.0,
+        help="trim this fraction off each edge of the input art before framing "
+        "(removes a border the model drew, e.g. 0.03 for FLUX)",
+    )
     args = ap.parse_args()
 
     paper = tuple(int(x) for x in args.paper.split(","))
@@ -108,14 +118,19 @@ def main():
 
     # black frame + banner separator
     for i in range(border):
-        draw.rectangle([margin + i, margin + i, W - margin - 1 - i, H - margin - 1 - i], outline=ink)
+        draw.rectangle(
+            [margin + i, margin + i, W - margin - 1 - i, H - margin - 1 - i],
+            outline=ink,
+        )
     sep = max(2, border // 2)
     draw.rectangle([inner_l, banner_top, inner_r - 1, banner_top + sep], fill=ink)
 
     # title
     title = args.title.upper()
     pad_x = round((inner_r - inner_l) * 0.06)
-    font = fit_title(draw, title, args.font, (inner_r - inner_l) - 2 * pad_x, round(banner_h * 0.55))
+    font = fit_title(
+        draw, title, args.font, (inner_r - inner_l) - 2 * pad_x, round(banner_h * 0.55)
+    )
     l, t, r, b = draw.textbbox((0, 0), title, font=font)
     tx = inner_l + ((inner_r - inner_l) - (r - l)) / 2 - l
     ty = banner_top + sep + ((inner_b - (banner_top + sep)) - (b - t)) / 2 - t

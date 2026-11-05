@@ -9,6 +9,7 @@ and `sha256sum -c` reads. The site serves it at /checksums.txt; the build fails 
 Write it only after scripts/label_media.sh: the label is part of each file. Standard library only.
 Option: --content DIR (default: $SOWER_CONTENT or content).
 """
+
 import argparse
 import hashlib
 import os
@@ -37,7 +38,9 @@ def listed(path):
 
 
 def main():
-    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     p.add_argument("cmd", choices=["write", "check"])
     p.add_argument("--content", default=os.environ.get("SOWER_CONTENT", "content"))
     a = p.parse_args()

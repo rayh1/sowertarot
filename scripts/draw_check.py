@@ -48,7 +48,7 @@ def front_matter(text: str) -> dict:
     if lines[0] != "---":
         raise SystemExit("no front matter")
     out = {}
-    for line in lines[1:lines.index("---", 1)]:
+    for line in lines[1 : lines.index("---", 1)]:
         key, _, value = line.partition(": ")
         try:
             out[key] = json.loads(value)
@@ -65,21 +65,37 @@ def deck_at(repo: str, date: str) -> tuple[list[str] | None, str]:
     """The sorted card titles in content/cards/ at the last commit before DATE's draw, and that commit."""
     until = draw_time(date).astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     api = f"https://api.github.com/repos/{repo}"
-    commits = json.loads(get(f"{api}/commits?sha=main&path=content/cards&per_page=1&until={until}", github=True))
+    commits = json.loads(
+        get(
+            f"{api}/commits?sha=main&path=content/cards&per_page=1&until={until}",
+            github=True,
+        )
+    )
     if not commits:
         return None, "no commit with content/cards before the draw"
     sha, when = commits[0]["sha"], commits[0]["commit"]["committer"]["date"]
     files = json.loads(get(f"{api}/contents/content/cards?ref={sha}", github=True))
     raw = f"https://raw.githubusercontent.com/{repo}/{sha}/content/cards/"
-    titles = [front_matter(get(raw + urllib.parse.quote(f["name"]), github=True).decode())["title"]
-              for f in files if f["name"].endswith(".md")]
+    titles = [
+        front_matter(get(raw + urllib.parse.quote(f["name"]), github=True).decode())[
+            "title"
+        ]
+        for f in files
+        if f["name"].endswith(".md")
+    ]
     return sorted(titles), f"commit {sha[:7]} of {when}"
 
 
 def drand_number(round_: int) -> int:
     beacon = json.loads(get(f"{DRAND}/public/{round_}"))
-    if beacon["round"] != round_ or hashlib.sha256(bytes.fromhex(beacon["signature"])).hexdigest() != beacon["randomness"]:
-        raise SystemExit(f"drand round {round_}: randomness does not match its signature")
+    if (
+        beacon["round"] != round_
+        or hashlib.sha256(bytes.fromhex(beacon["signature"])).hexdigest()
+        != beacon["randomness"]
+    ):
+        raise SystemExit(
+            f"drand round {round_}: randomness does not match its signature"
+        )
     return int(beacon["randomness"], 16)
 
 
@@ -91,29 +107,48 @@ def derive(n: int, deck: list[str]) -> tuple[str, str, str]:
 
 
 def verify(repo: str, date: str, reading_file: str | None) -> bool:
-    text = open(reading_file, encoding="utf-8").read() if reading_file else \
-        get(f"https://raw.githubusercontent.com/{repo}/main/content/readings/{date}.md", github=True).decode()
+    text = (
+        open(reading_file, encoding="utf-8").read()
+        if reading_file
+        else get(
+            f"https://raw.githubusercontent.com/{repo}/main/content/readings/{date}.md",
+            github=True,
+        ).decode()
+    )
     r = front_matter(text)
     recorded = r["deck_list"].split(" | ")
     ok = True
     deck, source = deck_at(repo, date)
     if deck is None:
-        print(f"deck: recorded in the reading ({source}; the reading predates the repository's cards)")
+        print(
+            f"deck: recorded in the reading ({source}; the reading predates the repository's cards)"
+        )
         deck = recorded
     else:
         print(f"deck: {len(deck)} cards, from {source}")
         if deck != recorded:
             ok = False
-            print(f"MISMATCH deck: only in the repository {sorted(set(deck) - set(recorded))}, "
-                  f"only in the reading {sorted(set(recorded) - set(deck))}" if set(deck) != set(recorded)
-                  else "MISMATCH deck: same cards, different order")
-    expected_round = int(draw_time(date).timestamp() - DRAND_GENESIS) // DRAND_PERIOD + 1
+            print(
+                f"MISMATCH deck: only in the repository {sorted(set(deck) - set(recorded))}, "
+                f"only in the reading {sorted(set(recorded) - set(deck))}"
+                if set(deck) != set(recorded)
+                else "MISMATCH deck: same cards, different order"
+            )
+    expected_round = (
+        int(draw_time(date).timestamp() - DRAND_GENESIS) // DRAND_PERIOD + 1
+    )
     if int(r["drand"]) != expected_round:
         ok = False
-        print(f"MISMATCH drand round: reading {r['drand']}, 07:00 on {date} is round {expected_round}")
+        print(
+            f"MISMATCH drand round: reading {r['drand']}, 07:00 on {date} is round {expected_round}"
+        )
     card, orientation, lens = derive(drand_number(int(r["drand"])), deck)
     print(f"draw: {card}, {orientation}, lens card {lens} (drand round {r['drand']})")
-    for name, want, got in (("card", card, r["card"]), ("orientation", orientation, r["orientation"]), ("lens", lens, r["lens"])):
+    for name, want, got in (
+        ("card", card, r["card"]),
+        ("orientation", orientation, r["orientation"]),
+        ("lens", lens, r["lens"]),
+    ):
         if want != got:
             ok = False
             print(f"MISMATCH {name}: draw gives {want}, reading says {got}")
@@ -131,7 +166,9 @@ if __name__ == "__main__":
     if a.command == "deck":
         deck, source = deck_at(a.repo, a.date)
         if deck is None:
-            sys.exit(f"{source} on {a.date}: that day's deck is only in its reading's deck_list")
+            sys.exit(
+                f"{source} on {a.date}: that day's deck is only in its reading's deck_list"
+            )
         print(f"{len(deck)} cards, from {source}:")
         print("\n".join(deck))
     else:
