@@ -6,6 +6,7 @@ ARG PYTHON_VERSION
 ARG UV_VERSION
 ARG NODE_VERSION
 ARG GH_VERSION
+ARG OSV_SCANNER_VERSION
 ARG PLAYWRIGHT_VERSION
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -48,6 +49,13 @@ RUN curl -fsSL -o /tmp/gh.tar.gz "https://github.com/cli/cli/releases/download/v
     && tar -xzf /tmp/gh.tar.gz -C /tmp \
     && install -m 0755 "/tmp/gh_${GH_VERSION}_linux_${TARGETARCH}/bin/gh" /usr/local/bin/gh \
     && rm -rf /tmp/gh.tar.gz "/tmp/gh_${GH_VERSION}_linux_${TARGETARCH}"
+
+# osv-scanner, for the dependency scans of .devcontainer/default-checks.sh, checked against the release's osv-scanner_SHA256SUMS
+RUN curl -fsSL -o "/tmp/osv-scanner_linux_${TARGETARCH}" "https://github.com/google/osv-scanner/releases/download/v${OSV_SCANNER_VERSION}/osv-scanner_linux_${TARGETARCH}" \
+    && curl -fsSL -o /tmp/osv-scanner_SHA256SUMS "https://github.com/google/osv-scanner/releases/download/v${OSV_SCANNER_VERSION}/osv-scanner_SHA256SUMS" \
+    && cd /tmp && grep " osv-scanner_linux_${TARGETARCH}\$" osv-scanner_SHA256SUMS | sha256sum -c - \
+    && install -m 0755 "/tmp/osv-scanner_linux_${TARGETARCH}" /usr/local/bin/osv-scanner \
+    && rm "/tmp/osv-scanner_linux_${TARGETARCH}" /tmp/osv-scanner_SHA256SUMS
 
 # Project-owned extra apt packages (.devcontainer/extra-packages.txt, one name per line)
 COPY .devcontainer/extra-packages.txt /tmp/extra-packages.txt

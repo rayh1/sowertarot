@@ -34,7 +34,7 @@ the container's own filesystem and is gone after a container recreate.
 ## Tools in the image
 
 `uv` with a pinned CPython, Node, `gh`, Playwright with Chromium (browsers in `/opt/playwright`),
-`git`, `jq`, `rg`.
+`osv-scanner`, `git`, `jq`, `rg`.
 The project's Python environment is `.venv` in the workspace, created by `uv sync` from
 `.python-version`.
 
@@ -54,14 +54,24 @@ The home directory is `HOME` on Linux and macOS and `USERPROFILE` on Windows (co
 ## Checks and continuous integration
 
 `.devcontainer/check.sh` is the project's check. It installs the dependencies with
-`TDP_CI=1 bash .devcontainer/update.sh`, then runs the default checks of every language whose
-manifest is at the top of the repository: `uv run ruff check`,
+`TDP_CI=1 bash .devcontainer/update.sh`, then runs the template's default checks,
+`bash .devcontainer/default-checks.sh`, then the project's own checks. The default checks are
+those of every language whose manifest is at the top of the repository: `uv run ruff check`,
 `uv run ruff format --check --extend-exclude '*.md'` and `uv run pytest` for `pyproject.toml` (no
 tests collected counts as a pass); `npm run check` for `package.json` when it has a `check`
 script, otherwise `npm run lint` and `npm test` where present; `mvn -B verify` for `pom.xml`;
 `flutter analyze`, `dart format --output=none --set-exit-if-changed .`, and `flutter test` when a
-`test` folder exists, for `pubspec.yaml`. Every check runs even when an earlier one fails; the exit
-code is 1 when any failed. The file is project-owned: change the checks there.
+`test` folder exists, for `pubspec.yaml`; then the dependency scans described below. Every check
+runs even when an earlier one fails, and each failure prints `==> FAILED: <command>`; the exit
+code is 1 when any failed. A failing dependency install stops the run at once.
+
+`.devcontainer/default-checks.sh` is template-owned: `copier update` rewrites it, so a default
+check the template adds later reaches the project with the next update. Do not edit it.
+`.devcontainer/check.sh` is project-owned and the place for the project's own checks: add each as
+`check <command>` between the line `# The project's own checks go below this line.` and the final
+`exit "$failed"` line; a check added after the `exit` line never runs. They run even when a
+default check failed. A project that wants a different
+default set edits or drops the `default-checks.sh` call in its `check.sh`.
 
 The two format checks change no file: they fail when a file is not formatted the way
 `uv run ruff format` or `dart format .` would write it, and running that command fixes it. The
@@ -93,6 +103,49 @@ port `5432`), the same as `main` does. A service declared there must therefore:
 Give a service a `healthcheck` (the PostgreSQL example has one), so that CI's
 `docker compose up --wait` returns only once the service accepts connections.
 
+### Dependency scans
+
+After the language checks, `osv-scanner` scans the dependencies each manifest resolved to, one
+scan per manifest, for known vulnerabilities: `uv.lock` for `pyproject.toml`, `package-lock.json`
+for `package.json`, `pubspec.lock` for `pubspec.yaml`, and for `pom.xml` a CycloneDX list of every
+resolved dependency, test scope included, that the CycloneDX Maven plugin writes to
+`target/bom.json` right before the scan (an old list is removed first). Each scan runs
+`osv-scanner scan source --config osv-scanner.toml -L <lockfile>` and looks each exact package
+version up in the OSV.dev vulnerability database. The scan reads whatever lockfile the install
+left, committed or not; commit your lockfiles (`uv.lock`, `package-lock.json`, `pubspec.lock`), so
+that every run and every machine scans the same versions.
+
+Each scan sends the project's dependency names and versions (never its code) to Google's OSV.dev
+web service, which answers with the matching advisories. There is no offline mode: when the
+database cannot be reached, the scan fails.
+
+Only osv-scanner's exit code decides the check, never its printed summary:
+
+- `0`: packages were found and none has a known vulnerability; the scan passes.
+- `1`: known vulnerabilities were found; the scan fails.
+- `127`: a general error, such as a missing or broken lockfile, an unreachable database or a bad
+  `osv-scanner.toml`; the scan fails.
+- `128`: no packages were found. This passes only when the manifest declares no dependencies,
+  and the output then says so, for example
+  `==> package.json: no dependencies declared, nothing to scan`; a fresh node or java project
+  passes this way. When the manifest does declare a dependency (or cannot be read), finding no
+  packages fails the scan. A `pubspec.yaml` always counts as declaring, since every Flutter
+  project depends on the Flutter SDK packages.
+- Any other exit code fails the scan.
+
+To accept a known risk, list its advisory in `osv-scanner.toml` at the top of the repository,
+which every scan reads. An entry with an `ignoreUntil` date accepts the advisory until that date
+and fails the scan again after it:
+
+```toml
+[[IgnoredVulns]]
+id = "GHSA-xxxx-xxxx-xxxx"
+ignoreUntil = 2027-01-31
+reason = "Why the risk is accepted, who decided it, and when."
+```
+
+The rendered `osv-scanner.toml` holds this example commented out.
+
 ## Troubleshooting
 
 - The container create fails with `all predefined address pools have been fully subnetted`:
@@ -115,7 +168,10 @@ Give a service a `healthcheck` (the PostgreSQL example has one), so that CI's
   compose's `include`, so a service written there joins the project's network and is reachable
   from `main` by its service name. The rendered file is a commented-out PostgreSQL example.
 - `.devcontainer/check.sh` — the project's checks, run by the **Run Checks** task and by
-  `.devcontainer/ci.sh`; see "Checks and continuous integration" above.
+  `.devcontainer/ci.sh`: the call of the template-owned `.devcontainer/default-checks.sh`, then
+  the project's own checks; see "Checks and continuous integration" above.
+- `osv-scanner.toml` — the project's accepted vulnerability risks for the dependency scans, at
+  the top of the repository: written once as a commented example; see "Dependency scans" above.
 - `extra_extensions` in `.copier-answers.yml` — extra VS Code extension ids, comma-separated.
 - `extra_dockerignore` in `.copier-answers.yml` — extra `.dockerignore` patterns, comma-separated
   (for example `work/, tmp/`): each becomes its own line of `.dockerignore`, after the template's
