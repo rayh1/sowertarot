@@ -38,6 +38,34 @@ the container's own filesystem and is gone after a container recreate.
 The project's Python environment is `.venv` in the workspace, created by `uv sync` from
 `.python-version`.
 
+## Download checks
+
+The image build checks every tool it downloads, and every apt signing key, against a pin in
+`.devcontainer/.env` before using it (`.devcontainer/verify-download.sh` does the check): a tool's
+archive or binary must match its SHA-256 hash pin, and a signing key file must hold exactly the
+one key with the pinned fingerprint. A download that does not match stops the build with the line
+`checksum mismatch: <name>` or `signing key mismatch: <name>`.
+
+A version bump in `.devcontainer/.env` needs the tool's hash pin updated as well, or the next
+build stops at that download. After editing a version, run
+`bash .devcontainer/update-hashes.sh` (it needs internet) in the dev container. It reads the
+version pins, fetches each tool's published checksum for amd64 and arm64, and rewrites the hash
+pins in `.devcontainer/.env`. It leaves the version pins and the signing-key fingerprints as they
+are: a changed signing key is for a person to check. When a fetch or a check fails, it changes
+nothing. Where each hash pin comes from, for a check by hand (`<version>` is the tool's version
+pin, `<arch>` is `amd64` or `arm64` as in the pin's name):
+
+- `UV_SHA256_AMD64`, `UV_SHA256_ARM64` — the file
+  `https://releases.astral.sh/github/uv/releases/download/<version>/uv-<target>-unknown-linux-gnu.tar.gz.sha256`,
+  where `<target>` is `x86_64` for amd64 and `aarch64` for arm64.
+- `GH_SHA256_AMD64`, `GH_SHA256_ARM64` — the `gh_<version>_linux_<arch>.tar.gz` line of
+  `https://github.com/cli/cli/releases/download/v<version>/gh_<version>_checksums.txt`.
+- `OSV_SCANNER_SHA256_AMD64`, `OSV_SCANNER_SHA256_ARM64` — the `osv-scanner_linux_<arch>` line of
+  `https://github.com/google/osv-scanner/releases/download/v<version>/osv-scanner_SHA256SUMS`.
+
+`NODESOURCE_KEY_FINGERPRINT` is the full fingerprint of the
+signing key's primary key; `gpg --show-keys <key file>` prints it.
+
 ## Host files used by the container
 
 The home directory is `HOME` on Linux and macOS and `USERPROFILE` on Windows (compose's

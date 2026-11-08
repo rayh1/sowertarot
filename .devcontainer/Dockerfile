@@ -28,8 +28,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends git ca-certific
     && install -d -m 0755 /etc/apt/keyrings \
     && rm -rf /var/lib/apt/lists/*
 
+# The download check: each step below checks every file it downloads against its pin from
+# .devcontainer/.env (a SHA-256 hash, or a signing key's fingerprint) before using it.
+COPY .devcontainer/verify-download.sh /opt/tdp/verify-download.sh
+
 # Node (NodeSource)
-RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+ARG NODESOURCE_KEY_FINGERPRINT
+RUN curl -fsSL -o /tmp/nodesource.key https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+    && bash /opt/tdp/verify-download.sh /tmp/nodesource.key "${NODESOURCE_KEY_FINGERPRINT}" nodesource-key \
+    && gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg /tmp/nodesource.key && rm /tmp/nodesource.key \
     && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_VERSION}.x nodistro main" > /etc/apt/sources.list.d/nodesource.list \
     && apt-get update && apt-get install -y --no-install-recommends nodejs \
     && rm -rf /var/lib/apt/lists/*
@@ -41,21 +48,43 @@ RUN npm install -g "playwright@${PLAYWRIGHT_VERSION}" \
     && apt-get update && playwright install-deps chromium \
     && rm -rf /var/lib/apt/lists/*
 
-# uv
-RUN curl -fsSL "https://astral.sh/uv/${UV_VERSION}/install.sh" | env UV_INSTALL_DIR=/usr/local/bin UV_NO_MODIFY_PATH=1 INSTALLER_NO_MODIFY_PATH=1 sh
+# uv (uv and uvx), from its release archive
+ARG UV_SHA256_AMD64
+ARG UV_SHA256_ARM64
+RUN case "${TARGETARCH}" in \
+      (amd64) uv_target=x86_64 uv_sha256="${UV_SHA256_AMD64}" ;; \
+      (arm64) uv_target=aarch64 uv_sha256="${UV_SHA256_ARM64}" ;; \
+    esac \
+    && curl -fsSL -o /tmp/uv.tar.gz "https://releases.astral.sh/github/uv/releases/download/${UV_VERSION}/uv-${uv_target}-unknown-linux-gnu.tar.gz" \
+    && bash /opt/tdp/verify-download.sh /tmp/uv.tar.gz "${uv_sha256:-}" uv \
+    && tar -xzf /tmp/uv.tar.gz -C /tmp \
+    && install -m 0755 "/tmp/uv-${uv_target}-unknown-linux-gnu/uv" "/tmp/uv-${uv_target}-unknown-linux-gnu/uvx" /usr/local/bin \
+    && rm -rf /tmp/uv.tar.gz "/tmp/uv-${uv_target}-unknown-linux-gnu"
 
 # The GitHub CLI (gh)
-RUN curl -fsSL -o /tmp/gh.tar.gz "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_${TARGETARCH}.tar.gz" \
+ARG GH_SHA256_AMD64
+ARG GH_SHA256_ARM64
+RUN case "${TARGETARCH}" in \
+      (amd64) gh_sha256="${GH_SHA256_AMD64}" ;; \
+      (arm64) gh_sha256="${GH_SHA256_ARM64}" ;; \
+    esac \
+    && curl -fsSL -o /tmp/gh.tar.gz "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_${TARGETARCH}.tar.gz" \
+    && bash /opt/tdp/verify-download.sh /tmp/gh.tar.gz "${gh_sha256:-}" gh \
     && tar -xzf /tmp/gh.tar.gz -C /tmp \
     && install -m 0755 "/tmp/gh_${GH_VERSION}_linux_${TARGETARCH}/bin/gh" /usr/local/bin/gh \
     && rm -rf /tmp/gh.tar.gz "/tmp/gh_${GH_VERSION}_linux_${TARGETARCH}"
 
-# osv-scanner, for the dependency scans of .devcontainer/default-checks.sh, checked against the release's osv-scanner_SHA256SUMS
-RUN curl -fsSL -o "/tmp/osv-scanner_linux_${TARGETARCH}" "https://github.com/google/osv-scanner/releases/download/v${OSV_SCANNER_VERSION}/osv-scanner_linux_${TARGETARCH}" \
-    && curl -fsSL -o /tmp/osv-scanner_SHA256SUMS "https://github.com/google/osv-scanner/releases/download/v${OSV_SCANNER_VERSION}/osv-scanner_SHA256SUMS" \
-    && cd /tmp && grep " osv-scanner_linux_${TARGETARCH}\$" osv-scanner_SHA256SUMS | sha256sum -c - \
+# osv-scanner, for the dependency scans of .devcontainer/default-checks.sh
+ARG OSV_SCANNER_SHA256_AMD64
+ARG OSV_SCANNER_SHA256_ARM64
+RUN case "${TARGETARCH}" in \
+      (amd64) osv_scanner_sha256="${OSV_SCANNER_SHA256_AMD64}" ;; \
+      (arm64) osv_scanner_sha256="${OSV_SCANNER_SHA256_ARM64}" ;; \
+    esac \
+    && curl -fsSL -o "/tmp/osv-scanner_linux_${TARGETARCH}" "https://github.com/google/osv-scanner/releases/download/v${OSV_SCANNER_VERSION}/osv-scanner_linux_${TARGETARCH}" \
+    && bash /opt/tdp/verify-download.sh "/tmp/osv-scanner_linux_${TARGETARCH}" "${osv_scanner_sha256:-}" osv-scanner \
     && install -m 0755 "/tmp/osv-scanner_linux_${TARGETARCH}" /usr/local/bin/osv-scanner \
-    && rm "/tmp/osv-scanner_linux_${TARGETARCH}" /tmp/osv-scanner_SHA256SUMS
+    && rm "/tmp/osv-scanner_linux_${TARGETARCH}"
 
 # Project-owned extra apt packages (.devcontainer/extra-packages.txt, one name per line)
 COPY .devcontainer/extra-packages.txt /tmp/extra-packages.txt
