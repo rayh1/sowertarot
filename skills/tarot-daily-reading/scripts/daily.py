@@ -538,6 +538,15 @@ def cmd_draw(a):
             }
             for r in earlier
         ],
+        "lens_readings": [
+            {
+                "date": r["date"],
+                "card": r.get("card"),
+                "for_today": r["sections"].get("For today", ""),
+            }
+            for r in all_readings
+            if r.get("lens") == lens and r.get("card") != card
+        ],
         "avoid_phrases": stock_phrases(all_readings),
     }
     DRAW_DIR.mkdir(parents=True, exist_ok=True)
