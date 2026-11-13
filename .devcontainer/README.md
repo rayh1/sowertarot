@@ -189,6 +189,8 @@ The rendered `osv-scanner.toml` holds this example commented out.
 - `package.json` — the project's Node manifest at the top of the repository: written once from a
   stub, then the project's own to change or replace (a starter may bring its own). An update that
   drops node from the languages removes it.
+- `pyproject.toml` — the project's Python manifest at the top of the repository: written once
+  from a stub, then the project's own to change or replace (a starter may bring its own).
 - `.devcontainer/extra-packages.txt` — apt packages, one per line, installed at image build.
 - `.devcontainer/extra.sh` — runs as root at the end of the image build.
 - `.devcontainer/compose.extra.yaml` — extra compose services next to `main` (a PostgreSQL
