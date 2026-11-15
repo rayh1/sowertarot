@@ -11,7 +11,12 @@ ribbon the background is filled along each row from the pixels either side, whic
 Whole cycles per clip (--cycles), so the loop is seamless.
 """
 
-import argparse, os, subprocess, sys, tempfile
+import argparse
+import os
+import subprocess
+import sys
+import tempfile
+
 import numpy as np
 from PIL import Image
 from scipy import ndimage as nd
@@ -23,8 +28,8 @@ SKILL = os.path.normpath(
     )
 )
 sys.path.insert(0, SKILL)
-from frame_card import cover_resize  # noqa: E402
-from animate_compose import FRAME_FLAGS  # noqa: E402
+from animate_compose import FRAME_FLAGS
+from frame_card import cover_resize
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 

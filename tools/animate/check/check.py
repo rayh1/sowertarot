@@ -1,10 +1,17 @@
-import json, subprocess, sys, os, numpy as np
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+import numpy as np
 
 HERE = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, os.path.join(HERE, "../../../skills/tarot-card-generator/scripts"))
+from multiprocessing import Pool
+
 from animate_compose import cover_resize
 from PIL import Image, ImageDraw
-from multiprocessing import Pool
 
 B = os.path.normpath(os.path.join(HERE, "../batch"))
 OUT = HERE
@@ -15,6 +22,7 @@ def frames(p):
     raw = subprocess.run(
         ["ffmpeg", "-v", "error", "-i", p, "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
         capture_output=True,
+        check=True,
     ).stdout
     return np.frombuffer(raw, np.uint8).reshape(-1, H, W, 3)
 
@@ -59,14 +67,14 @@ def card(slug):
         d1 = np.abs(f[1:] - f[:-1]).mean(-1)[:, m].mean(1)
         jump = np.abs(f[0] - f[-1]).mean(-1)[m].mean()
         white = (c[..., :].min(-1) > 240)[:, m].mean(1)
-        res[s] = dict(
-            motion=round(float(d4), 1),
-            step=round(float(np.median(d1)), 2),
-            stepmax=round(float(d1.max()), 2),
-            jump=round(float(jump), 2),
-            white0=round(float(white[0]), 3),
-            whitemax=round(float(white.max()), 3),
-        )
+        res[s] = {
+            "motion": round(float(d4), 1),
+            "step": round(float(np.median(d1)), 2),
+            "stepmax": round(float(d1.max()), 2),
+            "jump": round(float(jump), 2),
+            "white0": round(float(white[0]), 3),
+            "whitemax": round(float(white.max()), 3),
+        }
     # sheet: rows seeds, cols frames, crop bbox padded
     pad = 20
     y0 = max(0, y0 - pad)
@@ -102,14 +110,11 @@ def card(slug):
 
 
 if __name__ == "__main__":
-    slugs = sorted({j["slug"] for j in json.load(open(f"{B}/jobs.json"))})
+    slugs = sorted({j["slug"] for j in json.loads(Path(f"{B}/jobs.json").read_text())})
     with Pool(6) as p:
         out = p.map(card, slugs)
-    json.dump(
-        {s: {"seeds": r, "bbox": b} for s, r, b in out},
-        open(f"{OUT}/metrics.json", "w"),
-        indent=1,
-    )
+    with open(f"{OUT}/metrics.json", "w") as f:
+        json.dump({s: {"seeds": r, "bbox": b} for s, r, b in out}, f, indent=1)
     for s, r, b in out:
         print(s, b)
         [print("  ", k, v) for k, v in r.items()]

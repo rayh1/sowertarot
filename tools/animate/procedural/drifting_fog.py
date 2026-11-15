@@ -14,7 +14,12 @@ offset v*t and at v*(t-T), so frame T equals frame 0.
 then not used.
 """
 
-import argparse, os, subprocess, sys, tempfile
+import argparse
+import os
+import subprocess
+import sys
+import tempfile
+
 import numpy as np
 from PIL import Image
 from scipy import ndimage as nd
@@ -26,8 +31,8 @@ SKILL = os.path.normpath(
     )
 )
 sys.path.insert(0, SKILL)
-from frame_card import cover_resize  # noqa: E402
-from animate_compose import FRAME_FLAGS  # noqa: E402
+from animate_compose import FRAME_FLAGS
+from frame_card import cover_resize
 
 
 def noise(rng, h, w, sy, sx):
@@ -312,12 +317,12 @@ def plume_main(a, rng, T):
         n = (n - n.mean()) / n.std()
         sprites.append(np.clip((env * (1 + 0.6 * n) - 0.35) / 0.25, 0, 1))
     puffs = [
-        dict(
-            ph=(k + rng.uniform(-0.3, 0.3)) * T / a.puffs,
-            spr=int(rng.integers(6)),
-            jit=rng.normal(0, 3, 2),
-            k=rng.uniform(0.8, 1.2),
-        )
+        {
+            "ph": (k + rng.uniform(-0.3, 0.3)) * T / a.puffs,
+            "spr": int(rng.integers(6)),
+            "jit": rng.normal(0, 3, 2),
+            "k": rng.uniform(0.8, 1.2),
+        }
         for k in range(a.puffs)
     ]
 
@@ -368,7 +373,7 @@ def plume_main(a, rng, T):
             op = min(1.0, age / 0.06) * (1 - max(0.0, (age - 0.45) / 0.55)) ** 1.3
             if op <= 0:
                 continue
-            size = max(4, int(round(2 * r)))
+            size = max(4, round(2 * r))
             spr = (
                 np.array(
                     Image.fromarray((sprites[p["spr"]] * 255).astype(np.uint8)).resize(
@@ -377,7 +382,7 @@ def plume_main(a, rng, T):
                 )
                 / 255.0
             )
-            xa, ya = int(round(cx - size / 2)), int(round(cy - size / 2))
+            xa, ya = round(cx - size / 2), round(cy - size / 2)
             xs0, ys0 = max(0, xa), max(0, ya)
             xs1, ys1 = min(W, xa + size), min(H, ya + size)
             if xs1 <= xs0 or ys1 <= ys0:

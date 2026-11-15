@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Two repairs that do not show as a patch, shared by edit_card.py, fill_disc.py and
 render_card.py --from-card (which must replay them exactly).
 

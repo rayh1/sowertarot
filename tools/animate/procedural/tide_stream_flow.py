@@ -15,14 +15,19 @@ batch folder:
       --out the-tide_s2_v8 --fps 24
 """
 
-import argparse, glob, os, subprocess, sys, tempfile
+import argparse
+import glob
+import os
+import subprocess
+import sys
+import tempfile
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 from scipy import ndimage
 
 sys.path.insert(0, "/workspace/sowertarot/skills/tarot-card-generator/scripts")
-from animate_compose import cover_resize  # noqa: E402
+from animate_compose import cover_resize
 
 # the stream below the bowl's front rim, in clip-art pixels (tools/animate/batch/the-tide/art.png)
 STREAM = [

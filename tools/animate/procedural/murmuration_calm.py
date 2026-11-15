@@ -5,9 +5,9 @@ filled, so the banks, their shadows and the overhanging grass stay. Run in tools
 writes ../batch/the-murmuration/art_calm.png."""
 
 import numpy as np
+from flicker import diffuse_fill
 from PIL import Image
 from scipy import ndimage as nd
-from flicker import diffuse_fill
 
 A = np.asarray(Image.open("../batch/the-murmuration/art.png").convert("RGB"), float)
 water = np.asarray(Image.open("murmuration_water.png").convert("L")) > 128

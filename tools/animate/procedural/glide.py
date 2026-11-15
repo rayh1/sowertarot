@@ -11,7 +11,12 @@ squash, whole cycles per clip). The flock also drifts together slightly. The cli
 and the number of birds never changes.
 """
 
-import argparse, os, subprocess, sys, tempfile
+import argparse
+import os
+import subprocess
+import sys
+import tempfile
+
 import numpy as np
 from PIL import Image
 from scipy import ndimage as nd
@@ -23,8 +28,8 @@ SKILL = os.path.normpath(
     )
 )
 sys.path.insert(0, SKILL)
-from frame_card import cover_resize  # noqa: E402
-from animate_compose import FRAME_FLAGS  # noqa: E402
+from animate_compose import FRAME_FLAGS
+from frame_card import cover_resize
 
 
 def fit_sky(sub, x0, y0):
@@ -145,26 +150,26 @@ def find_insects(a, px, rng, T):
         bee, bird = kind == "bee", kind == "bird"
         r = a.radius * (0.5 if bee else 1.0) * rng.uniform(0.85, 1.15)
         birds.append(
-            dict(
-                sprite=sprite,
-                x=bxs,
-                y=bys,
-                cx=ww / 2,
-                cy=hh / 2,
-                kind=kind,
-                rx=r,
-                ry=r * (0.4 if bird else rng.uniform(0.5, 0.7)),
-                ph=rng.uniform(0, 2 * np.pi),
-                laps=3 if bee else 1,
-                dirn=rng.choice((-1, 1)),
-                bank=a.bank * (1.6 if bee else 1.0),
-                beats=24 if bee else (3 if bird else 10),
-                flap=0.18 if bee else (0.12 if bird else 0.42),
-                fph=rng.uniform(0, 2 * np.pi),
-                jit=[(rng.uniform(0, 6.3), rng.uniform(0, 6.3)) for _ in range(2)]
+            {
+                "sprite": sprite,
+                "x": bxs,
+                "y": bys,
+                "cx": ww / 2,
+                "cy": hh / 2,
+                "kind": kind,
+                "rx": r,
+                "ry": r * (0.4 if bird else rng.uniform(0.5, 0.7)),
+                "ph": rng.uniform(0, 2 * np.pi),
+                "laps": 3 if bee else 1,
+                "dirn": rng.choice((-1, 1)),
+                "bank": a.bank * (1.6 if bee else 1.0),
+                "beats": 24 if bee else (3 if bird else 10),
+                "flap": 0.18 if bee else (0.12 if bird else 0.42),
+                "fph": rng.uniform(0, 2 * np.pi),
+                "jit": [(rng.uniform(0, 6.3), rng.uniform(0, 6.3)) for _ in range(2)]
                 if bee
                 else None,
-            )
+            }
         )
         print(kind, "at", (bxs, bys, bxs + ww, bys + hh), int(m.sum()), "px")
     P = int(a.radius * 1.6 + 40)
@@ -411,7 +416,7 @@ def main():
         x0, y0, x1, y1 = [int(v) for v in a.box.split(",")]
         fit, res = fit_sky(px[y0:y1, x0:x1], x0, y0)
         found = nd.binary_fill_holes(nd.binary_closing(res > 40, iterations=2))
-        lab, n = nd.label(found)
+        lab, _n = nd.label(found)
 
         bg = px.copy()
         birds = []
@@ -436,20 +441,20 @@ def main():
             fy, fx = np.nonzero(hole)
             bg[fy, fx] = fit[fy - y0, fx - x0] + rng.normal(0, 1.0, (len(fy), 1))
             birds.append(
-                dict(
-                    sprite=sprite,
-                    x=bxs,
-                    y=bys,
-                    cx=ww / 2,
-                    cy=hh / 2,
-                    rx=a.radius * rng.uniform(0.85, 1.15),
-                    ry=a.radius * rng.uniform(0.35, 0.5),
+                {
+                    "sprite": sprite,
+                    "x": bxs,
+                    "y": bys,
+                    "cx": ww / 2,
+                    "cy": hh / 2,
+                    "rx": a.radius * rng.uniform(0.85, 1.15),
+                    "ry": a.radius * rng.uniform(0.35, 0.5),
                     # same direction for all, phase staggered by position: neighbours keep their spacing
-                    ph=2 * np.pi * (bxs + ww / 2) / 1400 + rng.uniform(0, 0.6),
-                    dirn=1,
-                    fph=rng.uniform(0, 2 * np.pi),
-                    beats=a.beats + int(rng.integers(0, 2)),
-                )
+                    "ph": 2 * np.pi * (bxs + ww / 2) / 1400 + rng.uniform(0, 0.6),
+                    "dirn": 1,
+                    "fph": rng.uniform(0, 2 * np.pi),
+                    "beats": a.beats + int(rng.integers(0, 2)),
+                }
             )
     print(len(birds), "birds found")
 
@@ -467,7 +472,7 @@ def main():
         occ = np.zeros((H, W), np.uint8)
         for b in birds:
             cx_, cy_ = centre(b, f / T)
-            ox, oy = int(round(cx_ - b["cx"])), int(round(cy_ - b["cy"]))
+            ox, oy = round(cx_ - b["cx"]), round(cy_ - b["cy"])
             m = np.array(b["sprite"])[..., 3] > 80
             occ[oy : oy + m.shape[0], ox : ox + m.shape[1]] += m
         worst = max(worst, int((occ > 1).sum()))

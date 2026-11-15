@@ -1,7 +1,7 @@
 """Masks for The Miner clip (2026-10-16): gold flecks on the ore (miner_gold.png) and lamplight on the rock walls and ceiling (miner_lamplight_rock.png). Run in tools/animate/procedural."""
 
-from PIL import Image, ImageDraw
 import numpy as np
+from PIL import Image, ImageDraw
 from scipy import ndimage as nd
 
 art = Image.open("../batch/the-miner/art.png").convert("RGB")

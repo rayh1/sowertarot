@@ -23,8 +23,17 @@ seed, title, scene, full prompt, frame flags, ComfyUI version and the executed
 ComfyUI graph. place_card.py attach copies it into the card file.
 """
 
-import argparse, json, os, re, subprocess, sys, time, urllib.request, uuid
+import argparse
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+import urllib.request
+import uuid
 from datetime import datetime
+from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter, PngImagePlugin
 
@@ -43,9 +52,9 @@ def read_frame_flags():
     takes effect here with no code change. Lines are `--flag value` with optional
     `# ...` comments; pure-comment lines (e.g. the font note) are skipped.
     """
-    txt = open(STYLE_MD, encoding="utf-8").read()
+    txt = Path(STYLE_MD).read_text(encoding="utf-8")
     i = txt.index("## Frame flags")
-    m = re.search(r"```(?:\w*)\n(.*?)```", txt[i:], re.S)
+    m = re.search(r"```(?:\w*)\n(.*?)```", txt[i:], re.DOTALL)
     if not m:
         raise SystemExit("style.md: no fenced block after '## Frame flags'")
     flags = []
@@ -58,11 +67,11 @@ def read_frame_flags():
 
 def read_style_blocks():
     """Return (style_block, tail) from the two fenced blocks under their headers."""
-    txt = open(STYLE_MD, encoding="utf-8").read()
+    txt = Path(STYLE_MD).read_text(encoding="utf-8")
 
     def fenced_after(header):
         i = txt.index(header)
-        m = re.search(r"```(?:\w*)\n(.*?)```", txt[i:], re.S)
+        m = re.search(r"```(?:\w*)\n(.*?)```", txt[i:], re.DOTALL)
         if not m:
             raise SystemExit(f"style.md: no fenced block after '{header}'")
         return m.group(1).strip()
@@ -71,7 +80,9 @@ def read_style_blocks():
 
 
 def comfy_json(args):
-    r = subprocess.run(["comfy", "--json"] + args, capture_output=True, text=True)
+    r = subprocess.run(
+        ["comfy", "--json"] + args, capture_output=True, text=True, check=False
+    )
     try:
         return json.loads(r.stdout)
     except json.JSONDecodeError:
@@ -82,7 +93,7 @@ def comfy_version(url):
     try:
         with urllib.request.urlopen(f"{url}/system_stats", timeout=5) as r:
             return json.load(r)["system"].get("comfyui_version")
-    except Exception:
+    except Exception:  # noqa: BLE001 - the version is optional metadata; any failure means unknown
         return None
 
 
@@ -151,7 +162,7 @@ def upload_image(url, path):
             f'--{boundary}\r\nContent-Disposition: form-data; name="image"; filename="{name}"\r\n'
             "Content-Type: image/png\r\n\r\n"
         ).encode()
-        + open(path, "rb").read()
+        + Path(path).read_bytes()
         + f"\r\n--{boundary}--\r\n".encode()
     )
     urllib.request.urlopen(
@@ -233,6 +244,7 @@ def from_note(args):
         + record["frame_flags"],
         capture_output=True,
         text=True,
+        check=False,
     )
     if fr.returncode != 0:
         raise SystemExit(f"frame_card.py failed:\n{fr.stdout}\n{fr.stderr}")
@@ -301,7 +313,7 @@ def main():
     )
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     with open(args.workflow) as f:
-        open(wf, "w").write(f.read())
+        Path(wf).write_text(f.read())
 
     nodes = comfy_json(["workflow", "ls-nodes", wf])["data"]["nodes"]
     pos = node_id(nodes, "CLIPTextEncode")
@@ -349,6 +361,7 @@ def main():
         + frame_flags,
         capture_output=True,
         text=True,
+        check=False,
     )
     if fr.returncode != 0:
         raise SystemExit(f"frame_card.py failed:\n{fr.stdout}\n{fr.stderr}")

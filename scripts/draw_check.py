@@ -28,6 +28,7 @@ import sys
 import urllib.parse
 import urllib.request
 import zoneinfo
+from pathlib import Path
 
 DRAND = "https://api.drand.sh/8990e7a9aaed2ffed73dbd7092123d6f289930540d7651336225dc172e51b2ce"
 DRAND_GENESIS, DRAND_PERIOD = 1595431050, 30
@@ -63,7 +64,7 @@ def draw_time(date: str) -> dt.datetime:
 
 def deck_at(repo: str, date: str) -> tuple[list[str] | None, str]:
     """The sorted card titles in content/cards/ at the last commit before DATE's draw, and that commit."""
-    until = draw_time(date).astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    until = draw_time(date).astimezone(dt.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     api = f"https://api.github.com/repos/{repo}"
     commits = json.loads(
         get(
@@ -108,7 +109,7 @@ def derive(n: int, deck: list[str]) -> tuple[str, str, str]:
 
 def verify(repo: str, date: str, reading_file: str | None) -> bool:
     text = (
-        open(reading_file, encoding="utf-8").read()
+        Path(reading_file).read_text(encoding="utf-8")
         if reading_file
         else get(
             f"https://raw.githubusercontent.com/{repo}/main/content/readings/{date}.md",

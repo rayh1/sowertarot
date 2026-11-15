@@ -21,7 +21,12 @@ Other kinds (opt-in, --kind; snow stays the default and is unchanged):
 --avoid x0,y0,x1,y1;...: falling particles (snow, leaf) whose path would cross a box are placed elsewhere.
 """
 
-import argparse, os, subprocess, sys, tempfile
+import argparse
+import os
+import subprocess
+import sys
+import tempfile
+
 import numpy as np
 from PIL import Image, ImageDraw
 from scipy import ndimage as nd
@@ -33,8 +38,8 @@ SKILL = os.path.normpath(
     )
 )
 sys.path.insert(0, SKILL)
-from frame_card import cover_resize  # noqa: E402
-from animate_compose import FRAME_FLAGS  # noqa: E402
+from animate_compose import FRAME_FLAGS
+from frame_card import cover_resize
 
 INK = (26, 22, 18)
 SNOW = (252, 252, 248)
@@ -177,14 +182,14 @@ def main():
         dur = max(6, T // 7)  # one flash lasts ~0.6 s
         for k in rng.choice(len(ys), a.glitter, replace=False):
             glints.append(
-                dict(
-                    x=xs[k],
-                    y=ys[k],
-                    start=int(rng.integers(T)),
-                    dur=dur,
-                    L=a.glitter_size * rng.uniform(0.6, 1.0),
-                    rot=rng.uniform(-0.3, 0.3),
-                )
+                {
+                    "x": xs[k],
+                    "y": ys[k],
+                    "start": int(rng.integers(T)),
+                    "dur": dur,
+                    "L": a.glitter_size * rng.uniform(0.6, 1.0),
+                    "rot": rng.uniform(-0.3, 0.3),
+                }
             )
 
     if a.kind != "snow":
@@ -196,17 +201,17 @@ def main():
         v = a.speed * depth * rng.uniform(0.85, 1.15)
         fall = v * T
         flakes.append(
-            dict(
-                x=rng.uniform(x0, x1),
-                y=rng.uniform(y0 - fall * 0.3, y1 - fall * 0.7),
-                v=v,
-                r=a.size * depth * rng.uniform(0.8, 1.2),
-                op=0.55 + 0.45 * depth,
-                sway=a.sway * depth * rng.uniform(0.5, 1.2),
-                cyc=int(rng.integers(1, 3)),
-                sph=rng.uniform(0, 2 * np.pi),
-                phase=int(rng.integers(T)),
-            )
+            {
+                "x": rng.uniform(x0, x1),
+                "y": rng.uniform(y0 - fall * 0.3, y1 - fall * 0.7),
+                "v": v,
+                "r": a.size * depth * rng.uniform(0.8, 1.2),
+                "op": 0.55 + 0.45 * depth,
+                "sway": a.sway * depth * rng.uniform(0.5, 1.2),
+                "cyc": int(rng.integers(1, 3)),
+                "sph": rng.uniform(0, 2 * np.pi),
+                "phase": int(rng.integers(T)),
+            }
         )
     flakes.sort(key=lambda fl: fl["r"])  # far flakes drawn first
 
@@ -441,21 +446,21 @@ def other_kinds(a, rng, art, glints):
                 depth = rng.uniform(0.45, 1.0) ** 0.8
                 v = a.speed * depth * rng.uniform(0.8, 1.2)
                 fall = v * T
-                p = dict(
-                    x=rng.uniform(x0, x1),
-                    y=rng.uniform(y0 - fall * 0.3, y1 - fall * 0.7),
-                    v=v,
-                    r=a.size * depth * rng.uniform(0.8, 1.2),
-                    op=0.7 + 0.3 * depth,
-                    sway=a.sway * depth * rng.uniform(0.6, 1.2),
-                    cyc=int(rng.integers(1, 3)),
-                    sph=rng.uniform(0, 2 * np.pi),
-                    phase=int(rng.integers(T)),
-                    rot=rng.uniform(0, 2 * np.pi),
-                    spin=a.spin * rng.uniform(0.6, 1.4) * rng.choice((-1, 1)),
-                    flip=a.spin * rng.uniform(0.8, 2.0),
-                    col=pal[int(rng.integers(len(pal)))],
-                )
+                p = {
+                    "x": rng.uniform(x0, x1),
+                    "y": rng.uniform(y0 - fall * 0.3, y1 - fall * 0.7),
+                    "v": v,
+                    "r": a.size * depth * rng.uniform(0.8, 1.2),
+                    "op": 0.7 + 0.3 * depth,
+                    "sway": a.sway * depth * rng.uniform(0.6, 1.2),
+                    "cyc": int(rng.integers(1, 3)),
+                    "sph": rng.uniform(0, 2 * np.pi),
+                    "phase": int(rng.integers(T)),
+                    "rot": rng.uniform(0, 2 * np.pi),
+                    "spin": a.spin * rng.uniform(0.6, 1.4) * rng.choice((-1, 1)),
+                    "flip": a.spin * rng.uniform(0.8, 2.0),
+                    "col": pal[int(rng.integers(len(pal)))],
+                }
                 pad = p["sway"] + p["r"] * 1.6
                 if not any(
                     p["x"] + pad > bx0
@@ -478,29 +483,29 @@ def other_kinds(a, rng, art, glints):
             )
             for _ in range(a.bounce):
                 hops.append(
-                    dict(
-                        x=bx,
-                        y=by,
-                        side=rng.uniform(-1, 1) * a.bounce_width,
-                        h=a.bounce_height * rng.uniform(0.35, 1.0),
-                        k=int(rng.integers(4, 9)),
-                        ph=rng.uniform(0, 1),
-                        r=a.size * rng.uniform(0.7, 1.1),
-                        col=pal[int(rng.integers(len(pal)))],
-                    )
+                    {
+                        "x": bx,
+                        "y": by,
+                        "side": rng.uniform(-1, 1) * a.bounce_width,
+                        "h": a.bounce_height * rng.uniform(0.35, 1.0),
+                        "k": int(rng.integers(4, 9)),
+                        "ph": rng.uniform(0, 1),
+                        "r": a.size * rng.uniform(0.7, 1.1),
+                        "col": pal[int(rng.integers(len(pal)))],
+                    }
                 )
         for _ in range(a.count):
             parts.append(
-                dict(
-                    u0=rng.uniform(0, 1),
-                    off=rng.uniform(-1, 1),
-                    wob=rng.uniform(0, 2 * np.pi),
-                    r=a.size * rng.uniform(0.75, 1.25),
-                    rot=rng.uniform(0, 2 * np.pi),
-                    spin=a.spin * rng.uniform(0.6, 1.4) * rng.choice((-1, 1)),
-                    flip=a.spin * rng.uniform(0.8, 2.0),
-                    col=pal[int(rng.integers(len(pal)))],
-                )
+                {
+                    "u0": rng.uniform(0, 1),
+                    "off": rng.uniform(-1, 1),
+                    "wob": rng.uniform(0, 2 * np.pi),
+                    "r": a.size * rng.uniform(0.75, 1.25),
+                    "rot": rng.uniform(0, 2 * np.pi),
+                    "spin": a.spin * rng.uniform(0.6, 1.4) * rng.choice((-1, 1)),
+                    "flip": a.spin * rng.uniform(0.8, 2.0),
+                    "col": pal[int(rng.integers(len(pal)))],
+                }
             )
 
     work = tempfile.mkdtemp(dir=os.path.dirname(os.path.abspath(a.out)) or ".")

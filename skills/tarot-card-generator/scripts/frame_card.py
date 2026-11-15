@@ -12,7 +12,9 @@ The art is center-cropped to fill the interior, so any input aspect works; pass
 art already close to the card aspect (~1:1.75) to avoid heavy cropping.
 """
 
-import argparse, random
+import argparse
+import random
+
 from PIL import Image, ImageDraw, ImageFont
 
 FONT_CANDIDATES = [

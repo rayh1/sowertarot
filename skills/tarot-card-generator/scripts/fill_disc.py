@@ -18,15 +18,19 @@ found as what differs from the sky at the box edge). --grow 24 when a faint rim 
 Emits {"ok":true,"out":...,"disc_pixels":...}.
 """
 
-import argparse, json, os, subprocess, sys
+import argparse
+import json
+import os
+import subprocess
+import sys
 from datetime import datetime
 
 from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from render_card import FRAME, RECORD_KEY, note_record, write_record  # noqa: E402
-from repair_tools import fill_disc, fill_halo  # noqa: E402
+from render_card import FRAME, RECORD_KEY, note_record, write_record
+from repair_tools import fill_disc, fill_halo
 
 
 def main():
@@ -100,6 +104,7 @@ def main():
         + record["frame_flags"],
         capture_output=True,
         text=True,
+        check=False,
     )
     if fr.returncode:
         raise SystemExit(f"frame_card.py failed:\n{fr.stdout}\n{fr.stderr}")

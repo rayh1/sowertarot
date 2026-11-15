@@ -8,8 +8,13 @@ of the distance travelled inside the mask from its top end, and they grow and sp
 bottom of the card (perspective). Every stroke repeats exactly once per clip, so the loop is seamless.
 """
 
-import argparse, os, subprocess, sys, tempfile
+import argparse
+import os
+import subprocess
+import sys
+import tempfile
 from collections import deque
+
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 from scipy import ndimage as nd
@@ -21,8 +26,8 @@ SKILL = os.path.normpath(
     )
 )
 sys.path.insert(0, SKILL)
-from frame_card import cover_resize  # noqa: E402
-from animate_compose import FRAME_FLAGS  # noqa: E402
+from animate_compose import FRAME_FLAGS
+from frame_card import cover_resize
 
 
 def geodesic_from_top(mask):
@@ -368,13 +373,13 @@ def main():
             y += s * sample(gy, x, y)
         dark = rng.random() < (0.7 if a.light_frac is None else 1 - a.light_frac)
         strokes.append(
-            dict(
-                track=tr,
-                phase=int(rng.integers(T)),
-                dark=dark,
-                length=rng.uniform(14, 34),
-                width=rng.uniform(1.9, 3.2),
-            )
+            {
+                "track": tr,
+                "phase": int(rng.integers(T)),
+                "dark": dark,
+                "length": rng.uniform(14, 34),
+                "width": rng.uniform(1.9, 3.2),
+            }
         )
 
     water_rgb = np.median(np.array(art)[water], 0)
@@ -558,7 +563,7 @@ def main():
             amp_ = a.fleck_morph * (sh_g if a.shimmer_depth is not None else 1.0)
             ys_, xs_ = np.nonzero(fl_box)
             y0_, y1_, x0_, x1_ = ys_.min(), ys_.max() + 1, xs_.min(), xs_.max() + 1
-            dxm = amp_ * mo if np.ndim(amp_) == 0 else amp_ * mo
+            dxm = amp_ * mo
             cy_ = YY[y0_:y1_, x0_:x1_]
             cx_ = XX[y0_:y1_, x0_:x1_] - dxm[y0_:y1_, x0_:x1_]
             fm = nd.map_coordinates(

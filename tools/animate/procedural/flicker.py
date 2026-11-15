@@ -11,7 +11,12 @@ height), brightness and a warm glow breathe. Each flame has its own rhythm built
 clip, so the loop is seamless. The art outside the flames is untouched.
 """
 
-import argparse, os, subprocess, sys, tempfile
+import argparse
+import os
+import subprocess
+import sys
+import tempfile
+
 import numpy as np
 from PIL import Image, ImageDraw
 from scipy import ndimage as nd
@@ -23,8 +28,8 @@ SKILL = os.path.normpath(
     )
 )
 sys.path.insert(0, SKILL)
-from frame_card import cover_resize  # noqa: E402
-from animate_compose import FRAME_FLAGS  # noqa: E402
+from animate_compose import FRAME_FLAGS
+from frame_card import cover_resize
 
 
 def diffuse_fill(img, hole, iters=400):
@@ -178,15 +183,15 @@ def fire_main(a):
     sx0, sy0 = [float(v) for v in a.spark_from.split(",")]
     amin, amax = [np.radians(float(v)) for v in a.spark_angle.split(",")]
     sparks = [
-        dict(
-            ang=rng.uniform(amin, amax),
-            d=a.spark_dist * rng.uniform(0.5, 1.2),
-            ph=rng.uniform(0, 1),
-            k=int(rng.choice((2, 3))),
-            r=a.spark_size * rng.uniform(0.7, 1.2),
-            ox=rng.uniform(-14, 14),
-            oy=rng.uniform(-8, 4),
-        )
+        {
+            "ang": rng.uniform(amin, amax),
+            "d": a.spark_dist * rng.uniform(0.5, 1.2),
+            "ph": rng.uniform(0, 1),
+            "k": int(rng.choice((2, 3))),
+            "r": a.spark_size * rng.uniform(0.7, 1.2),
+            "ox": rng.uniform(-14, 14),
+            "oy": rng.uniform(-8, 4),
+        }
         for _ in range(a.sparks)
     ]
 
@@ -227,7 +232,7 @@ def fire_main(a):
                 u = (s["k"] * t + s["ph"]) % 1  # life 0..1
                 prev = max(0.0, u - 0.05)
 
-                def at(u):
+                def at(u, s=s):
                     dist = s["d"] * u
                     return (
                         sx0 + s["ox"] + np.cos(s["ang"]) * dist,
@@ -425,15 +430,15 @@ def main():
             m[bottom + 1 :] = False
         cy, cx = [v.mean() for v in np.nonzero(c)]
         flames.append(
-            dict(
-                mask=m,
-                base=(cx, bottom),
-                h=h,
-                cy=cy,
-                st=rhythm(rng, T, (3, 4, 5), (7, 9, 11)),
-                sw=rhythm(rng, T, (2, 3), (5, 6)),
-                br=rhythm(rng, T, (4, 5, 6), (9, 11, 13)),
-            )
+            {
+                "mask": m,
+                "base": (cx, bottom),
+                "h": h,
+                "cy": cy,
+                "st": rhythm(rng, T, (3, 4, 5), (7, 9, 11)),
+                "sw": rhythm(rng, T, (2, 3), (5, 6)),
+                "br": rhythm(rng, T, (4, 5, 6), (9, 11, 13)),
+            }
         )
         hole |= m
     print(len(flames), "flames found")

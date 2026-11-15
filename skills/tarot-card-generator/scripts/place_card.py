@@ -43,8 +43,7 @@ from card_repo import (
     SETTINGS,
     TAGLINE,
     all_cards,
-    review_root,
-    card_path,  # noqa: E402
+    card_path,
     checksums,
     daily,
     fail,
@@ -52,6 +51,7 @@ from card_repo import (
     png_record,
     read_card,
     record_section,
+    review_root,
     section,
     slug,
     upsert_record,
@@ -101,7 +101,7 @@ def cmd_new(a):
     missing = [h for h in REQUIRED if section(sections, h) is None]
     if missing:
         fail(f"{a.body} lacks ## {', ## '.join(missing)}")
-    if re.search(r"^# ", sections, re.M) or TAGLINE in sections:
+    if re.search(r"^# ", sections, re.MULTILINE) or TAGLINE in sections:
         fail(
             f"{a.body} must hold only the sections; the title, tagline and image line are added"
         )
@@ -203,6 +203,7 @@ def rclone_copy(files, dest):
             ["rclone", "copyto", str(f), f"{dest}/{Path(f).name}"],
             capture_output=True,
             text=True,
+            check=False,
         )
         if r.returncode != 0:
             fail(f"rclone copyto {f} {dest}: {r.stderr.strip()}", 1)
@@ -231,7 +232,10 @@ def cmd_backup(a):
         fail(f"nothing to back up: {src.relative_to(REPO)} does not exist")
     target = f"{dest}/animations/source/batch/{slug(a.card)}"
     r = subprocess.run(
-        ["rclone", "copy", str(src), target], capture_output=True, text=True
+        ["rclone", "copy", str(src), target],
+        capture_output=True,
+        text=True,
+        check=False,
     )
     if r.returncode != 0:
         fail(f"rclone copy to {target}: {r.stderr.strip()}", 1)

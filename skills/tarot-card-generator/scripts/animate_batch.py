@@ -14,11 +14,18 @@ worker's instance is down (with-comfy exit 69, e.g. the remote after 07:00) the 
 job and exits. Progress: <batch dir>/run.log and state.json.
 """
 
-import argparse, fcntl, json, os, subprocess, sys, time
+import argparse
+import fcntl
+import json
+import os
+import subprocess
+import sys
+import time
+from pathlib import Path
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from card_repo import SETTINGS, review_root  # noqa: E402
+from card_repo import SETTINGS, review_root
 
 WITH_COMFY = "/workspace/.claude/tools/with-comfy/with-comfy"
 
@@ -39,10 +46,11 @@ def update(d, fn):
     with open(os.path.join(d, ".lock"), "w") as lk:
         fcntl.flock(lk, fcntl.LOCK_EX)
         p = os.path.join(d, "state.json")
-        state = json.load(open(p)) if os.path.exists(p) else {}
-        jobs = json.load(open(os.path.join(d, "jobs.json")))
+        state = json.loads(Path(p).read_text()) if os.path.exists(p) else {}
+        jobs = json.loads(Path(d, "jobs.json").read_text())
         out = fn(state, jobs)
-        json.dump(state, open(p + ".tmp", "w"), indent=1)
+        with open(p + ".tmp", "w") as f:
+            json.dump(state, f, indent=1)
         os.replace(p + ".tmp", p)
         return out
 
@@ -83,13 +91,13 @@ def finish(jid, status, **kw):
 
 
 def run(cmd, cwd):
-    r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
+    r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, check=False)
     return r.returncode, (r.stdout + r.stderr)[-1500:]
 
 
 def crop_arg(cd):
     p = os.path.join(cd, "crop.txt")  # the model renders only this box of the art
-    return ["--crop", open(p).read().strip()] if os.path.exists(p) else []
+    return ["--crop", Path(p).read_text().strip()] if os.path.exists(p) else []
 
 
 def main():
@@ -141,7 +149,7 @@ def main():
                 "--prefix",
                 prefix,
                 "--prompt",
-                open(os.path.join(cd, "prompt.txt")).read().strip(),
+                Path(cd, "prompt.txt").read_text().strip(),
             ],
             cd,
         )
@@ -180,7 +188,7 @@ def main():
             continue
         down = rc == 69 or "exit 69" in out or "is down" in out
 
-        def fail(state, jobs, jid=jid, out=out):
+        def fail(state, jobs, jid=jid, out=out, down=down):
             s = state[jid]
             s["status"] = "retry" if (down or s["tries"] < 2) else "failed"
             s["error"] = out[-400:]

@@ -3,6 +3,7 @@
 wcheck.py WORKDIR MASK.png x0,y0,x1,y1 OUT.png   (box in art coordinates)"""
 
 import sys
+
 import numpy as np
 from PIL import Image
 from scipy import ndimage as nd
@@ -28,7 +29,7 @@ left, top = (mm.width - iw) // 2, (mm.height - ih) // 2
 m = np.array(mm.crop((left, top, left + iw, top + ih)))[: bt - it] > 128
 out = ~nd.binary_dilation(m, iterations=6)
 steps = [np.abs(fr[(i + 1) % 96] - fr[i]).mean() for i in range(96)]
-print("seam 95->0 %.3f  typical %.3f" % (steps[95], np.mean(steps[:95])))
+print(f"seam 95->0 {steps[95]:.3f}  typical {np.mean(steps[:95]):.3f}")
 mx = max(np.abs(fr[i][out] - fr[0][out]).max() for i in range(0, 96, 8))
 print("max change outside the water (dilated 6 px):", round(mx, 1))
 x0, y0, x1, y1 = [int(v) for v in box.split(",")]

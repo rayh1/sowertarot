@@ -55,6 +55,7 @@ def render(card, scene, seed, out, retries):
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
         last = (p.stdout.strip().splitlines() or [""])[-1]
         if p.returncode == 0 and out.exists():

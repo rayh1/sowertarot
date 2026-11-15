@@ -16,14 +16,18 @@ card's batch folder:
       --title "The Ember" --out the-ember_s6_v5 --slow 2 --crossfade 0.5 --crop 360,620,760,1331
 """
 
-import argparse, os, subprocess, sys, tempfile
+import argparse
+import os
+import subprocess
+import sys
+import tempfile
 
 import numpy as np
 from PIL import Image
 from scipy import ndimage
 
 sys.path.insert(0, "/workspace/sowertarot/skills/tarot-card-generator/scripts")
-from animate_compose import FRAME_FLAGS, SKILL, cover_resize, fetch, interpolate  # noqa: E402
+from animate_compose import FRAME_FLAGS, SKILL, cover_resize, fetch, interpolate
 
 
 def overlay_region(art, box):

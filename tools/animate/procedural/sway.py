@@ -12,7 +12,12 @@ behind it is filled along each row (--fill rows) or by diffusion. --depth shrink
 (perspective), so far grass moves less than near grass. Waves run whole cycles per clip, so the loop is seamless.
 """
 
-import argparse, os, subprocess, sys, tempfile
+import argparse
+import os
+import subprocess
+import sys
+import tempfile
+
 import numpy as np
 from PIL import Image
 from scipy import ndimage as nd
@@ -24,12 +29,12 @@ SKILL = os.path.normpath(
     )
 )
 sys.path.insert(0, SKILL)
-from frame_card import cover_resize  # noqa: E402
-from animate_compose import FRAME_FLAGS  # noqa: E402
+from animate_compose import FRAME_FLAGS
+from frame_card import cover_resize
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from flicker import diffuse_fill  # noqa: E402
-from flow_strokes import star_twinkle  # noqa: E402
+from flicker import diffuse_fill
+from flow_strokes import star_twinkle
 
 
 def row_fill(img, hole):

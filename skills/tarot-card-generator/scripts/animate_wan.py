@@ -10,7 +10,13 @@ first and last frame (loops by construction); 576x1008, 81 frames @16 fps. --ful
 Settings follow ComfyUI's templates video_wan2_2_14B_flf2v and video_wan2_2_5B_ti2v.
 """
 
-import argparse, http.client, json, os, time, urllib.request
+import argparse
+import http.client
+import json
+import os
+import time
+import urllib.request
+from pathlib import Path
 
 HOST = os.environ.get("COMFY_LOCAL_URL", "http://127.0.0.1:8188").rstrip(
     "/"
@@ -205,7 +211,7 @@ def upload(path):
             f'--{boundary}\r\nContent-Disposition: form-data; name="image"; filename="{name}"\r\n'
             f"Content-Type: image/png\r\n\r\n"
         ).encode()
-        + open(path, "rb").read()
+        + Path(path).read_bytes()
         + f'\r\n--{boundary}\r\nContent-Disposition: form-data; name="overwrite"\r\n\r\ntrue\r\n--{boundary}--\r\n'.encode()
     )
     req = urllib.request.Request(

@@ -24,7 +24,7 @@ HERE = Path(__file__).resolve().parent
 SKILL = HERE.parent
 REPO = Path(os.environ.get("TAROT_REPO") or SKILL.parent.parent)
 sys.path.insert(0, str(REPO / "skills" / "tarot-daily-reading" / "scripts"))
-import daily  # noqa: E402  (shares REPO: both follow TAROT_REPO or their own place in the repository)
+import daily
 
 CONTENT = REPO / "content"
 CARDS = CONTENT / "cards"
@@ -95,7 +95,9 @@ def all_cards():
 
 def section(body, heading):
     """Text under `## heading` up to the next `## ` heading, or None."""
-    m = re.search(rf"^## {re.escape(heading)}\n(.*?)(?=^## |\Z)", body, re.S | re.M)
+    m = re.search(
+        rf"^## {re.escape(heading)}\n(.*?)(?=^## |\Z)", body, re.DOTALL | re.MULTILINE
+    )
     return m.group(1).strip() if m else None
 
 
@@ -106,7 +108,7 @@ def card_record(name):
         fail(
             f"{card_path(name).relative_to(REPO)} has no {RECORD_HEADING}: render the card with --scene instead"
         )
-    m = re.search(r"```json\n(.*?)\n```", body[body.index(RECORD_HEADING) :], re.S)
+    m = re.search(r"```json\n(.*?)\n```", body[body.index(RECORD_HEADING) :], re.DOTALL)
     return json.loads(m.group(1))
 
 
@@ -145,19 +147,23 @@ def record_section(record):
         "<details>",
         f"<summary>Seed {record.get('seed')} · {record.get('comfy_file')} — full render recipe</summary>",
         "",
-        "Written by `place_card.py` with the image above. It holds everything needed to "
-        're-render that image without the ComfyUI output file — `render_card.py --from-card "<title>"` does all '
-        "of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title "
-        "<title> <frame_flags>`; for each entry in `repairs`, first apply it to the unframed art: a Qwen "
-        "edit runs its `workflow` and keeps the result only inside `box` (soft edge `feather`), then, "
-        "if `tone_match` is true, evens the box's tone (`repair_tools.tone_match`), as `edit_card.py` "
-        "does; a `method: fill_disc` entry fills the disc in `box` from the sky around it with its "
-        "`grow`/`thresh` (`repair_tools.fill_disc`, no AI model); a `method: fill_halo` entry fills "
-        "the light rim round the linework in `box` from the sky with its `grow` (`repair_tools.fill_halo`, "
-        "no AI model). The model files named below must exist in ComfyUI.",
+        (
+            "Written by `place_card.py` with the image above. It holds everything needed to "
+            're-render that image without the ComfyUI output file — `render_card.py --from-card "<title>"` does all '
+            "of it: post `workflow` to ComfyUI's `/prompt` endpoint, then run `frame_card.py --art <output> --title "
+            "<title> <frame_flags>`; for each entry in `repairs`, first apply it to the unframed art: a Qwen "
+            "edit runs its `workflow` and keeps the result only inside `box` (soft edge `feather`), then, "
+            "if `tone_match` is true, evens the box's tone (`repair_tools.tone_match`), as `edit_card.py` "
+            "does; a `method: fill_disc` entry fills the disc in `box` from the sky around it with its "
+            "`grow`/`thresh` (`repair_tools.fill_disc`, no AI model); a `method: fill_halo` entry fills "
+            "the light rim round the linework in `box` from the sky with its `grow` (`repair_tools.fill_halo`, "
+            "no AI model). The model files named below must exist in ComfyUI."
+        ),
         "",
-        f"- Rendered: {record.get('rendered')} · ComfyUI {record.get('comfyui_version')} "
-        f"· output `{record.get('comfy_file')}`",
+        (
+            f"- Rendered: {record.get('rendered')} · ComfyUI {record.get('comfyui_version')} "
+            f"· output `{record.get('comfy_file')}`"
+        ),
         f"- Seed: {record.get('seed')}",
         f"- Models: {', '.join(dict.fromkeys(models)) or 'unknown'}",
         f"- Frame flags: `{' '.join(record.get('frame_flags', []))}`",
@@ -195,7 +201,8 @@ def record_section(record):
 def upsert_record(body, section_md):
     """Replace the ## Render Record section, append it, or (None) remove it."""
     pat = re.compile(
-        r"\n*^" + re.escape(RECORD_HEADING) + r"\n.*?(?=^## |\Z)", re.S | re.M
+        r"\n*^" + re.escape(RECORD_HEADING) + r"\n.*?(?=^## |\Z)",
+        re.DOTALL | re.MULTILINE,
     )
     body = pat.sub("\n", body).rstrip() + "\n"
     return body if section_md is None else f"{body}\n{section_md}"
@@ -216,6 +223,7 @@ def label(*files):
         ["sh", str(REPO / "scripts" / "label_media.sh"), *map(str, files)],
         capture_output=True,
         text=True,
+        check=False,
     )
     if r.returncode != 0:
         fail(f"label_media.sh: {(r.stderr or r.stdout).strip()}")
@@ -233,6 +241,7 @@ def checksums(cmd):
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
     if r.returncode != 0:
         fail(f"checksums.py {cmd}: {(r.stdout + r.stderr).strip()}", 1)

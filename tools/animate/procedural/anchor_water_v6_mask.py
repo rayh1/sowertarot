@@ -6,6 +6,7 @@ vine and right fluke tip (polygons in trimmed-art pixels, ~8 px margin). Binary,
     python3 anchor_water_v6_mask.py anchor_water.png anchor_water_v6.png ../batch/the-anchor/art.png"""
 
 import sys
+
 import numpy as np
 from PIL import Image, ImageDraw
 

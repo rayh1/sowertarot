@@ -12,7 +12,10 @@ trimmed 1024 x 1792 art (art.png in the card's folder).
 --include polygons are filled white, then --exclude polygons black (figures, faces, hands, with a margin).
 """
 
-import argparse, os
+import argparse
+import os
+from pathlib import Path
+
 from PIL import Image, ImageDraw, ImageFilter
 
 
@@ -59,7 +62,7 @@ def main():
         cp = os.path.join(a.dir, "crop.txt")
         if os.path.exists(cp):
             ImageDraw.Draw(prev).rectangle(
-                [int(v) for v in open(cp).read().split(",")],
+                [int(v) for v in Path(cp).read_text().split(",")],
                 outline=(0, 200, 0),
                 width=6,
             )
@@ -69,7 +72,7 @@ def main():
         y1 = y0 + round((x1 - x0) * 16 / 9)
         if x0 < 0 or x1 > W or y0 < 0 or y1 > H:
             raise SystemExit(f"box {x0},{y0},{x1},{y1} leaves the {W}x{H} art")
-        open(os.path.join(a.dir, "crop.txt"), "w").write(f"{x0},{y0},{x1},{y1}\n")
+        Path(a.dir, "crop.txt").write_text(f"{x0},{y0},{x1},{y1}\n")
         art.crop((x0, y0, x1, y1)).resize((576, 1024), Image.LANCZOS).save(
             os.path.join(a.dir, "input_576x1024.png")
         )

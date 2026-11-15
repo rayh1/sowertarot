@@ -144,11 +144,66 @@ PHRASE_MAX = 15
 PHRASE_MIN_CONTENT = (
     2  # a phrase needs this many words outside FILLER ("it is the" is not a cliche)
 )
-FILLER = set(
-    """a an the and or but of to in on at by for with from into as than then so
-i you he she it we they me him her us them my your his its our their this that these those
-is are was were be been being am there here what which who where when how""".split()
-)
+FILLER = {
+    "a",
+    "an",
+    "the",
+    "and",
+    "or",
+    "but",
+    "of",
+    "to",
+    "in",
+    "on",
+    "at",
+    "by",
+    "for",
+    "with",
+    "from",
+    "into",
+    "as",
+    "than",
+    "then",
+    "so",
+    "i",
+    "you",
+    "he",
+    "she",
+    "it",
+    "we",
+    "they",
+    "me",
+    "him",
+    "her",
+    "us",
+    "them",
+    "my",
+    "your",
+    "his",
+    "its",
+    "our",
+    "their",
+    "this",
+    "that",
+    "these",
+    "those",
+    "is",
+    "are",
+    "was",
+    "were",
+    "be",
+    "been",
+    "being",
+    "am",
+    "there",
+    "here",
+    "what",
+    "which",
+    "who",
+    "where",
+    "when",
+    "how",
+}
 
 
 def today():
@@ -173,7 +228,7 @@ def git(*args, auth=False, check=True):
     env, pre = os.environ.copy(), []
     if auth:
         cmd = ["gh", "auth", "token", *(["--user", GH_USER] if GH_USER else [])]
-        tok = subprocess.run(cmd, capture_output=True, text=True)
+        tok = subprocess.run(cmd, capture_output=True, text=True, check=False)
         if tok.returncode != 0:
             fail(f"{' '.join(cmd)}: {tok.stderr.strip()}")
         env["SOWER_GIT_TOKEN"] = tok.stdout.strip()
@@ -187,7 +242,11 @@ def git(*args, auth=False, check=True):
             f'credential.helper=!f() {{ echo username={user}; echo "password=$SOWER_GIT_TOKEN"; }}; f',
         ]
     r = subprocess.run(
-        ["git", "-C", str(REPO), *pre, *args], capture_output=True, text=True, env=env
+        ["git", "-C", str(REPO), *pre, *args],
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
     )
     if check and r.returncode != 0:
         fail(f"git {' '.join(args[:2])}: {(r.stderr or r.stdout).strip()}")
@@ -668,6 +727,7 @@ def cmd_backup(_):
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
     if r.returncode != 0:
         fail(f"rclone copy to {dest}/content: {r.stderr.strip()}", 1)
@@ -707,7 +767,9 @@ def trigger_title(r):
 
 
 def joplink(*args, check=True):
-    r = subprocess.run(["joplink", "--json", *args], capture_output=True, text=True)
+    r = subprocess.run(
+        ["joplink", "--json", *args], capture_output=True, text=True, check=False
+    )
     if check and r.returncode != 0:
         raise RuntimeError(
             f"joplink {' '.join(args[:2])}: {(r.stderr or r.stdout).strip()}"
@@ -819,7 +881,10 @@ def cmd_notify(a):
             f"{SITE}/",
         ]
         res = subprocess.run(
-            cmd + (["--dry-run"] if a.dry_run else []), capture_output=True, text=True
+            cmd + (["--dry-run"] if a.dry_run else []),
+            capture_output=True,
+            text=True,
+            check=False,
         )
         if res.returncode != 0:
             print(

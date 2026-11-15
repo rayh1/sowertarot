@@ -17,8 +17,14 @@ at its unframed art, see --keep-art) to fix a second defect.
 Emits {"ok":true,"out":...,"seed":...,"comfy_file":...}.
 """
 
-import argparse, json, os, subprocess, sys, urllib.request
+import argparse
+import json
+import os
+import subprocess
+import sys
+import urllib.request
 from datetime import datetime
+from pathlib import Path
 
 from PIL import Image
 
@@ -28,14 +34,14 @@ from render_card import (
     FRAME,
     RECORD_KEY,
     SKILL,
-    comfy_version,  # noqa: E402
+    comfy_version,
     note_record,
     paste_back,
     post_graph,
     upload_image,
     write_record,
 )
-from repair_tools import tone_match  # noqa: E402
+from repair_tools import tone_match
 
 WORKFLOW = os.path.join(SKILL, "assets", "tarot-card-qwen-edit.json")
 KEEP = " Keep everything else, including the woodcut linework and hatching, exactly the same."
@@ -97,7 +103,7 @@ def main():
             urllib.request.urlretrieve(
                 f"{url}/view?filename={record['comfy_file']}&type=output", art
             )
-        except Exception as e:
+        except (OSError, ValueError) as e:
             raise SystemExit(
                 f"{record['comfy_file']} not in ComfyUI output ({e}); pass --art "
                 "(re-render it from the record's workflow)"
@@ -106,7 +112,7 @@ def main():
 
     up = upload_image(url, art)
 
-    graph = json.load(open(WORKFLOW))
+    graph = json.loads(Path(WORKFLOW).read_text())
     prompt = a.instruction.strip()
     if "exactly the same" not in prompt:
         prompt += KEEP
@@ -150,6 +156,7 @@ def main():
         + record["frame_flags"],
         capture_output=True,
         text=True,
+        check=False,
     )
     if fr.returncode:
         raise SystemExit(f"frame_card.py failed:\n{fr.stdout}\n{fr.stderr}")

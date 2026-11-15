@@ -12,12 +12,21 @@ banner are rendered once (frame_card.py) and reused, so the paper texture does n
 --crop: the model was given only this box of the art (art pixels); its frames are pasted back there.
 """
 
-import argparse, http.client, io, os, subprocess, sys, tempfile, time, urllib.request
+import argparse
+import http.client
+import io
+import os
+import subprocess
+import sys
+import tempfile
+import time
+import urllib.request
+
 from PIL import Image
 
 SKILL = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, SKILL)
-from frame_card import cover_resize  # noqa: E402
+from frame_card import cover_resize
 
 HOST = os.environ.get("COMFY_LOCAL_URL", "http://127.0.0.1:8188").rstrip(
     "/"
@@ -78,7 +87,7 @@ def interpolate(frames, fps, slow):
         for n in sorted(os.listdir(d))
         if n.startswith("i")
     ]
-    subprocess.run(["rm", "-rf", d])
+    subprocess.run(["rm", "-rf", d], check=False)
     return out
 
 

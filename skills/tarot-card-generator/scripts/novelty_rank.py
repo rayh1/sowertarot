@@ -65,8 +65,10 @@ def essences():
     out = {}
     for p in sorted((REPO / "content" / "cards").glob("*.md")):
         text = p.read_text(encoding="utf-8")
-        title = re.search(r'^title: "(.*)"$', text, re.M).group(1)
-        m = re.search(r"^## Archetypal Essence\n(.*?)(?=^## |\Z)", text, re.S | re.M)
+        title = re.search(r'^title: "(.*)"$', text, re.MULTILINE).group(1)
+        m = re.search(
+            r"^## Archetypal Essence\n(.*?)(?=^## |\Z)", text, re.DOTALL | re.MULTILINE
+        )
         if not m:
             sys.exit(f"{p.name}: no ## Archetypal Essence section")
         out[title] = m.group(1).strip()

@@ -13,7 +13,12 @@ own rhythm: size, brightness, a soft halo, and four thin rays at its peaks. --li
 cycles per clip, so the loop is seamless.
 """
 
-import argparse, os, subprocess, sys, tempfile
+import argparse
+import os
+import subprocess
+import sys
+import tempfile
+
 import numpy as np
 from PIL import Image, ImageDraw
 from scipy import ndimage as nd
@@ -25,8 +30,8 @@ SKILL = os.path.normpath(
     )
 )
 sys.path.insert(0, SKILL)
-from frame_card import cover_resize  # noqa: E402
-from animate_compose import FRAME_FLAGS  # noqa: E402
+from animate_compose import FRAME_FLAGS
+from frame_card import cover_resize
 
 
 def rhythm(rng, T, slow, fast):
@@ -44,7 +49,7 @@ def find_stars(px, box, dark, min_px, contrast, sky_max=255.0):
     lum = px[y0:y1, x0:x1].mean(-1)
     bgl = nd.median_filter(lum, 25)
     spot = (bgl - lum > contrast) if dark else (lum - bgl > contrast)
-    lab, n = nd.label(nd.binary_closing(spot, iterations=1))
+    lab, _n = nd.label(nd.binary_closing(spot, iterations=1))
     out = []
     for i, sl in enumerate(nd.find_objects(lab)):
         m = lab[sl] == i + 1
@@ -60,14 +65,14 @@ def find_stars(px, box, dark, min_px, contrast, sky_max=255.0):
         if bgl[int(ys.mean()) + sl[0].start, int(xs.mean()) + sl[1].start] > sky_max:
             continue  # not on the sky (e.g. a curtain)
         out.append(
-            dict(
-                y0=sl[0].start + y0,
-                x0=sl[1].start + x0,
-                m=m,
-                cy=ys.mean() + sl[0].start + y0,
-                cx=xs.mean() + sl[1].start + x0,
-                r=np.sqrt(m.sum() / np.pi),
-            )
+            {
+                "y0": sl[0].start + y0,
+                "x0": sl[1].start + x0,
+                "m": m,
+                "cy": ys.mean() + sl[0].start + y0,
+                "cx": xs.mean() + sl[1].start + x0,
+                "r": np.sqrt(m.sum() / np.pi),
+            }
         )
     return out
 
@@ -214,7 +219,7 @@ def main():
         )
     if a.twinkle_zone:
         zone = np.array(Image.open(a.twinkle_zone).convert("L")) > 128
-        stars = [s for s in stars if zone[int(round(s["cy"])), int(round(s["cx"]))]]
+        stars = [s for s in stars if zone[round(s["cy"]), round(s["cx"])]]
     if a.star_mask:
         sm = np.array(Image.open(a.star_mask).convert("L")) > 128
         lab, _ = nd.label(sm)
@@ -222,14 +227,14 @@ def main():
             m = lab[sl] == i + 1
             ys, xs = np.nonzero(m)
             stars.append(
-                dict(
-                    y0=sl[0].start,
-                    x0=sl[1].start,
-                    m=m,
-                    cy=ys.mean() + sl[0].start,
-                    cx=xs.mean() + sl[1].start,
-                    r=np.sqrt(m.sum() / np.pi),
-                )
+                {
+                    "y0": sl[0].start,
+                    "x0": sl[1].start,
+                    "m": m,
+                    "cy": ys.mean() + sl[0].start,
+                    "cx": xs.mean() + sl[1].start,
+                    "r": np.sqrt(m.sum() / np.pi),
+                }
             )
     if a.twinkle_count:  # only the largest stars twinkle;
         stars = sorted(stars, key=lambda s: -s["r"])[
@@ -372,7 +377,7 @@ def main():
                 k = max(0.0, s["k"][f])
                 sig = min(18.0, max(4.0, 2.2 * s["r"]))
                 R = int(3 * sig)  # window wide enough: no square edge
-                cy, cx = int(round(s["cy"])), int(round(s["cx"]))
+                cy, cx = round(s["cy"]), round(s["cx"])
                 ys, xs = (
                     slice(max(0, cy - R), cy + R + 1),
                     slice(max(0, cx - R), cx + R + 1),

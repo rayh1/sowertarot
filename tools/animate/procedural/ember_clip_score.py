@@ -4,7 +4,10 @@ share of the card's pale painted-smoke pixels that never leave the card's colour
   python3 ember_clip_score.py <art.png> <mask.png> <smoke_drawn.png> <sheet dir> <clip.mp4> ...
 """
 
-import subprocess, sys, os
+import os
+import subprocess
+import sys
+
 import numpy as np
 from PIL import Image, ImageDraw
 
@@ -49,6 +52,7 @@ for p in clips:
     raw = subprocess.run(
         ["ffmpeg", "-v", "error", "-i", p, "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
         capture_output=True,
+        check=True,
     ).stdout
     c = np.frombuffer(raw, np.uint8).reshape(-1, H, W, 3)
     f = c.astype(np.int16)
