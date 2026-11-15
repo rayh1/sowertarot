@@ -5,9 +5,11 @@ ARG TARGETARCH
 ARG PYTHON_VERSION
 ARG UV_VERSION
 ARG NODE_VERSION
+ARG TEA_VERSION
 ARG GH_VERSION
 ARG OSV_SCANNER_VERSION
 ARG PLAYWRIGHT_VERSION
+ARG PLAYWRIGHT_CLI_VERSION
 ARG DEBIAN_FRONTEND=noninteractive
 
 ENV TZ=Europe/Amsterdam \
@@ -48,6 +50,10 @@ RUN npm install -g "playwright@${PLAYWRIGHT_VERSION}" \
     && apt-get update && playwright install-deps chromium \
     && rm -rf /var/lib/apt/lists/*
 
+# playwright-cli, the browser command line (npm @playwright/cli), in the same global prefix; its own
+# Chromium (playwright-cli brings a newer Playwright) is downloaded later, as devuser, by playwright-cli.
+RUN npm install -g "@playwright/cli@${PLAYWRIGHT_CLI_VERSION}" && npm cache clean --force
+
 # uv (uv and uvx), from its release archive
 ARG UV_SHA256_AMD64
 ARG UV_SHA256_ARM64
@@ -61,13 +67,18 @@ RUN case "${TARGETARCH}" in \
     && install -m 0755 "/tmp/uv-${uv_target}-unknown-linux-gnu/uv" "/tmp/uv-${uv_target}-unknown-linux-gnu/uvx" /usr/local/bin \
     && rm -rf /tmp/uv.tar.gz "/tmp/uv-${uv_target}-unknown-linux-gnu"
 
-# The GitHub CLI (gh)
+# The Gitea CLI (tea) and the GitHub CLI (gh)
+ARG TEA_SHA256_AMD64
+ARG TEA_SHA256_ARM64
 ARG GH_SHA256_AMD64
 ARG GH_SHA256_ARM64
 RUN case "${TARGETARCH}" in \
-      (amd64) gh_sha256="${GH_SHA256_AMD64}" ;; \
-      (arm64) gh_sha256="${GH_SHA256_ARM64}" ;; \
+      (amd64) tea_sha256="${TEA_SHA256_AMD64}" gh_sha256="${GH_SHA256_AMD64}" ;; \
+      (arm64) tea_sha256="${TEA_SHA256_ARM64}" gh_sha256="${GH_SHA256_ARM64}" ;; \
     esac \
+    && curl -fsSL -o /tmp/tea "https://dl.gitea.com/tea/${TEA_VERSION}/tea-${TEA_VERSION}-linux-${TARGETARCH}" \
+    && bash /opt/tdp/verify-download.sh /tmp/tea "${tea_sha256:-}" tea \
+    && install -m 0755 /tmp/tea /usr/local/bin/tea && rm /tmp/tea \
     && curl -fsSL -o /tmp/gh.tar.gz "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_${TARGETARCH}.tar.gz" \
     && bash /opt/tdp/verify-download.sh /tmp/gh.tar.gz "${gh_sha256:-}" gh \
     && tar -xzf /tmp/gh.tar.gz -C /tmp \
@@ -118,6 +129,8 @@ RUN uv python install "${PYTHON_VERSION}" \
 
 # Chromium for Playwright, downloaded as devuser into PLAYWRIGHT_BROWSERS_PATH (/opt/playwright)
 RUN playwright install chromium
+# playwright-cli's Chromium, downloaded as devuser into the same folder, for playwright-cli's Playwright
+RUN playwright-cli install-browser chromium
 
 # Project-owned build hook, run as root at the end of the image build
 USER root

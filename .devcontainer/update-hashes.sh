@@ -71,6 +71,13 @@ if any UV_SHA256_AMD64 UV_SHA256_ARM64; then
   done
 fi
 
+if any TEA_SHA256_AMD64 TEA_SHA256_ARM64; then
+  v=$(pin TEA_VERSION)
+  for arch in amd64 arm64; do
+    fetch "https://dl.gitea.com/tea/${v}/tea-${v}-linux-${arch}.sha256" "$work/sums"
+    hashes[TEA_SHA256_${arch^^}]=$(listed "$work/sums" "tea-${v}-linux-${arch}")
+  done
+fi
 
 if any GH_SHA256_AMD64 GH_SHA256_ARM64; then
   v=$(pin GH_VERSION)

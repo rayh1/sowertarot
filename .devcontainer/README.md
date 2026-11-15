@@ -34,7 +34,9 @@ the container's own filesystem and is gone after a container recreate.
 ## Tools in the image
 
 `uv` with a pinned CPython, Node, `gh`, Playwright with Chromium (browsers in `/opt/playwright`),
-`osv-scanner`, `git`, `jq`, `rg`.
+`tea`, `osv-scanner`, `git`, `jq`, `rg`.
+`playwright-cli`, the browser command line, is there too, with its own Chromium in `/opt/playwright`:
+`playwright-cli open --browser=chromium <url>` opens a page without a download.
 The project's Python environment is `.venv` in the workspace, created by `uv sync` from
 `.python-version`.
 
@@ -58,6 +60,8 @@ pin, `<arch>` is `amd64` or `arm64` as in the pin's name):
 - `UV_SHA256_AMD64`, `UV_SHA256_ARM64` — the file
   `https://releases.astral.sh/github/uv/releases/download/<version>/uv-<target>-unknown-linux-gnu.tar.gz.sha256`,
   where `<target>` is `x86_64` for amd64 and `aarch64` for arm64.
+- `TEA_SHA256_AMD64`, `TEA_SHA256_ARM64` — the file
+  `https://dl.gitea.com/tea/<version>/tea-<version>-linux-<arch>.sha256`.
 - `GH_SHA256_AMD64`, `GH_SHA256_ARM64` — the `gh_<version>_linux_<arch>.tar.gz` line of
   `https://github.com/cli/cli/releases/download/v<version>/gh_<version>_checksums.txt`.
 - `OSV_SCANNER_SHA256_AMD64`, `OSV_SCANNER_SHA256_ARM64` — the `osv-scanner_linux_<arch>` line of
@@ -206,6 +210,10 @@ The rendered `osv-scanner.toml` holds this example commented out.
 - `extra_dockerignore` in `.copier-answers.yml` — extra `.dockerignore` patterns, comma-separated
   (for example `work/, tmp/`): each becomes its own line of `.dockerignore`, after the template's
   own lines, so those paths stay out of the image build.
+- `dropped_stubs` in `.copier-answers.yml` — the project-owned files above that the project
+  deleted on purpose, as a list (for example `[/osv-scanner.toml]`). A template update writes a
+  missing project-owned file again unless it is listed here. Set it once with
+  `copier update --trust --data 'dropped_stubs=["/osv-scanner.toml"]'`.
 
 `copier update` carries template changes into this project and never overwrites the
 project-owned files above; it keeps the two answers and renders them again. To change an answer,
